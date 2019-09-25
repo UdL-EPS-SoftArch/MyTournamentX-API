@@ -1,0 +1,86 @@
+@startuml
+
+skinparam dpi 200
+skinparam classAttributeFontSize 8
+skinparam classArrowFontSize 9
+skinparam classFontSize 10
+skinparam nodesep 90
+skinparam ranksep 40
+hide stereotype
+skinparam class {
+	BackgroundColor White
+	BackgroundColor<<Tournament>> LightPink
+	BackgroundColor<<User>> LightBlue
+	BackgroundColor<<Team>> LightGreen
+	BackgroundColor<<Match>> LightYellow
+}
+
+abstract class User <<User>> {
+    String username, password, email
+}
+
+class TournamentMaster <<User>> extends User {
+}
+
+class Player <<User>> extends User {
+}
+
+class Team <<Team>> {
+    String name, game, level
+    Integer maxPlayers
+}
+
+Team "1..*" -- "*" Player: joins <
+Team "*" -- "1" Player: leads <
+
+class TeamInvitation <<Team>> {
+    String message
+}
+
+Player "1" -left- "*" TeamInvitation: creates >
+Player "*" -- "*" TeamInvitation: invites <
+TeamInvitation "*" -- "1" Team: invitesTo >
+
+class Tournament <<Tournament>> {
+    String name, level, game, type, description
+    Integer minParticipants, maxParticipants,
+    Integer minTeamPlayers, maxTeamPlayers
+    Date limitDate
+}
+
+Tournament "*" -- "1" TournamentMaster: creates <
+Tournament "*" -- "*" Team: participates <
+
+class TournamentInvitation <<Tournament>> {
+    String message
+}
+
+TournamentInvitation "*" -- "1" User: creates <
+TournamentInvitation "*" -- "1" Tournament: invitesTo >
+TournamentInvitation "*" -- "*" Team: invites >
+
+class Classification <<Tournament>> {
+}
+
+Classification "1" -- "1" Tournament: forA >
+Classification "*" -- "*" Team: classifies >
+
+class Match <<Match>> {
+    String description
+}
+
+Match "*" -- "0..1" Match: nextMatch
+Match "*" -- "1" Team: wins <
+Match "1..*" -- "1" Tournament: partOf >
+Match "*" -- "2..*" Team: faces >
+
+class MatchResult <<Match>> {
+    String result
+}
+
+MatchResult "*" -up- "0..1" Match: of >
+MatchResult "*" -- "1" Player: indicates <
+MatchResult "*" -- "1" Team: setsWinner >
+
+
+@enduml
