@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Collection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -33,6 +30,7 @@ public class User extends UriEntity<String> implements UserDetails {
 
 	@NotBlank
 	@Email
+	@Column(unique = true)
 	private String email;
 
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

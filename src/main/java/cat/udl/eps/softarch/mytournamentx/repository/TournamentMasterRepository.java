@@ -1,14 +1,17 @@
 package cat.udl.eps.softarch.mytournamentx.repository;
 
-import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.TournamentMaster;
-import cat.udl.eps.softarch.mytournamentx.domain.User;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
-public interface TournamentMasterRepository extends PagingAndSortingRepository<User, String> {
+/**
+ * The interface TournamentMaster repository.
+ */
+@RepositoryRestResource
+public interface TournamentMasterRepository extends PagingAndSortingRepository<TournamentMaster, String> {
         /* Interface provides automatically, as defined in https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html
      * count, delete, deleteAll, deleteById, existsById, findAll, findAllById, findById, save, saveAll
      *
