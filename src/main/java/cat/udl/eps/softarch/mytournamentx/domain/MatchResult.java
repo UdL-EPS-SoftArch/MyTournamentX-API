@@ -3,10 +3,10 @@ package cat.udl.eps.softarch.mytournamentx.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Data
@@ -14,7 +14,31 @@ import javax.persistence.Id;
 public class MatchResult extends UriEntity<Integer> {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
+
+
+    @NotBlank
+    @Length(min = 1, max = 256)
+    private String winner;
+
+
+    @Length(min = 1, max = 256)
+    private String description;
+
+    @ManyToOne
+    private Match match;
+
+    public MatchResult(@NotBlank @Length(min = 1, max = 256) String winner, @Length(min = 1, max = 256) String description){
+        this.winner = winner;
+        this.description = description;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+    public String getDescription(){
+        return  description;
+    }
 
 }
