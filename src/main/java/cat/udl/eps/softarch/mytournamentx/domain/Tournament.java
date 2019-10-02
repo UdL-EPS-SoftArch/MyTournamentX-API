@@ -9,11 +9,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import org.hibernate.validator.constraints.Length;
 
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 
 @Entity
@@ -26,8 +32,14 @@ public class Tournament extends UriEntity<Integer> {
     private Integer id;
 
 
+    enum Level{
+        BEGINNER,
+        AMATEUR,
+        PROFESSIONAL
+    }
+
     @NotBlank
-    private String level;
+    private Level level;
 
     @NotBlank
     @Length(min = 5, max = 20)
@@ -36,25 +48,35 @@ public class Tournament extends UriEntity<Integer> {
     @NotBlank
     private String game;
 
+    @Length(min = 1, max = 30)
     private String type;
+
+    @Length(min = 1, max = 250)
     private String description;
 
-    @NotBlank
+    @Positive
+    @Min(2)
     private Integer minParticipants;
 
-    @NotBlank
+    @Positive
+    @Max(250)
     private Integer maxParticipants;
 
-    @NotBlank
+    @Positive
+    @Min(1)
     private Integer minTeamPlayers;
 
-    @NotBlank
-    //Comprovar maxim!!
+    @Positive
+    @Max(50)
     private Integer maxTeamPlayers;
 
-    private Date limitDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private ZonedDateTime limitDate;
 
-    public Tournament(@NotBlank String level, @NotBlank @Length(min = 5, max = 20) String name, @NotBlank String game, String type, String description, @NotBlank Integer minParticipants, Integer maxParticipants, Integer minTeamPlayers, Integer maxTeamPlayers, Date limitDate) {
+    public Tournament(Level level, @NotBlank @Length(min = 5, max = 20) String name, @NotBlank String game,
+                      String type, String description, @NotBlank Integer minParticipants, Integer maxParticipants,
+                      Integer minTeamPlayers, Integer maxTeamPlayers, ZonedDateTime limitDate) {
+
         this.level = level;
         this.name = name;
         this.game = game;
@@ -73,6 +95,8 @@ public class Tournament extends UriEntity<Integer> {
     }
 
     public void setTeamPlayers(Integer minTeamPlayers, Integer maxTeamPlayers){
+
+
         this.minTeamPlayers = minTeamPlayers;
         this.maxTeamPlayers = maxTeamPlayers;
     }
