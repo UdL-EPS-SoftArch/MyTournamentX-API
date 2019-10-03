@@ -19,7 +19,7 @@ Feature: Register
     And I cannot login with username "tournamentmaster" and password "newpassword"
 
   Scenario: Register tournamentmaster when already authenticated
-    Given I login as "demo" with password "password"
+    Given I login as "demoTM" with password "password"
     When I register a new tournamentmaster with username "tournamentmaster", email "tournamentmaster@mytournamentx.game" and password "password"
     Then The response code is 403
     And It has not been created a tournamentmaster with username "tournamentmaster"

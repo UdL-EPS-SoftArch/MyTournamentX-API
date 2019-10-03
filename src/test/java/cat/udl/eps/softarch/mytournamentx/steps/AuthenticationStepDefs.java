@@ -24,13 +24,13 @@ public class AuthenticationStepDefs {
     }
 
     @Given("^I login as \"([^\"]*)\" with password \"([^\"]*)\"$")
-    public void iLoginAsWithPassword(String username, String password) throws Throwable {
+    public void iLoginAsWithPassword(String username, String password) {
         AuthenticationStepDefs.currentUsername = username;
         AuthenticationStepDefs.currentPassword = password;
     }
 
     @Given("^I'm not logged in$")
-    public void iMNotLoggedIn() throws Throwable {
+    public void iMNotLoggedIn() {
         currentUsername = currentPassword = null;
     }
 }

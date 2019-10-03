@@ -19,7 +19,7 @@ Feature: Register
     And I cannot login with username "player" and password "newpassword"
 
   Scenario: Register player when already authenticated
-    Given I login as "demo" with password "password"
+    Given I login as "demoP" with password "password"
     When I register a new player with username "player", email "player@mytournamentx.game" and password "password"
     Then The response code is 403
     And It has not been created a player with username "player"
