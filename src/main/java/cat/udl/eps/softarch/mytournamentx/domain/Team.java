@@ -45,16 +45,17 @@ public class Team extends UriEntity<Integer> {
 
     @Max(value = 8) // Example
     @Min(value = 1)
-    @NotBlank
     private int maxPlayers;
 
 
-    public Team(@NotBlank @Length(min = 1, max = 256) String name, @NotBlank @Length(min = 1, max = 256) String game,
-                @Length(min = 1, max = 256) String level, @Max(value = 8) @Min(value = 1) @NotBlank int maxPlayers) {
+    public Team(String name,String game,String level, int maxPlayers) {
         this.name = name;
         this.game = game;
         this.level = level;
         this.maxPlayers = maxPlayers;
+    }
+
+    public Team() {
     }
 
     public String getName() {
