@@ -32,7 +32,7 @@ public class Tournament extends UriEntity<Integer> {
     private Integer id;
 
 
-    enum Level{
+    public enum Level{
         BEGINNER,
         AMATEUR,
         PROFESSIONAL
@@ -72,7 +72,7 @@ public class Tournament extends UriEntity<Integer> {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime limitDate;
-
+/*
     public Tournament(Level level, @NotBlank @Length(min = 5, max = 20) String name, @NotBlank String game,
                       String type, String description, @NotBlank Integer minParticipants, Integer maxParticipants,
                       Integer minTeamPlayers, Integer maxTeamPlayers, ZonedDateTime limitDate) {
@@ -87,7 +87,7 @@ public class Tournament extends UriEntity<Integer> {
         this.minTeamPlayers = minTeamPlayers;
         this.maxTeamPlayers = maxTeamPlayers;
         this.limitDate = limitDate;
-    }
+    }*/
 
     public void setParticipants(Integer minParticipants, Integer maxParticipants){
         this.minParticipants = minParticipants;
@@ -95,8 +95,6 @@ public class Tournament extends UriEntity<Integer> {
     }
 
     public void setTeamPlayers(Integer minTeamPlayers, Integer maxTeamPlayers){
-
-
         this.minTeamPlayers = minTeamPlayers;
         this.maxTeamPlayers = maxTeamPlayers;
     }
