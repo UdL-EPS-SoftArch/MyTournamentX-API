@@ -29,7 +29,9 @@ public class MatchResult extends UriEntity<Integer> {
     @ManyToOne
     private Match match;
 
-    public MatchResult(@NotBlank @Length(min = 1, max = 256) String winner, @Length(min = 1, max = 256) String description){
+    public MatchResult(@NotBlank @Length(min = 1, max = 256)
+                               String winner, @Length(min = 1, max = 256) String description){
+
         this.winner = winner;
         this.description = description;
     }
