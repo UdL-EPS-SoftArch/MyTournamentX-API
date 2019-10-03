@@ -7,10 +7,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.TournamentMaster;
 import cat.udl.eps.softarch.mytournamentx.domain.User;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentMasterRepository;
+import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.UserRepository;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
@@ -29,6 +32,9 @@ public class RegisterStepDefs {
 
   @Autowired
   private TournamentMasterRepository tournamentMasterRepository;
+
+  @Autowired
+  private PlayerRepository playerRepository;
 
   @Given("^There is no registered user with username \"([^\"]*)\"$")
   public void thereIsNoRegisteredUserWithUsername(String username) {
@@ -63,6 +69,25 @@ public class RegisterStepDefs {
       master.setPassword(password);
       master.encodePassword();
       tournamentMasterRepository.save(master);
+    }
+  }
+
+  @Given("^There is no registered player with username \"([^\"]*)\"$")
+  public void thereIsNoRegisteredPlayerWithUsername(String player) {
+    Assert.assertFalse("Player \""
+                    +  player + "\"shouldn't exist",
+                    playerRepository.existsById(player));
+  }
+
+  @Given("^There is a registered player with username \"([^\"]*)\" and password \"([^\"]*)\"$")
+  public void thereIsARegisteredPlayerWithUsernameAndPassword(String username, String password) {
+    if (!playerRepository.existsById(username)) {
+      Player player = new Player();
+      player.setEmail(username + "@mytournamentx.game");
+      player.setUsername(username);
+      player.setPassword(password);
+      player.encodePassword();
+      playerRepository.save(player);
     }
   }
 
@@ -164,5 +189,42 @@ public class RegisterStepDefs {
             .with(AuthenticationStepDefs.authenticate()))
         .andDo(print())
         .andExpect(status().isUnauthorized());
+  }
+
+  @When("^I register a new player with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
+  public void iRegisterANewPlayerWithUsernameEmailAndPassword(String username, String email, String password) throws Throwable {
+    Player player = new Player();
+    player.setUsername(username);
+    player.setEmail(email);
+
+    stepDefs.result = stepDefs.mockMvc.perform(
+            post("/players")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(new JSONObject(
+                            stepDefs.mapper.writeValueAsString(player)
+                    ).put("password", password).toString())
+                    .accept(MediaType.APPLICATION_JSON_UTF8)
+                    .with(AuthenticationStepDefs.authenticate()))
+            .andDo(print());
+  }
+
+  @And("^It has been created a player with username \"([^\"]*)\" and email \"([^\"]*)\", the password is not returned$")
+  public void itHasBeenCreatedAPlayerWithUsername(String username, String email) throws Throwable {
+    stepDefs.result = stepDefs.mockMvc.perform(
+            get("/players/{username}", username)
+                    .accept(MediaType.APPLICATION_JSON_UTF8)
+                    .with(AuthenticationStepDefs.authenticate()))
+            .andDo(print())
+            .andExpect(jsonPath("$.email", is(email)))
+            .andExpect(jsonPath("$.password").doesNotExist());
+  }
+
+  @And("^It has not been created a player with username \"([^\"]*)\"$")
+  public void itHasNotBeenCreatedAPlayerWithUsername(String username) throws Throwable {
+    stepDefs.result = stepDefs.mockMvc.perform(
+            get("/players/{username}", username)
+                    .accept(MediaType.APPLICATION_JSON_UTF8)
+                    .with(AuthenticationStepDefs.authenticate()))
+            .andExpect(status().isNotFound());
   }
 }
