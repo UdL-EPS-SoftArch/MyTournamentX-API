@@ -19,14 +19,17 @@ import java.util.List;
 
 @Entity
 @EqualsAndHashCode(callSuper = true)
-public class Team extends UriEntity<Integer> {
+public class Team extends UriEntity<String> {
 
+    /*
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+    */
 
     /*OWN CODE*/
     @NotBlank
+    @Id
     @Length(min = 1, max = 256)
     private String name;
 
@@ -90,7 +93,7 @@ public class Team extends UriEntity<Integer> {
     }
 
     @Override
-    public Integer getId() {
-        return this.id;
+    public String getId() {
+        return name;
     }
 }
