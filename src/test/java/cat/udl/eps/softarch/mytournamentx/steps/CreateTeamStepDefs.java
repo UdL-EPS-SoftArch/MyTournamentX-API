@@ -1,5 +1,4 @@
 package cat.udl.eps.softarch.mytournamentx.steps;
-
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import cucumber.api.PendingException;
@@ -7,38 +6,50 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import gherkin.deps.com.google.gson.JsonObject;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 
-import javax.validation.constraints.AssertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CreateTeamStepDefs {
 
 
     @Autowired private TeamRepository teamRepository;
+    @Autowired private StepDefs stepDefs;
 
-    @Given("^There is no registered team with name \"([^\"]*)\"$")
+    @And("^There is no registered team with name \"([^\"]*)\"$")
     public void thereIsNoRegisteredTeamWithName(String arg0) throws Throwable {
 
         Assert.assertFalse(teamRepository.existsByName(arg0));
     }
 
-    @Given("^I register a new team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
+    @When("^I register a new team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
     public void iRegisterANewTeamWithNameGameLevelMaxPlayers(String arg0, String arg1, String arg2, int arg3) throws Throwable {
 
-        if(!teamRepository.existsByName(arg0)){
             Team team = new Team(arg0,arg1,arg2,arg3);
-            Assert.assertEquals(team.getName(),"team");
-            teamRepository.save(team);
-        }
+
+            stepDefs.result = stepDefs.mockMvc.perform(
+                    post("/teams")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(
+                            stepDefs.mapper.writeValueAsString(team))
+                    .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate())).andDo(print());
+
     }
 
-    @Then("^It has been created a team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
-    public void itHasBeenCreatedATeamWithNameGameLevelMaxPlayers(String arg0, String arg1, String arg2, int arg3) throws Throwable {
-        Team team = teamRepository.findTeamByName(arg0);
-        Assert.assertEquals(team.getName(),arg0);
-        Assert.assertEquals(team.getGame(),arg1);
-        Assert.assertEquals(team.getLevel(),arg2);
-        Assert.assertEquals(team.getMaxPlayers(),arg3);
+    @And("^It has been created a team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
+    public void itHasBeenCreatedATeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
+        Team team = teamRepository.findTeamByName(name);
+        Assert.assertEquals(team.getName(),name);
+        Assert.assertEquals(team.getGame(),game);
+        Assert.assertEquals(team.getLevel(),level);
+        Assert.assertEquals(team.getMaxPlayers(),maxPlayers);
     }
 }

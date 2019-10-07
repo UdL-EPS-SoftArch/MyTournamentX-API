@@ -1,6 +1,6 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
-import lombok.Data;
+
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Entity
-@Data
 @EqualsAndHashCode(callSuper = true)
 public class Team extends UriEntity<Integer> {
 
