@@ -37,3 +37,10 @@ Feature: Create Team
     When I register a new team with name "team", game "game", level "level", maxPlayers 8
     Then The response code is 401
     And I cannot create a team with name "team"
+
+  Scenario: Create new team with blank game
+    Given I login as "demo" with password "password"
+    When I register a new team with name "team", game "", level "amateur", maxPlayers 7
+    Then The response code is 400
+    And The error message is "must not be blank"
+    And I cannot create a team with name "name", game "", level "amateur", maxPlayers 7

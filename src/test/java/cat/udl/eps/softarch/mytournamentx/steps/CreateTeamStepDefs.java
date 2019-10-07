@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.mytournamentx.steps;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -68,5 +69,14 @@ public class CreateTeamStepDefs {
     public void thereIsACreatedTeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
             Team team = new Team(name, game, level, maxPlayers);
             teamRepository.save(team);
+    }
+
+    @And("^I cannot create a team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
+    public void iCannotCreateATeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/team/{game}",game)
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andExpect(status().isNotFound());// Write code here that turns the phrase above into concrete actions
     }
 }
