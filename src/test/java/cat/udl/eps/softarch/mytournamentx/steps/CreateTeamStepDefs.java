@@ -2,12 +2,9 @@ package cat.udl.eps.softarch.mytournamentx.steps;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.json.JSONObject;
 import org.junit.Assert;
 import static org.hamcrest.Matchers.is;
 import org.springframework.beans.factory.annotation.Autowired;
