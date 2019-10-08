@@ -28,9 +28,6 @@ public class RegisterStepDefs {
   private StepDefs stepDefs;
 
   @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
   private TournamentMasterRepository tournamentMasterRepository;
 
   @Autowired
@@ -43,11 +40,11 @@ public class RegisterStepDefs {
                      tournamentMasterRepository.existsById(master));
   }
 
-  @Given("^There is a registered tournamentmaster with username \"([^\"]*)\" and password \"([^\"]*)\"$")
-  public void thereIsARegisteredTournamentmasterWithUsernameAndPassword(String username, String password) {
+  @Given("^There is a registered tournamentmaster with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
+  public void thereIsARegisteredTournamentmasterWithUsernameAndPasswordAndEmail(String username, String password, String email) {
     if (!tournamentMasterRepository.existsById(username)) {
       TournamentMaster master = new TournamentMaster();
-      master.setEmail(username + "@mytournamentx.game");
+      master.setEmail(email);
       master.setUsername(username);
       master.setPassword(password);
       master.encodePassword();
@@ -62,11 +59,11 @@ public class RegisterStepDefs {
                     playerRepository.existsById(player));
   }
 
-  @Given("^There is a registered player with username \"([^\"]*)\" and password \"([^\"]*)\"$")
-  public void thereIsARegisteredPlayerWithUsernameAndPassword(String username, String password) {
+  @Given("^There is a registered player with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
+  public void thereIsARegisteredPlayerWithUsernameAndPasswordAndEmail(String username, String password, String email) {
     if (!playerRepository.existsById(username)) {
       Player player = new Player();
-      player.setEmail(username + "@mytournamentx.game");
+      player.setEmail(email);
       player.setUsername(username);
       player.setPassword(password);
       player.encodePassword();

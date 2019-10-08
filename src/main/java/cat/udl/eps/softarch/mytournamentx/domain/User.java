@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Table(name = "MyTournamentXUser") //Avoid collision with system table User in Postgres
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class User extends UriEntity<String> implements UserDetails {
 
 	public static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -30,6 +31,7 @@ public abstract class User extends UriEntity<String> implements UserDetails {
 
 	@NotBlank
 	@Email
+	@Column(name = "email", unique = true)
 	private String email;
 
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

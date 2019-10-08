@@ -12,7 +12,7 @@ Feature: Register
     And I can login with username "tournamentmaster" and password "password"
 
   Scenario: Register existing username
-    Given There is a registered tournamentmaster with username "tournamentmaster" and password "existing"
+    Given There is a registered tournamentmaster with username "tournamentmaster" and password "password" and email "tm@mytournamentx.game"
     And I'm not logged in
     When I register a new tournamentmaster with username "tournamentmaster", email "tournamentmaster@mytournamentx.game" and password "newpassword"
     Then The response code is 409
@@ -51,3 +51,10 @@ Feature: Register
     Then The response code is 400
     And The error message is "length must be between 8 and 256"
     And It has not been created a tournamentmaster with username "tournamentmaster"
+
+  Scenario: Register tournamentmaster with an existing email
+    Given There is a registered tournamentmaster with username "tournamentmaster" and password "password" and email "tm@mytournamentx.game"
+    And I'm not logged in
+    When I register a new tournamentmaster with username "tournamentmaster2", email "tm@mytournamentx.game" and password "password2"
+    Then The response code is 409
+    And I can login with username "tournamentmaster" and password "password"

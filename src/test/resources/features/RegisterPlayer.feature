@@ -12,7 +12,7 @@ Feature: Register
     And I can login with username "player" and password "password"
 
   Scenario: Register existing username
-    Given There is a registered player with username "player" and password "existing"
+    Given There is a registered player with username "player" and password "existing" and email "player@mytournamentx.game"
     And I'm not logged in
     When I register a new player with username "player", email "player@mytournamentx.game" and password "newpassword"
     Then The response code is 409
@@ -51,3 +51,10 @@ Feature: Register
     Then The response code is 400
     And The error message is "length must be between 8 and 256"
     And It has not been created a player with username "player"
+
+  Scenario: Register player with an existing email
+    Given There is a registered player with username "player" and password "password" and email "player@mytournamentx.game"
+    And I'm not logged in
+    When I register a new player with username "player2", email "player@mytournamentx.game" and password "password2"
+    Then The response code is 409
+    And I can login with username "player" and password "password"
