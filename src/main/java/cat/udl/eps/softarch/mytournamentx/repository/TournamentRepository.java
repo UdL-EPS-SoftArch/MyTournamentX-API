@@ -8,6 +8,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface TournamentRepository extends PagingAndSortingRepository<Tournament, String> {
 
     Tournament findByName(String name);
-
-    public abstract boolean existsByName(String name);
+    boolean existsByName(String name);
 }

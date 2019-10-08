@@ -33,6 +33,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.PUT, "/**/*").authenticated()
                     .antMatchers(HttpMethod.PATCH, "/**/*").authenticated()
                     .antMatchers(HttpMethod.DELETE, "/**/*").authenticated()
+
+                    .antMatchers(HttpMethod.GET, "/tournaments/*").authenticated()
+                    .antMatchers(HttpMethod.GET, "/tournaments").authenticated()
+                    .antMatchers(HttpMethod.PUT, "/tournaments/*").authenticated()
+                    .antMatchers(HttpMethod.POST, "/tournaments").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/tournaments/*").authenticated()
+
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic().realmName("MyTournamentX")
