@@ -26,21 +26,22 @@ public class MatchResult extends UriEntity<Integer> {
     @Length(min = 1, max = 256)
     private String description;
 
+    @NotBlank
     @ManyToOne
     private Match match;
 
+    @NotBlank
+    @OneToMany
+    private Player player;
+
     public MatchResult(@NotBlank @Length(min = 1, max = 256)
-                               String winner, @Length(min = 1, max = 256) String description){
+                               String winner, @Length(min = 1, max = 256) String description,@NotBlank Match match,
+                       @NotBlank Player player){
 
         this.winner = winner;
         this.description = description;
-    }
-
-    public String getWinner() {
-        return winner;
-    }
-    public String getDescription(){
-        return  description;
+        this.match = match;
+        this.player = player;
     }
 
 }
