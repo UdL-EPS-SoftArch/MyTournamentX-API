@@ -31,8 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.POST, "/users/*").denyAll()
                     .antMatchers(HttpMethod.POST, "/**/*").authenticated()
 
-                    .antMatchers(HttpMethod.GET, "/teams/*").authenticated()
-                    .antMatchers(HttpMethod.GET, "/teams").authenticated()
+                    .antMatchers(HttpMethod.GET, "/teams/*").anonymous()
                     .antMatchers(HttpMethod.PUT, "/teams/*").authenticated()
                     .antMatchers(HttpMethod.POST, "/teams").authenticated()
                     .antMatchers(HttpMethod.DELETE, "/teams/*").authenticated()
