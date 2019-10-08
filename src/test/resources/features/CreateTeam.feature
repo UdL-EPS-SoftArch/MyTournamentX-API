@@ -31,6 +31,13 @@ Feature: Create Team
     And The error message is "must be less than or equal to 8"
     And I cannot create a team with name "team"
 
+  Scenario: Create new team with zero maxPlayers
+    Given I login as "demo" with password "password"
+    When I register a new team with name "team", game "game", level "amateur", maxPlayers 0
+    Then The response code is 400
+    And The error message is "must be greater than or equal to 1"
+    And I cannot create a team with name "team"
+
   Scenario: Create new team without authentication
     Given I'm not logged in
     And There is no registered team with name "team"

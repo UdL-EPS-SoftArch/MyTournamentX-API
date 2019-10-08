@@ -50,8 +50,7 @@ public class CreateTeamStepDefs {
     public void itHasBeenCreatedATeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/teams/{team}", name)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                        .with(AuthenticationStepDefs.authenticate()))
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(jsonPath("$.game", is(game)));
     }
@@ -60,8 +59,7 @@ public class CreateTeamStepDefs {
     public void iCannotCreateATeamWithName(String name) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/team/{name}",name)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                        .with(AuthenticationStepDefs.authenticate()))
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound());
     }
 
@@ -75,8 +73,7 @@ public class CreateTeamStepDefs {
     public void iCannotCreateATeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/team/{game}",game)
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andExpect(status().isNotFound());// Write code here that turns the phrase above into concrete actions
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound());
     }
 }
