@@ -1,31 +1,22 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+
 import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 @Entity
+@Data
 @EqualsAndHashCode(callSuper = true)
 public class Team extends UriEntity<String> {
-
-    /*
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
-    */
 
     /*OWN CODE*/
     @NotBlank
@@ -37,11 +28,7 @@ public class Team extends UriEntity<String> {
     @Length(min = 1, max = 256)
     private String game;
 
-    /*enum Level {
-        Beginner,
-        Amateur,
-        Professional
-    }*/
+
     @Length(min = 1, max = 256)
     private String level;
 
@@ -58,38 +45,6 @@ public class Team extends UriEntity<String> {
     }
 
     public Team() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGame() {
-        return game;
-    }
-
-    public void setGame(String game) {
-        this.game = game;
-    }
-
-    public int getMaxPlayers() {
-        return maxPlayers;
-    }
-
-    public void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = maxPlayers;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     @Override
