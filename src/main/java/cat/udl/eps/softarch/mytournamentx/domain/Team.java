@@ -12,11 +12,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Team extends UriEntity<String> {
-
 
     /*OWN CODE*/
     @NotBlank
@@ -27,6 +27,7 @@ public class Team extends UriEntity<String> {
     @NotBlank
     @Length(min = 1, max = 256)
     private String game;
+
 
     @Length(min = 1, max = 256)
     private String level;
