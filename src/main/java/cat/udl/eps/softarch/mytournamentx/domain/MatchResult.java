@@ -34,14 +34,14 @@ public class MatchResult extends UriEntity<Integer> {
 
     @NotBlank
     @OneToMany
-    private Player player;
+    private Team team;
 
     public MatchResult(@NotBlank @Length(min = 1, max = 256)
                                String winner, @Length(min = 1, max = 256) String description,@NotBlank Match match,
-                       @NotBlank Player player){
+                       @NotBlank Team team){
 
         this.winner = winner;
         this.description = description;
-        this.player=player;
+        this.team=team;
     }
 }

@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.mytournamentx.steps;
 
 import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
+import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -11,9 +12,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class CreateMatchResultStepDefs {
 
-    Match match = new Match();
+    Match match;
+    @Autowired
+    MatchResultRepository;
+
+
+    @Autowired
+    MatchRepository
+
 
     MatchResult matchResult = new MatchResult("","");
+
+    @Given("^There is a Match$")
+    public void thereIsMatch() {
+        match= new Match();
+
+    }
+
 
     @Given("^There is no registered result for this Match$")
     public void thereIsNoRegisteredResultForThisMatch() {
