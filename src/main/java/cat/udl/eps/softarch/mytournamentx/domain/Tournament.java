@@ -59,7 +59,7 @@ public class Tournament extends UriEntity<Integer> {
     private Integer minParticipants;
 
     @Positive
-    @Max(250)
+    @Max(256)
     private Integer maxParticipants;
 
     @Positive
@@ -72,22 +72,7 @@ public class Tournament extends UriEntity<Integer> {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime limitDate;
-/*
-    public Tournament(Level level, @NotBlank @Length(min = 5, max = 20) String name, @NotBlank String game,
-                      String type, String description, @NotBlank Integer minParticipants, Integer maxParticipants,
-                      Integer minTeamPlayers, Integer maxTeamPlayers, ZonedDateTime limitDate) {
 
-        this.level = level;
-        this.name = name;
-        this.game = game;
-        this.type = type;
-        this.description = description;
-        this.minParticipants = minParticipants;
-        this.maxParticipants = maxParticipants;
-        this.minTeamPlayers = minTeamPlayers;
-        this.maxTeamPlayers = maxTeamPlayers;
-        this.limitDate = limitDate;
-    }*/
 
     public void setParticipants(Integer minParticipants, Integer maxParticipants){
         this.minParticipants = minParticipants;

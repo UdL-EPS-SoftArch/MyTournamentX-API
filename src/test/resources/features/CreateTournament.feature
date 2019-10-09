@@ -12,7 +12,7 @@ Feature: Tournament
     And I'm not logged in
     When I create a new tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
     Then The response code is 409
-    And I cannot create a tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
+    And There is no tournament with name "FirstTournament"
 
   Scenario: Create new tournament
     Given There is no tournament with name "FirstTournament"
@@ -26,7 +26,7 @@ Feature: Tournament
     And I log as "TournamentMaster" with password "password"
     When I create a new tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
     Then The response code is 409
-    And I cannot create a tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
+    And There is no tournament with name "FirstTournament"
 
   Scenario: Create tournament when already authenticated
     Given I log as "TournamentMaster" with password "password"
@@ -39,19 +39,19 @@ Feature: Tournament
     When I create a new tournament with name "", level "AMATEUR" and game "LoL"
     Then The response code is 400
     And The error message is "must not be blank"
-    And It has not been created a tournament with name ""
+    And There is no tournament with name "FirstTournament"
 
   Scenario: Create tournament with empty level
     Given I log as "TournamentMaster" with password "password"
     When I create a new tournament with name "FirstTournament", level "" and game "LoL"
     Then The response code is 400
     And The error message is "must not be blank"
-    And It has not been created a tournament with name "FirstTournament"
+    And There is no tournament with name "FirstTournament"
 
   Scenario: Create tournament with empty game
     Given I log as "TournamentMaster" with password "password"
     When I create a new tournament with name "FirstTournament", level "AMATEUR" and game ""
     Then The response code is 400
     And The error message is "must not be blank"
-    And It has not been created a tournament with name "FirstTournament"
+    And There is no tournament with name "FirstTournament"
 

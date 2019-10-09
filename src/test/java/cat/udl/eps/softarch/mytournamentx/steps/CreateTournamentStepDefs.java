@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
-public class TournamentStepDefs {
+public class CreateTournamentStepDefs {
 
     public static String currentUsername;
     public static String currentPassword;
@@ -62,12 +62,10 @@ public class TournamentStepDefs {
 
 
     @Given("^There is a tournament with name \"([^\"]*)\"$")
-    public void thereIsATournamentWithName(String name, Tournament.Level level, String game) {
+    public void thereIsATournamentWithName(String name) {
         if(!tournamentRepository.existsByName(name)){
             Tournament tournament = new Tournament();
             tournament.setName(name);
-            tournament.setLevel(level);
-            tournament.setGame(game);
             tournamentRepository.save(tournament);
         }
     }
@@ -92,5 +90,28 @@ public class TournamentStepDefs {
         currentUsername = null;
     }
 
+    @And("^It has been created a tournament with name \"([^\"]*)\", level \"([^\"]*)\" and game \"([^\"]*)\"$")
+    public void itHasBeenCreatedATournamentWithNameLevelAndGame(String name, Tournament.Level level, String game) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        if(!tournamentRepository.existsByName(name)){
+            Tournament tournament = new Tournament();
+            tournament.setName(name);
+            tournament.setLevel(level);
+            tournament.setGame(game);
+            tournamentRepository.save(tournament);
+        }
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/tournaments")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(String.valueOf(new JSONObject(stepDefs.mapper.writeValueAsString(name)))) //MIRAR SI ES CORRECTE
+                        .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("^It has been created a tournament with name \"([^\"]*)\"$")
+    public void itHasBeenCreatedATournamentWithName(String name) throws Throwable {
+        Assert.assertTrue("Tournament \"" + name + "\"shouldn't exist", tournamentRepository.existsByName(name));
+    }
 }
 
