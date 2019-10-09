@@ -2,11 +2,13 @@ package cat.udl.eps.softarch.mytournamentx.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
+import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
 import javax.persistence.*;
 
 import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -40,8 +42,6 @@ public class MatchResult extends UriEntity<Integer> {
 
         this.winner = winner;
         this.description = description;
-        this.match = match;
-        this.player = player;
+        this.player=player;
     }
-
 }

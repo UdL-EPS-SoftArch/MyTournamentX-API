@@ -1,6 +1,7 @@
 package cat.udl.eps.softarch.mytournamentx.repository;
 
 import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
+import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +12,7 @@ public interface MatchResultRepository extends PagingAndSortingRepository<MatchR
 
     List<MatchResult> findByMatchContaining(@Param("match") Match match);
 
-    MatchResult findbyMatchAndLeadPlayer(@Param("match") Match match, @Param)
+    MatchResult findByMatchAndPlayer(@Param("match") Match match, @Param("player") Player player);
 
     List<MatchResult> findByWinnerContaining(@Param("winner") String winner);
 
