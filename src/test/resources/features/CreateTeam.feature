@@ -10,6 +10,13 @@ Feature: Create Team
     Then The response code is 201
     And It has been created a team with name "team", game "game", level "level", maxPlayers 8
 
+  Scenario: Create new team with Tournament Master
+    Given I login as "demoTM" with password "password"
+    And There is no registered team with name "team"
+    When I register a new team with name "team", game "game", level "level", maxPlayers 8
+    Then The response code is 403
+    And I cannot create a team with name "team"
+
   Scenario: Create new team with existing name
     Given There is a created team with name "team", game "game", level "level", maxPlayers 8
     And I login as "demoP" with password "password"
