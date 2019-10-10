@@ -32,6 +32,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.POST, "/tournamentMasters/*").denyAll()
                     .antMatchers(HttpMethod.POST, "/players/*").denyAll()
 
+                    .antMatchers(HttpMethod.GET, "/matches").authenticated()
+                    .antMatchers(HttpMethod.POST, "/matches").denyAll()
 
                     .antMatchers(HttpMethod.GET, "/teams/*").anonymous()
                     .antMatchers(HttpMethod.PUT, "/teams/*").hasRole("PLAYER")
