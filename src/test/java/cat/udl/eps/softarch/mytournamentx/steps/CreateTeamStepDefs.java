@@ -8,6 +8,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import org.junit.Assert;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
@@ -32,9 +33,9 @@ public class CreateTeamStepDefs {
     }
 
     @When("^I register a new team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
-    public void iRegisterANewTeamWithNameGameLevelMaxPlayers(String arg0, String arg1, String arg2, int arg3) throws Throwable {
+    public void iRegisterANewTeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
 
-        Team team = new Team(arg0, arg1, arg2, arg3);
+        Team team = new Team(name, game, level, maxPlayers);
             stepDefs.result = stepDefs.mockMvc.perform(
                     post("/teams")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -47,16 +48,19 @@ public class CreateTeamStepDefs {
     @And("^It has been created a team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
     public void itHasBeenCreatedATeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teams/{team}", name)
+                get("/teams/{name}", name)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
-                .andExpect(jsonPath("$.game", is(game)));
+                .andExpect(jsonPath("$.game", is(game)))
+                .andExpect(jsonPath("$.level", is(level)))
+                .andExpect(jsonPath("$.maxPlayers", is(maxPlayers))
+                );
     }
 
     @And("^I cannot create a team with name \"([^\"]*)\"$")
     public void iCannotCreateATeamWithName(String name) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teams/{team}",name)
+                get("/teams/{name}",name)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound());
     }
@@ -67,19 +71,27 @@ public class CreateTeamStepDefs {
             teamRepository.save(team);
     }
 
-    @And("^I cannot create a team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
-    public void iCannotCreateATeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
-        stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teams/{team}/game",name)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNotFound());
-    }
 
     @And("^I am the leader of the team with name \"([^\"]*)\" and my username is \"([^\"]*)\"$")
     public void iAmTheLeaderOfTheTeamWithNameAndMyUsernameIs(String team, String teamLeader) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teams/{team}/leader", team)
+                get("/teams/{name}", team)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.leader", is(teamLeader)));
+    }
+
+    @And("^I cannot create a team with name \"([^\"]*)\",game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), because is already created$")
+    public void iCannotCreateATeamWithNameGameLevelMaxPlayersBecauseIsAlreadyCreated(String name, String game, String level, int maxPlayers) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teams/{name}", name)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.game", not(game)))
+                .andExpect(jsonPath("$.level",not(level)))
+                .andExpect(jsonPath("$.maxPlayers",not(maxPlayers)));
+    }
+
+    @And("^I cannot create a team with blank name$")
+    public void iCannotCreateATeamWithBlankName() {
+        Assert.assertEquals(0,teamRepository.findAll().size());
     }
 }

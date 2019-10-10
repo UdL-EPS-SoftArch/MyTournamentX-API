@@ -20,16 +20,16 @@ Feature: Create Team
   Scenario: Create new team with existing name
     Given There is a created team with name "team", game "game", level "level", maxPlayers 8
     And I login as "demoP" with password "password"
-    When I register a new team with name "team", game "game", level "level", maxPlayers 8
+    When I register a new team with name "team", game "futbol", level "amateur", maxPlayers 5
     Then The response code is 409
-    And I cannot create a team with name "team", because is already created
+    And I cannot create a team with name "team",game "futbol", level "amateur", maxPlayers 5, because is already created
 
   Scenario: Create new team with blank name
     Given I login as "demoP" with password "password"
     When I register a new team with name "", game "futbol", level "amateur", maxPlayers 7
     Then The response code is 400
     And The error message is "must not be blank"
-    And I cannot create a team with name ""
+    And I cannot create a team with blank name
 
   Scenario: Create new team with outnumber maxPlayers
     Given I login as "demoP" with password "password"
@@ -54,12 +54,12 @@ Feature: Create Team
 
   Scenario: Create new team with blank game
     Given I login as "demoP" with password "password"
-    When I register a new team with name "team", game "", level "amateur", maxPlayers 7
+    When I register a new team with name "team-blank-game", game "", level "amateur", maxPlayers 7
     Then The response code is 400
     And The error message is "must not be blank"
-    And I cannot create a team with name "name", game "", level "amateur", maxPlayers 7
+    And I cannot create a team with name "team-blank-game"
 
-  Scenario: Check a team leader of a team.
+  Scenario: Check the team leader of a team.
     Given I login as "demoP" with password "password"
     When I register a new team with name "team", game "game", level "amateur", maxPlayers 7
     Then The response code is 201
