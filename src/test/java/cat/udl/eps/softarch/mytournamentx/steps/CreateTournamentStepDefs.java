@@ -66,4 +66,10 @@ public class CreateTournamentStepDefs {
                         .with(AuthenticationStepDefs.authenticate()))
                 .andExpect(status().isNotFound());
     }
+
+    @Given("^There is a tournament with name \"([^\"]*)\", level \"([^\"]*)\" and game \"([^\"]*)\"$")
+    public void thereIsATournamentWithNameLevelAndGame(String name, Tournament.Level level, String game) throws Throwable {
+        Tournament tournament = new Tournament(name, level, game);
+        tournamentRepository.save(tournament);
+    }
 }

@@ -9,10 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -43,7 +40,7 @@ public class Tournament extends UriEntity<String> {
         AMATEUR,
         PROFESSIONAL
     }
-
+    @NotNull(message = "Level must not be Null")
     private Level level;
 
 

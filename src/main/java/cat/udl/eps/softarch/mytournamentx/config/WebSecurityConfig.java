@@ -15,17 +15,17 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Value("${allowed-origins}")
-    String[] allowedOrigins;
+    @EnableWebSecurity
+    @EnableGlobalMethodSecurity(prePostEnabled = true)
+    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+        @Value("${allowed-origins}")
+        String[] allowedOrigins;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests()
                     .antMatchers(HttpMethod.GET, "/identity").authenticated()
                     .antMatchers(HttpMethod.POST, "/tournamentMasters").anonymous()
                     .antMatchers(HttpMethod.POST, "/players").anonymous()
@@ -34,14 +34,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                     .antMatchers(HttpMethod.GET, "/tournaments/*").authenticated()
                     .antMatchers(HttpMethod.GET, "/tournaments").authenticated()
-                    .antMatchers(HttpMethod.PUT, "/tournaments/*").hasRole("TournamentMaster")
-                    .antMatchers(HttpMethod.POST, "/tournaments").hasRole("TournamentMaster")
-                    .antMatchers(HttpMethod.DELETE, "/tournaments/*").hasRole("TournamentMaster")
+                    .antMatchers(HttpMethod.PUT, "/tournaments/*").hasRole("TOURNAMENTMASTER")
+                    .antMatchers(HttpMethod.POST, "/tournaments").hasRole("TOURNAMENTMASTER")
+                    .antMatchers(HttpMethod.DELETE, "/tournaments/*").hasRole("TOURNAMENTMASTER")
 
                     .antMatchers(HttpMethod.GET, "/teams/*").anonymous()
-                    .antMatchers(HttpMethod.PUT, "/teams/*").authenticated()
-                    .antMatchers(HttpMethod.POST, "/teams").authenticated()
-                    .antMatchers(HttpMethod.DELETE, "/teams/*").authenticated()
+                    .antMatchers(HttpMethod.PUT, "/teams/*").hasRole("PLAYER")
+                    .antMatchers(HttpMethod.POST, "/teams").hasRole("PLAYER")
+                    .antMatchers(HttpMethod.DELETE, "/teams/*").hasRole("PLAYER")
+
+                    .antMatchers(HttpMethod.POST, "/**/*").authenticated()
 
                     .antMatchers(HttpMethod.POST, "/**/*").authenticated()
                     .antMatchers(HttpMethod.PUT, "/**/*").authenticated()
@@ -49,29 +51,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.DELETE, "/**/*").authenticated()
 
 
-                .anyRequest().permitAll()
-                .and()
-                .httpBasic().realmName("MyTournamentX")
-                .and()
-                .cors()
-                .and()
-                .csrf().disable();
+                    .anyRequest().permitAll()
+                    .and()
+                    .httpBasic().realmName("MyTournamentX")
+                    .and()
+                    .cors()
+                    .and()
+                    .csrf().disable();
+        }
+
+        @Bean
+        CorsConfigurationSource corsConfigurationSource() {
+            CorsConfiguration corsConfiguration = new CorsConfiguration();
+            corsConfiguration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+            corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+            corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+            corsConfiguration.setAllowCredentials(true);
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", corsConfiguration);
+            return source;
+        }
+
+        @Bean
+        public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+            return new SecurityEvaluationContextExtension();
+        }
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList(allowedOrigins));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
-        corsConfiguration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
 
-    @Bean
-    public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
-        return new SecurityEvaluationContextExtension();
-    }
-}
