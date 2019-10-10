@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Collection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -24,7 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Table(name = "MyTournamentXUser") //Avoid collision with system table User in Postgres
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class User extends UriEntity<String> implements UserDetails {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User extends UriEntity<String> implements UserDetails {
 
 	public static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -33,6 +31,7 @@ public class User extends UriEntity<String> implements UserDetails {
 
 	@NotBlank
 	@Email
+	@Column(name = "email", unique = true)
 	private String email;
 
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -51,11 +50,7 @@ public class User extends UriEntity<String> implements UserDetails {
 	@Override
 	public String getId() { return username; }
 
-	@Override
-	@JsonIgnore
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
-	}
+
 
 	@Override
 	public boolean isAccountNonExpired() {
