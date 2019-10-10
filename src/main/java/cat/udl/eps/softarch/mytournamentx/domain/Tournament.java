@@ -17,6 +17,7 @@ import javax.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 import java.time.ZonedDateTime;
@@ -25,12 +26,17 @@ import java.time.ZonedDateTime;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Tournament extends UriEntity<Integer> {
+public class Tournament extends UriEntity<String> {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    @NotBlank
+    @Length(min = 5, max = 20)
+    private String name;
 
+    @Override
+    public String getId() {
+        return name;
+    }
 
     public enum Level{
         BEGINNER,
@@ -38,12 +44,8 @@ public class Tournament extends UriEntity<Integer> {
         PROFESSIONAL
     }
 
-    @NotBlank
     private Level level;
 
-    @NotBlank
-    @Length(min = 5, max = 20)
-    private String name;
 
     @NotBlank
     private String game;
@@ -73,6 +75,13 @@ public class Tournament extends UriEntity<Integer> {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime limitDate;
 
+    public Tournament(@NotBlank @Length(min = 5, max = 20) String name, @NotBlank Level level, @NotBlank String game) {
+        this.name = name;
+        this.level = level;
+        this.game = game;
+    }
+
+    public Tournament(){}
 
     public void setParticipants(Integer minParticipants, Integer maxParticipants){
         this.minParticipants = minParticipants;
