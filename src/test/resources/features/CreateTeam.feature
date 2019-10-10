@@ -58,3 +58,10 @@ Feature: Create Team
     Then The response code is 400
     And The error message is "must not be blank"
     And I cannot create a team with name "name", game "", level "amateur", maxPlayers 7
+
+  Scenario: Check a team leader of a team.
+    Given I login as "demoP" with password "password"
+    When I register a new team with name "team", game "game", level "amateur", maxPlayers 7
+    Then The response code is 201
+    And I am the team leader with username "demoP"
+    And It has been created a team with name "team", game "game", level "amateur", maxPlayers 7
