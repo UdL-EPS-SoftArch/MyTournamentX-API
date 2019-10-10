@@ -3,10 +3,7 @@ package cat.udl.eps.softarch.mytournamentx.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -14,7 +11,11 @@ import javax.persistence.Id;
 public class Match extends UriEntity<Integer> {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    private String description;
+
+    @ManyToOne
+    private Team winner;
 }
