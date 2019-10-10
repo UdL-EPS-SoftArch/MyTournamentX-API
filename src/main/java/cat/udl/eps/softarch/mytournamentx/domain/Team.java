@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.Entity;
 
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -37,6 +38,7 @@ public class Team extends UriEntity<String> {
     @Min(value = 1)
     private int maxPlayers;
 
+    @ManyToOne
     private Player leader;
 
 

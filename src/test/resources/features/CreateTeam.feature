@@ -22,7 +22,7 @@ Feature: Create Team
     And I login as "demoP" with password "password"
     When I register a new team with name "team", game "game", level "level", maxPlayers 8
     Then The response code is 409
-    And I cannot create a team with name "team"
+    And I cannot create a team with name "team", because is already created
 
   Scenario: Create new team with blank name
     Given I login as "demoP" with password "password"
@@ -63,5 +63,5 @@ Feature: Create Team
     Given I login as "demoP" with password "password"
     When I register a new team with name "team", game "game", level "amateur", maxPlayers 7
     Then The response code is 201
-    And I am the team leader with username "demoP"
+    And I am the leader of the team with name "team" and my username is "demoP"
     And It has been created a team with name "team", game "game", level "amateur", maxPlayers 7

@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.mytournamentx.steps;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
@@ -55,7 +56,7 @@ public class CreateTeamStepDefs {
     @And("^I cannot create a team with name \"([^\"]*)\"$")
     public void iCannotCreateATeamWithName(String name) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/team/{name}",name)
+                get("/teams/{team}",name)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound());
     }
@@ -69,8 +70,16 @@ public class CreateTeamStepDefs {
     @And("^I cannot create a team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
     public void iCannotCreateATeamWithNameGameLevelMaxPlayers(String name, String game, String level, int maxPlayers) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/team/{game}",game)
+                get("/teams/{team}/game",name)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound());
+    }
+
+    @And("^I am the leader of the team with name \"([^\"]*)\" and my username is \"([^\"]*)\"$")
+    public void iAmTheLeaderOfTheTeamWithNameAndMyUsernameIs(String team, String teamLeader) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teams/{team}/leader", team)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.leader", is(teamLeader)));
     }
 }
