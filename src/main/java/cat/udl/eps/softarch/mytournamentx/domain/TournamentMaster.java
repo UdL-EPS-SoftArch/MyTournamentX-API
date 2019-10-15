@@ -16,6 +16,6 @@ public class TournamentMaster extends User {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_TOURNAMENT");
+        return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_TOURNAMENTMASTER");
     }
 }
