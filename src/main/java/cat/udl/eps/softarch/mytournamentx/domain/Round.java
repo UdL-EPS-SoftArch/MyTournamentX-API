@@ -5,16 +5,19 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
+
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Match extends UriEntity<Integer> {
+public class Round extends UriEntity<Integer> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    private String description;
+    private int bestOf = 1;
+
+    private int numTeams;
 
     @ManyToOne
     private Team winner;

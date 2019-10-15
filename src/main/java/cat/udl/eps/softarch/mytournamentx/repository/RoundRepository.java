@@ -1,16 +1,19 @@
 package cat.udl.eps.softarch.mytournamentx.repository;
 
 import cat.udl.eps.softarch.mytournamentx.domain.Match;
+import cat.udl.eps.softarch.mytournamentx.domain.Round;
+import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.List;
 
 /**
- * The interface Player repository.
+ * The interface Round repository.
  */
 @RepositoryRestResource
-public interface MatchRepository extends PagingAndSortingRepository<Match, String> {
+public interface RoundRepository extends PagingAndSortingRepository<Round, String> {
     /* Interface provides automatically, as defined in https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html
      * count, delete, deleteAll, deleteById, existsById, findAll, findAllById, findById, save, saveAll
      *
@@ -19,16 +22,23 @@ public interface MatchRepository extends PagingAndSortingRepository<Match, Strin
      */
 
     /**
-     * Find a list of match results.
+     * Find a Round by id.
      *
-     * @return the list of match results
+     * @return round identified by the given id.
      */
-    // List<MatchResult> findByMatch(@Param("match") Match match);
+    Round findById(@Param("id") Integer id);
 
     /**
-     * Find a Match by id.
+     * Find a list of rounds won by a particular team.
      *
-     * @return match identified by the given id.
+     * @return a list of rounds.
      */
-    Match findById(@Param("id") Integer id);
+    List<Round> findByWinner(@Param("winner") Team winner);
+
+    /**
+     * Find a list of matches won by a particular team.
+     *
+     * @return a list of matches.
+     */
+    // List<Match> findMatchesByWinner(@Param("winner") Team winner);
 }
