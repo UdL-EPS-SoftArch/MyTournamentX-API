@@ -11,13 +11,13 @@ Feature: CreateMatchResult
   #  And It has been created a user with username "user" and email "user@mytournamentx.game", the password is not returned
   #  And I can login with username "user" and password "password"
 
-  Scenario: Testing this scenario
+  Scenario: Assign a match to a MatchResult
     Given There is a match
-    And   There is no registered result for this Match
+    And   There is no registered matchResult for this Match
     And   I login as "demoP" with password "password"
-    When  I register a new result with Description
+    When  I register a new MatchResult with Description "description"
     Then  The response code is 201
-    And   There is a registered result with "description" for this match
+    And   There is a registered MatchResult with "description" for this match
 
   Scenario: Register a result with correct parameters (Winner, Description)
     Given There is no registered result for this Match

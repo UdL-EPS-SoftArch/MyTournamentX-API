@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.mytournamentx.steps;
 
 import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
+import cat.udl.eps.softarch.mytournamentx.domain.Tournament;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.UserRepository;
@@ -13,6 +14,10 @@ import cucumber.api.java.en.When;
 import cucumber.api.java.it.Ma;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
 public class CreateMatchResultStepDefs {
@@ -44,17 +49,26 @@ public class CreateMatchResultStepDefs {
         match = matchRepository.save(new Match());
     }
 
-    @Given("^There is no registered result for this Match$")
+    @Given("^There is no registered matchResult for this Match$")
     public void thereIsNoRegisteredResultForThisMatch() {
-        Assert.assertNull(match.getWinnerTeam());
+        Assert.assertNull(match.getWinner());
     }
 
-    @When("^I register a new result with Description$")
-    public void iRegisterANewResultWithDescription() {
-        matchResult = matchResultRepository.save(new MatchResult("description", match));
+    @When("^I register a new MatchResult with Description \"([^\"]*)\"$")
+    public void iRegisterANewResultWithDescription(String description) throws Throwable  {
+        MatchResult matchResult = new MatchResult(description,match);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchresult")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
     }
 
-    @And("^There is a registered result with \"([^\"]*)\" for this match$")
+    @And("^There is a registered MatchResult with \"([^\"]*)\" for this match$")
     public void thereIsARegisteredResultWithForThisMatch(String description){
         Assert.assertEquals(matchResultRepository.findById(matchResult.getId()).getDescription(),description);
     }
@@ -80,7 +94,4 @@ public class CreateMatchResultStepDefs {
     @When("^I try to register a new result$")
     public void iTryToRegisterANewResult() {
     }
-
-
-
 }

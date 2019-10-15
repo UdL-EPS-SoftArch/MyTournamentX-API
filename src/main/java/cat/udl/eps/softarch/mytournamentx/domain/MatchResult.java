@@ -22,7 +22,6 @@ public class MatchResult extends UriEntity<Integer> {
 
 
     //@NotBlank
-    @Length(min = 1, max = 256)
     @ManyToOne
     private Team winner;
 
@@ -38,7 +37,7 @@ public class MatchResult extends UriEntity<Integer> {
     @ManyToOne
     private Team sender;
 
-    public MatchResult(/*@NotBlank Team winner,*/ @Length(min = 1, max = 256) String description, /*@NotBlank*/Match match/*,
+    public MatchResult(/*@NotBlank Team winner,*/ String description, /*@NotBlank*/Match match/*,
                        @NotBlank Team sender*/) {
 
         //this.winner = winner;
