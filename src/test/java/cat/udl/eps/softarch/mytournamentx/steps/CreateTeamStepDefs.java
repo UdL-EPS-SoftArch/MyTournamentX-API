@@ -10,6 +10,7 @@ import org.junit.Assert;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.JsonPath;
 import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -75,9 +76,9 @@ public class CreateTeamStepDefs {
     @And("^I am the leader of the team with name \"([^\"]*)\" and my username is \"([^\"]*)\"$")
     public void iAmTheLeaderOfTheTeamWithNameAndMyUsernameIs(String team, String teamLeader) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teams/{name}", team)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.leader", is(teamLeader)));
+                get("/teams/{team}/leader", team)
+                .accept(MediaType.APPLICATION_JSON_UTF8)).andDo(print())
+                .andExpect(jsonPath("$.id", is(teamLeader)));
     }
 
     @And("^I cannot create a team with name \"([^\"]*)\",game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), because is already created$")
