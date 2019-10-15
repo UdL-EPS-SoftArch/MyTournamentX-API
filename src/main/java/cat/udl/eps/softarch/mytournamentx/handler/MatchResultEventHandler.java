@@ -73,8 +73,8 @@ public class MatchResultEventHandler {
         logger.info("After deleting: {}", matchResult.toString());
     }
 
-    /*@HandleAfterLinkSave
+    @HandleAfterLinkSave
     public void handlePlayerPostLinkSave(MatchResult matchResult, Object o) {
-        logger.info("After linking: {} to {}", player.toString(), o.toString());
-    }*/
+        logger.info("After linking: {} to {}", matchResult.toString(), o.toString());
+    }
 }
