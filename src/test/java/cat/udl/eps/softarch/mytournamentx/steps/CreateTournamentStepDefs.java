@@ -72,4 +72,5 @@ public class CreateTournamentStepDefs {
         Tournament tournament = new Tournament(name, level, game);
         tournamentRepository.save(tournament);
     }
+
 }
