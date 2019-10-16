@@ -5,12 +5,14 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.Optional;
+
 
 /**
  * The interface Player repository.
  */
 @RepositoryRestResource
-public interface MatchRepository extends PagingAndSortingRepository<Match, String> {
+public interface MatchRepository extends PagingAndSortingRepository<Match, Integer> {
     /* Interface provides automatically, as defined in https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html
      * count, delete, deleteAll, deleteById, existsById, findAll, findAllById, findById, save, saveAll
      *
@@ -30,5 +32,5 @@ public interface MatchRepository extends PagingAndSortingRepository<Match, Strin
      *
      * @return match identified by the given id.
      */
-    Match findById(@Param("id") Integer id);
+    Optional<Match> findById(@Param("id") Integer id);
 }
