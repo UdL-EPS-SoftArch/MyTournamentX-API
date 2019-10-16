@@ -12,6 +12,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import cucumber.api.java.it.Ma;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -56,9 +57,13 @@ public class CreateMatchResultStepDefs {
 
     @When("^I register a new MatchResult with Description \"([^\"]*)\"$")
     public void iRegisterANewResultWithDescription(String description) throws Throwable  {
-        MatchResult matchResult = new MatchResult(description,match);
+        MatchResult matchResult = new MatchResult();
+        matchResult.setMatch(match);
+        matchResult.setDescription(description);
+
+//        jsonObject.put("match",match.getUri());
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/matchresult")
+                post("/matchResults")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(
                                 stepDefs.mapper.writeValueAsString(matchResult))
@@ -70,10 +75,11 @@ public class CreateMatchResultStepDefs {
 
     @And("^There is a registered MatchResult with \"([^\"]*)\" for this match$")
     public void thereIsARegisteredResultWithForThisMatch(String description){
-        Assert.assertEquals(matchResultRepository.findById(matchResult.getId()).getDescription(),description);
+        Assert.assertNotNull(matchResultRepository.findByDescriptionContaining(description));
+        Assert.assertNotNull(matchResultRepository.findByMatch(match));
     }
 
-    @And("^It has been created a MatchResult with Winner \"([^\"]*)\" and Description \"([^\"]*)\"$")
+    /*@And("^It has been created a MatchResult with Winner \"([^\"]*)\" and Description \"([^\"]*)\"$")
     public void itHasBeenCreatedAMatchResultWithWinnerAndDescription(String arg0, String arg1) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
@@ -93,5 +99,5 @@ public class CreateMatchResultStepDefs {
 
     @When("^I try to register a new result$")
     public void iTryToRegisterANewResult() {
-    }
+    }*/
 }
