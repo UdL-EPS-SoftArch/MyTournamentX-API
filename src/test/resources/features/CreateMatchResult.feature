@@ -20,7 +20,7 @@ Feature: CreateMatchResult
     And   There is a registered MatchResult with "description" for this match
 
   Scenario: Register a result with correct parameters (Winner, Description)
-    Given There is no registered result for this Match
+    Given There is no registered matchResult for this Match
     And I'm logged in like team's leader "" who has played this Match""
     When I register a new result with Winner "Team" and Description "description"
     Then The response code is 201

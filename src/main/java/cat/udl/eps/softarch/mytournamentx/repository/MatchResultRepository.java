@@ -8,10 +8,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface MatchResultRepository extends PagingAndSortingRepository<MatchResult, String> {
+public interface MatchResultRepository extends PagingAndSortingRepository<MatchResult, Integer> {
 
-    MatchResult findById(@Param("id") Integer id);
+    Optional<MatchResult> findById(@Param("id") Integer id);
 
     List<MatchResult> findByMatch(@Param("match") Match match);
 

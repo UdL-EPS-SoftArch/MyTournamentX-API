@@ -1,5 +1,6 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
@@ -31,18 +32,11 @@ public class MatchResult extends UriEntity<Integer> {
 
     //@NotBlank
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private Match match;
 
     //@NotBlank
     @ManyToOne
     private Team sender;
 
-    public MatchResult(/*@NotBlank Team winner,*/ String description, /*@NotBlank*/Match match/*,
-                       @NotBlank Team sender*/) {
-
-        //this.winner = winner;
-        this.description = description;
-        //this.sender = sender;
-        this.match = match;
-    }
 }
