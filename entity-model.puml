@@ -65,14 +65,27 @@ class Classification <<Tournament>> {
 Classification "1" -- "1" Tournament: forA >
 Classification "*" -- "*" Team: classifies >
 
+class Round <<Round>> {
+    Integer bestOf
+    Integer numTeams
+
+}
+
+Round "*" -- "0..1" Round: nextRound
+Round "1" -- "1..*" Match: matchesToPlay
+Round "1" -- "0..1" Match: currentMatch
+Round "1..*" -- "1" Tournament: partOf >
+Round "*" -- "2..*" Team: faces >
+Round "*" -- "1" Team: wins <
+
+
 class Match <<Match>> {
     String description
 }
 
-Match "*" -- "0..1" Match: nextMatch
 Match "*" -- "1" Team: wins <
-Match "1..*" -- "1" Tournament: partOf >
-Match "*" -- "2..*" Team: faces >
+
+
 
 class MatchResult <<Match>> {
     String result
