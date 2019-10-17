@@ -57,4 +57,54 @@ public class UpdateTeamStepDefs {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.game",is(game))).andDo(print());
     }
+
+    @When("^I change the level of my team \"([^\"]*)\" to \"([^\"]*)\"$")
+    public void iChangeTheLevelOfMyTeamTo(String teamName, String newLevel) throws Throwable {
+        JSONObject team_json = new JSONObject();
+        team_json.put("level",newLevel);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                patch("/teams/{name}",teamName)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(team_json.toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate())
+        ).andDo(print());
+    }
+
+    @And("^It has been changed level of team \"([^\"]*)\" to \"([^\"]*)\"$")
+    public void itHasBeenChangedLevelOfTeamTo(String teamName, String newLevel) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teams/{name}",teamName)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.level",is(newLevel))).andDo(print());
+    }
+
+    @When("^I change the maxPlayers of my team \"([^\"]*)\" to (\\d+)$")
+    public void iChangeTheMaxPlayersOfMyTeamTo(String teamName, int newMaxPlayers) throws Throwable {
+        JSONObject team_json = new JSONObject();
+        team_json.put("maxPlayers",newMaxPlayers);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                patch("/teams/{name}",teamName)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(team_json.toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()
+        )).andDo(print());
+    }
+
+    @And("^It has been changed maxPlayers of team \"([^\"]*)\" to (\\d+)$")
+    public void itHasBeenChangedMaxPlayersOfTeamTo(String teamName, int newMaxPlayers) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teams/{name}",teamName)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.maxPlayers",is(newMaxPlayers))).andDo(print());
+    }
+
+    @And("^I cannot change maxPlayers of team \"([^\"]*)\" to (\\d+), because is an invalid number$")
+    public void iCannotChangeMaxPlayersOfTeamToBecauseIsAnInvalidNumber(String teamName, int newMaxPlayers) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teams/{name}",teamName)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.maxPlayers",not(newMaxPlayers))).andDo(print());
+    }
 }
