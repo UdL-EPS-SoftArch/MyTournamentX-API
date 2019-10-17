@@ -24,6 +24,7 @@ public class MatchResult extends UriEntity<Integer> {
 
     //@NotBlank
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private Team winner;
 
 

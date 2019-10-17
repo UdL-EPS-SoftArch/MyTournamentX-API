@@ -1,7 +1,9 @@
 package cat.udl.eps.softarch.mytournamentx.handler;
 import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
+import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
+import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,11 @@ public class MatchResultEventHandler {
     @HandleBeforeCreate
     public void handlePlayerPreCreate(MatchResult matchResult) {
         logger.info("Before creating: {}", matchResult.toString());
+        Player player = new Player();
+        player.setUsername("Player");
+        player.setEmail("mytourment@udl.cat");
+        player.setPassword("mytournament");
+
     }
 
     @HandleBeforeSave
