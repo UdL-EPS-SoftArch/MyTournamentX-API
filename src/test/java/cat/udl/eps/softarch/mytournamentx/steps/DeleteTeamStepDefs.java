@@ -60,7 +60,7 @@ public class DeleteTeamStepDefs {
                 .andDo(print());
     }
 
-    @And("^I cannot delete team with name \"([^\"]*)\",game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), because Tournament Master doesn't have permission$")
+    @And("^I cannot delete team with name \"([^\"]*)\",game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), because it doesn't have permission$")
     public void iCannotDeleteTeamWithNameGameLevelMaxPlayersBecauseTournamentMasterDoesnTHavePermission(String team, String game, String level, int maxPlayers) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/teams/{name}", team)
