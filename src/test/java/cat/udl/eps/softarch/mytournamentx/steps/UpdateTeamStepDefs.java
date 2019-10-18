@@ -107,4 +107,20 @@ public class UpdateTeamStepDefs {
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.maxPlayers",not(newMaxPlayers))).andDo(print());
     }
+
+    @And("^I cannot change game of team \"([^\"]*)\" to \"([^\"]*)\"$")
+    public void iCannotChangeGameOfTeamToBecauseIsBlank(String teamName, String game) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+            get("/teams/{name}",teamName)
+                    .accept(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.game",not(game))).andDo(print());
+    }
+
+    @And("^I cannot change level of team \"([^\"]*)\" to \"([^\"]*)\"$")
+    public void iCannotChangeLevelOfTeamToBecauseIsBlank(String teamName, String level) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teams/{name}",teamName)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.level",not(level))).andDo(print());
+    }
 }
