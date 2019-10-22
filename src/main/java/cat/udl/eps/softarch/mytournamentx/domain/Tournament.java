@@ -70,7 +70,7 @@ public class Tournament extends UriEntity<String> {
     private Integer maxTeamPlayers;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private ZonedDateTime limitDate;
+    private ZonedDateTime  finishedAt, startAt, createdAt;
 
     public Tournament(@NotBlank @Length(min = 5, max = 20) String name, @NotBlank Level level, @NotBlank String game) {
         this.name = name;

@@ -4,7 +4,6 @@ import cat.udl.eps.softarch.mytournamentx.domain.Tournament;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 
 import net.minidev.json.JSONObject;
@@ -12,11 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class EditTournamentStepDefs {
@@ -25,6 +29,8 @@ public class EditTournamentStepDefs {
 
     @Autowired
     private StepDefs stepDefs;
+
+    private ZonedDateTime startDate, finishDate;
 
 
 
@@ -67,5 +73,94 @@ public class EditTournamentStepDefs {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
+    }
+
+    @When("^I edit tournament with name \"([^\"]*)\" and new level \"([^\"]*)\"$")
+    public void iEditTournamentWithNameAndNewLevel(String name, Tournament.Level level) throws Throwable {
+        JSONObject tournament = new JSONObject();
+        tournament.put("BEGINNER", level);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                patch("/tournaments/{name}", name)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tournament.toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @When("^I edit the tournament with name \"([^\"]*)\" and set the start date \"([^\"]*)\" at \"([^\"]*)\"$")
+    public void iEditTheTournamentWithNameAndSetTheStartDateAt(String name, String start_date, String start_hour) throws Throwable {
+        LocalDate localDateStart = LocalDate.parse(start_date);
+        LocalTime localTime = LocalTime.parse(start_hour);
+
+        startDate = ZonedDateTime.of(localDateStart,localTime, ZoneId.systemDefault());
+
+        JSONObject tournament = new JSONObject();
+        tournament.put("startAt",startDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                patch("/tournaments/{name}", name)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tournament.toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("^The tournament with name \"([^\"]*)\" has the start date \"([^\"]*)\" at \"([^\"]*)\"$")
+    public void theTournamentWithNameHasTheStartDateAt(String name, String start_date, String start_hour) throws Throwable {
+        LocalDate localDateStart = LocalDate.parse(start_date);
+        LocalTime localTime = LocalTime.parse(start_hour);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+
+        startDate = ZonedDateTime.of(localDateStart,localTime,ZoneId.systemDefault());
+        String startDate1 = startDate.format(formatter);
+
+        stepDefs.result = stepDefs.mockMvc
+                .perform(get("/tournaments/{name}", name)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print())
+                .andExpect(jsonPath("$.startAt",is(startDate1)));
+    }
+
+    @When("^I edit the tournament with name \"([^\"]*)\" and set the finish date \"([^\"]*)\" at \"([^\"]*)\"$")
+    public void iEditTheTournamentWithNameAndSetTheFinishDateAt(String name, String finish_date, String finish_hour) throws Throwable {
+        LocalDate localDateFinish = LocalDate.parse(finish_date);
+        LocalTime localTime = LocalTime.parse(finish_hour);
+
+        finishDate = ZonedDateTime.of(localDateFinish,localTime,ZoneId.systemDefault());
+
+        JSONObject tournament = new JSONObject();
+        tournament.put("finishedAt",finishDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                patch("/tournaments/{name}", name)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tournament.toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("^The tournament with name \"([^\"]*)\" has the finish date \"([^\"]*)\" at \"([^\"]*)\"$")
+    public void theGameWithNameHasTheFinishDateAt(String name, String finish_date, String finish_hour) throws Throwable {
+
+        LocalDate localDateFinish = LocalDate.parse(finish_date);
+        LocalTime localTime = LocalTime.parse(finish_hour);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+        finishDate = ZonedDateTime.of(localDateFinish,localTime,ZoneId.systemDefault());
+
+        String finishDate1 = finishDate.format(formatter);
+
+        stepDefs.result = stepDefs.mockMvc
+                .perform(get("/tournaments/{name}", name)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print())
+                .andExpect(jsonPath("$.finishedAt",is(finishDate1)));
+
     }
 }
