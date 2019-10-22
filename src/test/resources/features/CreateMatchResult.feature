@@ -26,8 +26,9 @@ Feature: CreateMatchResult
 
   Scenario: Register a result with correct parameters (Winner, Description)
     Given There is no registered matchResult for this Match
+    And I login as "demoP" with password "password"
     #And I'm logged in like team's leader "" who has played this Match""
-    When I register a new result with Winner "winner" and Description "description"
+    When I register a new MatchResult with Winner "winner" and Description "description"
     Then The response code is 201
     And It has been created a MatchResult with Winner "team" and Description "description"
 

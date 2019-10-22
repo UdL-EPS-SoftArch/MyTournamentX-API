@@ -24,7 +24,7 @@ public class CreateMatchResultStepDefs {
     public static String currentPass;
     private Match match;
     private Player player;
-    private Team team;
+    public Team team;
     private MatchResult matchResult;
 
     @Autowired
@@ -47,6 +47,7 @@ public class CreateMatchResultStepDefs {
     public void setup() {
         currentPass = "";
         currentUser = "";
+        team = new Team();
     }
 
     @Given("^There is a match$")
@@ -84,35 +85,13 @@ public class CreateMatchResultStepDefs {
         Assert.assertNotNull(matchResultRepository.findByMatch(match));
     }
 
-    @When("^I register a new result with Winner \"([^\"]*)\" and Description \"([^\"]*)\"$")
-    public void iRegisterANewResultWithWinnerAndDescription(String winner, String description) throws Throwable {
-        MatchResult matchResult = new MatchResult();
-
-        team.setName(winner);
-        team.setLeader(player);
-
-        matchResult.setMatch(match);
-        matchResult.setWinner(team);
-        matchResult.setDescription(description);
-
-//        jsonObject.put("match",match.getUri());
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/matchResults")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(
-                                stepDefs.mapper.writeValueAsString(matchResult))
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andDo(print());
-        throw new PendingException();
-    }
 
     @And("^It has been created a MatchResult with Winner \"([^\"]*)\" and Description \"([^\"]*)\"$")
-    public void itHasBeenCreatedAMatchResultWithWinnerAndDescription(Team winner, String description) throws Throwable {
+    public void itHasBeenCreatedAMatchResultWithWinnerAndDescription(String winner, String description) throws Throwable {
         Assert.assertNotNull(matchResultRepository.findByDescriptionContaining(description));
-        Assert.assertNotNull(matchResultRepository.findByWinner(winner));
+        Assert.assertNotNull(matchResultRepository.findByWinner(team));
         Assert.assertNotNull(matchResultRepository.findByMatch(match));
-        throw new PendingException();
+        //throw new PendingException();
     }
 
     @And("^There is a team$")
@@ -129,6 +108,39 @@ public class CreateMatchResultStepDefs {
         player.setEmail("mytourment@udl.cat");
         player.setPassword("mytourment");
         player = playerRepository.save(player);
+    }
+
+    @When("^I register a new MatchResult with Winner \"([^\"]*)\" and Description \"([^\"]*)\"$")
+    public void iRegisterANewMatchResultWithWinnerAndDescription(String winner, String description) throws Throwable {
+
+        MatchResult matchResult = new MatchResult();
+
+        team.setName(winner);
+        team.setLeader(player);
+        //        jsonObject.put("match",match.getUri());
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/team")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(team))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult.setMatch(match);
+        matchResult.setWinner(team);
+        matchResult.setDescription(description);
+
+//        jsonObject.put("match",match.getUri());
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
     }
     
 /*

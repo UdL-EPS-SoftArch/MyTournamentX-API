@@ -48,9 +48,8 @@ public class MatchResultEventHandler {
     public void handlePlayerPreCreate(MatchResult matchResult) {
         logger.info("Before creating: {}", matchResult.toString());
         Player player = new Player();
-        player.setUsername("Player");
-        player.setEmail("mytourment@udl.cat");
-        player.setPassword("mytournament");
+        player.setUsername("demoP");
+        player.setPassword("password");
 
     }
 
