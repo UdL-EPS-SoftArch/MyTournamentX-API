@@ -3,18 +3,36 @@ package cat.udl.eps.softarch.mytournamentx.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
-@Entity
+@Entity @IdClass(TeamInvitationId.class)
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TeamInvitation extends UriEntity<Integer> {
+public class TeamInvitation extends UriEntity<TeamInvitationId> {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    @NotBlank
+    private String teamId;
 
+    @Id
+    @NotBlank
+    private String userId;
+
+    private String message;
+
+
+
+
+    public TeamInvitation(String teamId, String userId, String message){
+        this.teamId = teamId;
+        this.userId = userId;
+        this.message = message;
+    }
+    @Override
+    public TeamInvitationId getId() {return new TeamInvitationId(teamId, userId);}
+
+    public String getMessage() {
+        return message;
+    }
 }
