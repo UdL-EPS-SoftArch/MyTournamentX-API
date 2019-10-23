@@ -17,6 +17,5 @@ public interface UserRepository extends PagingAndSortingRepository<User, String>
    * https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation
    */
 
-  User findByEmail(String email);
   List<User> findByUsernameContaining(@Param("text") String text);
 }
