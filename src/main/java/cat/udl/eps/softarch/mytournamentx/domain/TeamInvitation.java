@@ -1,5 +1,6 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,8 +22,7 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
 
     private String message;
 
-
-
+    private Boolean accepted;
 
     public TeamInvitation(String teamId, String userId, String message){
         this.teamId = teamId;
@@ -30,9 +30,19 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
         this.message = message;
     }
     @Override
-    public TeamInvitationId getId() {return new TeamInvitationId(teamId, userId);}
+    public TeamInvitationId getId() {
+        return new TeamInvitationId(teamId, userId);
+    }
 
     public String getMessage() {
         return message;
+    }
+
+    public Boolean getAccepted(){
+        return accepted;
+    }
+
+    public void setAccepted(Boolean accepted){
+        this.accepted = accepted;
     }
 }
