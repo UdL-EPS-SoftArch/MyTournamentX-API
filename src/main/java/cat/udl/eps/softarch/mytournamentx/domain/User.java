@@ -50,11 +50,7 @@ public abstract class User extends UriEntity<String> implements UserDetails {
 	@Override
 	public String getId() { return username; }
 
-	@Override
-	@JsonIgnore
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
-	}
+
 
 	@Override
 	public boolean isAccountNonExpired() {
