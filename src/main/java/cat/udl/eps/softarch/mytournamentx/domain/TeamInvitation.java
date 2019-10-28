@@ -1,11 +1,11 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 
 @Entity @IdClass(TeamInvitationId.class)
 @Data
@@ -24,10 +24,13 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
 
     private Boolean accepted;
 
+    private Date creationDate;
+
     public TeamInvitation(String teamId, String userId, String message){
         this.teamId = teamId;
         this.userId = userId;
         this.message = message;
+        this.creationDate = new Date();
     }
     @Override
     public TeamInvitationId getId() {
@@ -41,6 +44,11 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
     public Boolean getAccepted(){
         return accepted;
     }
+
+    public Date getCreationDate(){
+        return creationDate;
+    }
+
 
     public void setAccepted(Boolean accepted){
         this.accepted = accepted;
