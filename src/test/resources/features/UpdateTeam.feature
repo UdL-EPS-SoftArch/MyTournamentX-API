@@ -66,7 +66,6 @@ Feature: Update Team
   Scenario: Update an existing team login without leader role
     Given There is a created team with name "team", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
     And I login as "demoP1" with password "password"
-    And It has been created a team with name "team", game "game", level "level", maxPlayers 8
     When I change the level of my team "team" to "Begginer"
     Then The response code is 403
     And I cannot change level of team "team" to "Begginer"
