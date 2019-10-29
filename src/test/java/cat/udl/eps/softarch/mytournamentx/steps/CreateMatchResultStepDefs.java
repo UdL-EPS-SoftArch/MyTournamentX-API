@@ -24,6 +24,7 @@ public class CreateMatchResultStepDefs {
     public static String currentPass;
     private Match match;
     private Player player;
+    private Team sender;
     public Team team;
     private MatchResult matchResult;
 
@@ -55,6 +56,15 @@ public class CreateMatchResultStepDefs {
         match = matchRepository.save(new Match());
     }
 
+    @Given("^There is a matchResult$")
+    public void thereIsAMatchWithMatchResult() {
+        matchResult.setWinner(team);
+        matchResult.setSender(sender);
+        matchResult.setDescription("Amazing game");
+
+        matchResult = matchResultRepository.save(matchResult);
+
+    }
 
     @Given("^There is no registered matchResult for this Match$")
     public void thereIsNoRegisteredResultForThisMatch() {
@@ -117,7 +127,7 @@ public class CreateMatchResultStepDefs {
 
         team.setName(winner);
         team.setLeader(player);
-        //        jsonObject.put("match",match.getUri());
+//      jsonObject.put("match",match.getUri());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/team")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -131,7 +141,7 @@ public class CreateMatchResultStepDefs {
         matchResult.setWinner(team);
         matchResult.setDescription(description);
 
-//        jsonObject.put("match",match.getUri());
+//      jsonObject.put("match",match.getUri());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/matchResults")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -142,7 +152,15 @@ public class CreateMatchResultStepDefs {
                 .andDo(print());
 
     }
-    
+
+    @And("^It has been deleted the last MatchResult of a Sender \"([^\"]*)\" in that Match$")
+    public void itHasBeenDeletedMyLastMatchResultInThatMatchSender() throws Throwable {
+        matchResult.setSender(sender);
+        MatchResult oldMatchResult = matchResultRepository.findBySender(sender);
+        matchResultRepository.delete(oldMatchResult);
+    }
+
+
 /*
     @When("^I try to register a new result with an invalid Winner$")
     public void iTryToRegisterANewResultWithAnInvalidWinner() {
