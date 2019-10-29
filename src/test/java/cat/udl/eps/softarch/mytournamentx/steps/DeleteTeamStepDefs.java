@@ -1,6 +1,8 @@
 package cat.udl.eps.softarch.mytournamentx.steps;
 
+import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
+import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
@@ -9,6 +11,9 @@ import cucumber.api.java.en.When;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -24,6 +29,8 @@ public class DeleteTeamStepDefs {
 
     @Autowired
     private TeamRepository teamRepository;
+    @Autowired
+    private PlayerRepository playerRepository;
     @Autowired
     private StepDefs stepDefs;
 
@@ -53,11 +60,9 @@ public class DeleteTeamStepDefs {
     @And("^I cannot delete team \"([^\"]*)\"$")
     public void iCannotDeleteTeam(String team) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teams/{name}", team)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andExpect(jsonPath("$.team", is(team)))
-                .andDo(print());
+                get("/teams/{name}",team)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
     }
 
     @And("^I cannot delete team with name \"([^\"]*)\",game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), because it doesn't have permission$")
@@ -69,5 +74,27 @@ public class DeleteTeamStepDefs {
                 .andExpect(jsonPath("$.level",is(level)))
                 .andExpect(jsonPath("$.maxPlayers",is(maxPlayers)))
                 .andDo(print());
+    }
+
+    @And("^The team leader of team \"([^\"]*)\" is \"([^\"]*)\"$")
+    public void theTeamLeaderOfTeamIs(String teamName, String leader) throws Throwable {
+        Team team = teamRepository.findTeamByName(teamName);
+        Player player = playerRepository.findById(leader).get();
+        team.setLeader(player);
+        teamRepository.save(team);
+    }
+
+    @Given("^There is a created team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\"$")
+    public void thereIsACreatedTeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIs(String name, String game, String level, int maxPlayers, String teamLeader) throws Throwable {
+        Team team = new Team(name, game, level, maxPlayers);
+        Player player = playerRepository.findById(teamLeader).get();
+        team.setLeader(player);
+        teamRepository.save(team);
+    }
+
+    @And("^I cannot delete team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
+    public void iCannotDeleteTeamWithNameGameLevelMaxPlayers(String arg0, String arg1, String arg2, int arg3) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
     }
 }
