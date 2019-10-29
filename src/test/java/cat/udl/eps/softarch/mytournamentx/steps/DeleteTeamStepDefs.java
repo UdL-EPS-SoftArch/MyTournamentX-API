@@ -92,9 +92,4 @@ public class DeleteTeamStepDefs {
         teamRepository.save(team);
     }
 
-    @And("^I cannot delete team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+)$")
-    public void iCannotDeleteTeamWithNameGameLevelMaxPlayers(String arg0, String arg1, String arg2, int arg3) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
 }
