@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TournamentInvitation {
+public class TournamentInvitation extends UriEntity<Integer>{
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -34,5 +34,10 @@ public class TournamentInvitation {
     public void setTournamentInvitation(Integer id, String message){
         this.id = id;
         this.message = message;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
     }
 }
