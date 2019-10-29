@@ -34,6 +34,9 @@ public class Team extends UriEntity<String> {
     @Length(min = 1, max = 256)
     private String level;
 
+    @ManyToOne
+    private Player teamLeader;
+
     @Max(value = 8) // Example
     @Min(value = 1)
     private int maxPlayers;

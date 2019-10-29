@@ -47,6 +47,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
                     .antMatchers(HttpMethod.DELETE, "/teams/*").hasRole("PLAYER")
                     .antMatchers(HttpMethod.PATCH, "/teams/*").hasRole("PLAYER")
 
+                    .antMatchers(HttpMethod.GET, "/matchResults/*").authenticated()
+                    .antMatchers(HttpMethod.GET, "/matchResults").authenticated()
+                    .antMatchers(HttpMethod.PUT, "/matchResults/*").authenticated()
+                    .antMatchers(HttpMethod.POST, "/matchResults/*").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/matchResults/*").authenticated()
+
                     .antMatchers(HttpMethod.POST, "/**/*").authenticated()
 
                     .antMatchers(HttpMethod.POST, "/**/*").authenticated()

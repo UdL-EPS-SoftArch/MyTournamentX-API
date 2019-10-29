@@ -42,6 +42,16 @@ public class AuthenticationConfig extends GlobalAuthenticationConfigurerAdapter 
       playerRepository.save(player);
     }
 
+    // Sample player
+    if (!playerRepository.existsById("demoP1")) {
+      Player player = new Player();
+      player.setEmail("demoP1@mytournamentx.game");
+      player.setUsername("demoP1");
+      player.setPassword(defaultPassword);
+      player.encodePassword();
+      playerRepository.save(player);
+    }
+
     // Sample Tournament Master
     if (!tournamentMasterRepository.existsById("demoTM")) {
       TournamentMaster master = new TournamentMaster();

@@ -34,4 +34,5 @@ public interface PlayerRepository extends PagingAndSortingRepository<Player, Str
      * @return the list of players
      */
     List<Player> findByUsernameContaining(@Param("text") String text);
+
 }

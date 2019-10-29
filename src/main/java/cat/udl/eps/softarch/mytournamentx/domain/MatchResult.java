@@ -1,12 +1,16 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
+import javax.persistence.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.Length;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -14,7 +18,25 @@ import javax.persistence.Id;
 public class MatchResult extends UriEntity<Integer> {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+
+    //@NotBlank
+    @ManyToOne
+    private Team winner;
+
+
+    @Length(min = 1, max = 256)
+    private String description;
+
+    //@NotBlank
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Match match;
+
+    //@NotBlank
+    @ManyToOne
+    private Team sender;
 
 }
