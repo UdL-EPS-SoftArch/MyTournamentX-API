@@ -1,6 +1,8 @@
 package cat.udl.eps.softarch.mytournamentx.steps;
 
+import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.TournamentInvitation;
+import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentInvitationRepository;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
@@ -26,18 +28,25 @@ public class CreateTournamentInvitationStepDefs {
     private TournamentInvitationRepository tournamentInvitationRepository;
 
     @Autowired
+    private PlayerRepository playerRepository;
+
+    @Autowired
     private StepDefs stepDefs;
 
     private String url;
 
 
 
-    @When("^I create an invitation with message \"([^\"]*)\"$")
-    public void iCreateAnInvitationWithMessage(String message) throws Throwable {
-        TournamentInvitation tournamentInvitation = new TournamentInvitation(message);
-        tournamentInvitationRepository.save(tournamentInvitation);
+    @And("^There is a registered player with username \"([^\"]*)\" and password \"([^\"]*)\"$")
+    public void thereIsARegisteredPlayerWithUsernameAndPassword(String username, String password) throws Throwable {
+        if (!playerRepository.existsById(username)) {
+            Player player = new Player();
+            player.setUsername(username);
+            player.setPassword(password);
+            player.encodePassword();
+            playerRepository.save(player);
+        }
     }
-
 
     @And("^Exists an invitation with message \"([^\"]*)\"$")
     public void existsAnInvitationWithMessage(String message) throws Throwable {
@@ -49,17 +58,11 @@ public class CreateTournamentInvitationStepDefs {
                 .andExpect(jsonPath("$.message", is(message)));
     }
 
-    @And("^And it doesn't exist an invitation with message \"([^\"]*)\"$")
-    public void andItDoesnTExistAnInvitationWithMessage(String message) throws Throwable {
-        Assert.assertEquals(0, tournamentInvitationRepository.count());
-        Assert.assertEquals(0, tournamentInvitationRepository.findTournamentInvitationByMessage(message));
-    }
-
     @When("^I create an invitation with no message$")
     public void iCreateAnInvitationWithNoMessage() throws Exception {
         JSONObject tournamentInvitation = new JSONObject();
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/invitations")
+                post("/tournamentInvitations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(tournamentInvitation.toString())
                         .accept(MediaType.APPLICATION_JSON)
@@ -67,7 +70,7 @@ public class CreateTournamentInvitationStepDefs {
                 .andDo(print());
     }
 
-    @And("^And it exists \"([^\"]*)\" invitations$")
+    @And("^It exists \"([^\"]*)\" invitations$")
     public void andItExistsInvitations(int invitations) throws Throwable {
         Assert.assertEquals(invitations, tournamentInvitationRepository.count());
     }
@@ -81,9 +84,23 @@ public class CreateTournamentInvitationStepDefs {
         JSONObject tournamentInvitation = new JSONObject();
         tournamentInvitation.put("message", str);
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/invitations")
+                post("/tournamentInvitations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(tournamentInvitation.toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+
+    @When("^I create an invitation with message \"([^\"]*)\"$")
+    public void iCreateAnInvitationWithMessage(String message) throws Throwable {
+        JSONObject invitation = new JSONObject();
+        invitation.put("message", message);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/tournamentInvitations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invitation.toString())
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
