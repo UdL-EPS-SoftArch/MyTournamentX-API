@@ -54,11 +54,12 @@ Feature: CreateMatchResult
 #    Then The response code is 400
 #    And The object is not created
 #
-#  Scenario: Register a result without being correctly registered
-#    Given I'm not logged in
-#    When I try to register a new result
-#    Then The response code is 400
-#    And The object is not created
+  Scenario: Register a result without being correctly registered
+    Given I'm not logged in
+    When I register a new MatchResult with Winner "winner" and Description "description"
+    Then The response code is 401
+    And The object is not created
+
 
 
 

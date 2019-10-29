@@ -142,6 +142,11 @@ public class CreateMatchResultStepDefs {
                 .andDo(print());
 
     }
+
+    @And("^The object is not created$")
+    public void theObjectIsNotCreated() {
+        Assert.assertTrue(matchResultRepository.findByMatch(match).isEmpty());
+    }
     
 /*
     @When("^I try to register a new result with an invalid Winner$")
