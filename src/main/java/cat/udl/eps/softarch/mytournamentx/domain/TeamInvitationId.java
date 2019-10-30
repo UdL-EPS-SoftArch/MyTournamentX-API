@@ -10,7 +10,7 @@ public class TeamInvitationId implements Serializable {
     @NotBlank
     private String userId;
 
-    TeamInvitationId(String teamId, String userId){
+    public TeamInvitationId(String teamId, String userId){
         this.teamId = teamId;
         this.userId = userId;
     }
