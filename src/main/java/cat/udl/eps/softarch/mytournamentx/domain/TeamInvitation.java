@@ -22,6 +22,8 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
 
     private String message;
 
+    private TeamInvitationId id;
+
     private Boolean accepted;
 
     private Date creationDate;
@@ -29,12 +31,13 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
     public TeamInvitation(String teamId, String userId, String message){
         this.teamId = teamId;
         this.userId = userId;
+        this.id = new TeamInvitationId(teamId, userId);
         this.message = message;
         this.creationDate = new Date();
     }
     @Override
     public TeamInvitationId getId() {
-        return new TeamInvitationId(teamId, userId);
+        return id;
     }
 
     public String getMessage() {
