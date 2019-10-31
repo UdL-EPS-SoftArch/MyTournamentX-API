@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import cat.udl.eps.softarch.mytournamentx.domain.*;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -35,6 +36,8 @@ public class CreateTeamInvitationStepDefs {
 
     @Autowired
     private TeamRepository teamRepository;
+
+    protected ResultActions result;
 
     @Given("^The userId \"([^\"]*)\" is correct$")
     public void theUserIdIsCorrect(String userId) throws Throwable {
@@ -106,5 +109,10 @@ public class CreateTeamInvitationStepDefs {
                 get("/teams/{teamId}",teamId)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound());
+    }
+
+    @Then("^The sever response code is (\\d+)$")
+    public void theSeverResponseCodeIs(int code) throws Throwable {
+        result.andExpect(status().is(code));
     }
 }
