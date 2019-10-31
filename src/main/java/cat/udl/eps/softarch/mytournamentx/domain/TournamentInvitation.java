@@ -40,10 +40,6 @@ public class TournamentInvitation extends UriEntity<Integer>{
     @Size(max = 255)
     private String message;
 
-    public TournamentInvitation(@NotBlank @Length(min = 1, max = 250) String message) {
-        this.message = message;
-    }
-
     public TournamentInvitation(){}
 
     public void setTournamentInvitation(Integer id, String message){
