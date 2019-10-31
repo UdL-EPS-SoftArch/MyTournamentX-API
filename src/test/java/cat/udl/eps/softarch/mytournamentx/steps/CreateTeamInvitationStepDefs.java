@@ -48,7 +48,7 @@ public class CreateTeamInvitationStepDefs {
 
     @And("^The user \"([^\"]*)\" is not in the team \"([^\"]*)\"$")
     public void theUserIsNotInTheTeam(String userId, String teamId) throws Throwable {
-        Team team = teamRepository.getById(teamId);
+        Team team = teamRepository.findTeamByName(teamId);
         Assert.assertFalse("User with ID: " +  userId + ", musn't be allredy in the team " +
                 "with id: " + teamId, team.userInTeam(userId));
     }
