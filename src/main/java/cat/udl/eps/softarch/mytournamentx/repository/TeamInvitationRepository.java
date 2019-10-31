@@ -13,5 +13,4 @@ public interface TeamInvitationRepository extends PagingAndSortingRepository<Tea
     List<TeamInvitation> findAllTeamInvitationsByTeamId(String teamId);
     List<TeamInvitation> findAllTeamInvitationsByUserId(String userId);
     List<TeamInvitation> findAllTeamInvitationsByCreationDate(Date date);
-    List<TeamInvitation> findAllTeamInvitationsByCreationDateRange(Date minDate, Date maxDate);
 }
