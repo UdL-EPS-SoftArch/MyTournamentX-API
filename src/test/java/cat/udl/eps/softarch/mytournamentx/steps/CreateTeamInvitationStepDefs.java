@@ -40,20 +40,20 @@ public class CreateTeamInvitationStepDefs {
     protected ResultActions result;
 
     @Given("^The userId \"([^\"]*)\" is correct$")
-    public void theUserIdIsCorrect(String userId) throws Throwable {
-        Assert.assertTrue("User with ID: " +  userId + ", must exist", userRepository.existsById(userId));
+    public void theUserIdIsCorrect(User user) throws Throwable {
+        Assert.assertTrue("User with ID: " +  user.getId() + ", must exist", userRepository.existsById(user.getId()));
     }
 
     @And("^The teamId \"([^\"]*)\" is correct$")
-    public void theTeamIdIsCorrect(String teamId) throws Throwable {
-        Assert.assertTrue("Team with ID:  " + teamId + ", must exist", teamRepository.existsById(teamId));
+    public void theTeamIdIsCorrect(Team team) throws Throwable {
+        Assert.assertTrue("Team with ID:  " + team.getId() + ", must exist", teamRepository.existsById(team.getId()));
     }
 
     @And("^The user \"([^\"]*)\" is not in the team \"([^\"]*)\"$")
-    public void theUserIsNotInTheTeam(String userId, String teamId) throws Throwable {
-        Team team = teamRepository.findTeamByName(teamId);
-        Assert.assertFalse("User with ID: " +  userId + ", musn't be allredy in the team " +
-                "with id: " + teamId, team.userInTeam(userId));
+    public void theUserIsNotInTheTeam(User user, Team team) throws Throwable {
+
+        Assert.assertFalse("User with ID: " +  user.getId() + ", musn't be allredy in the team " +
+                "with id: " + team.getId(), team.userInTeam(user.getId()));
     }
 
     @When("^I create the invitation for the user \"([^\"]*)\" to participate in team \"([^\"]*)\"$")
