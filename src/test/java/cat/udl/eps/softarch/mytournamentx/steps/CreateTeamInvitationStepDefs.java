@@ -40,25 +40,25 @@ public class CreateTeamInvitationStepDefs {
     protected ResultActions result;
 
     @Given("^The userId \"([^\"]*)\" is correct$")
-    public void theUserIdIsCorrect(User user) throws Throwable {
-        Assert.assertTrue("User with ID: " +  user.getId() + ", must exist", userRepository.existsById(user.getId()));
+    public void theUserIdIsCorrect(String userId) throws Throwable {
+
+        Assert.assertTrue(userRepository.existsById(userId));
     }
 
     @And("^The teamId \"([^\"]*)\" is correct$")
-    public void theTeamIdIsCorrect(Team team) throws Throwable {
-        Assert.assertTrue("Team with ID:  " + team.getId() + ", must exist", teamRepository.existsById(team.getId()));
+    public void theTeamIdIsCorrect(String teamId) throws Throwable {
+        Assert.assertTrue(teamRepository.existsById(teamId));
     }
 
     @And("^The user \"([^\"]*)\" is not in the team \"([^\"]*)\"$")
-    public void theUserIsNotInTheTeam(User user, Team team) throws Throwable {
-
-        Assert.assertFalse("User with ID: " +  user.getId() + ", musn't be allredy in the team " +
-                "with id: " + team.getId(), team.userInTeam(user.getId()));
+    public void theUserIsNotInTheTeam(String userId, String teamId) throws Throwable {
+        Team team = teamRepository.findTeamByName(teamId);
+        Assert.assertFalse(team.userInTeam(userId));
     }
 
     @When("^I create the invitation for the user \"([^\"]*)\" to participate in team \"([^\"]*)\"$")
-    public void iCreateTheInvitationForTheUserToParticipateInTeam(User user, Team team) throws Throwable {
-        teamInvitation = new TeamInvitation(team.getId(), user.getId(), "Welcome");
+    public void iCreateTheInvitationForTheUserToParticipateInTeam(String userId, String teamId) throws Throwable {
+        teamInvitation = new TeamInvitation(teamId, userId, "Welcome");
             stepDefs.result = stepDefs.mockMvc.perform(
                 post("/teamInvitation")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -74,14 +74,14 @@ public class CreateTeamInvitationStepDefs {
     }*/
 
     @And("^The invitation has been created for the user \"([^\"]*)\" for the team \"([^\"]*)\"$")
-    public void theInvitationHasBeenCreatedForTheUserForTheTeam(User user, Team team) throws Throwable {
-        TeamInvitationId teamInvitationId = new TeamInvitationId(user.getId(),team.getId());
+    public void theInvitationHasBeenCreatedForTheUserForTheTeam(String userId, String teamId) throws Throwable {
+        TeamInvitationId teamInvitationId = new TeamInvitationId(userId,teamId);
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/teamInvitation/{teamInvitationId}", teamInvitationId)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
-                .andExpect(jsonPath("$.userId", is(user.getId())))
-                .andExpect(jsonPath("$.teamId", is(team.getId()))
+                .andExpect(jsonPath("$.userId", is(userId)))
+                .andExpect(jsonPath("$.teamId", is(teamId))
                 );
     }
 
