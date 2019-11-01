@@ -57,8 +57,8 @@ public class CreateTeamInvitationStepDefs {
     }
 
     @When("^I create the invitation for the user \"([^\"]*)\" to participate in team \"([^\"]*)\"$")
-    public void iCreateTheInvitationForTheUserToParticipateInTeam(String userId, String teamId) throws Throwable {
-        teamInvitation = new TeamInvitation(teamId, userId, "Welcome");
+    public void iCreateTheInvitationForTheUserToParticipateInTeam(User user, Team team) throws Throwable {
+        teamInvitation = new TeamInvitation(team.getId(), user.getId(), "Welcome");
             stepDefs.result = stepDefs.mockMvc.perform(
                 post("/teamInvitation")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -74,14 +74,14 @@ public class CreateTeamInvitationStepDefs {
     }*/
 
     @And("^The invitation has been created for the user \"([^\"]*)\" for the team \"([^\"]*)\"$")
-    public void theInvitationHasBeenCreatedForTheUserForTheTeam(String userId, String teamId) throws Throwable {
-        TeamInvitationId teamInvitationId = new TeamInvitationId(userId,teamId);
+    public void theInvitationHasBeenCreatedForTheUserForTheTeam(User user, Team team) throws Throwable {
+        TeamInvitationId teamInvitationId = new TeamInvitationId(user.getId(),team.getId());
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/teamInvitation/{teamInvitationId}", teamInvitationId)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
-                .andExpect(jsonPath("$.userId", is(userId)))
-                .andExpect(jsonPath("$.teamId", is(teamId))
+                .andExpect(jsonPath("$.userId", is(user.getId())))
+                .andExpect(jsonPath("$.teamId", is(team.getId()))
                 );
     }
 
