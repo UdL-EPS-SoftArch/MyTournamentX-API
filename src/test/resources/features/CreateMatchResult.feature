@@ -38,7 +38,7 @@ Feature: CreateMatchResult
 #    When I try to register a new result with an invalid Winner
 #    Then The response code is 400
 #    And The object is not created
-#
+
   Scenario: Replace a result with correct parameters (Winner, Description)
     Given It has been created a MatchResult with Winner "team" and Description "description"
     And I login as "demoP" with password "password"
@@ -47,13 +47,7 @@ Feature: CreateMatchResult
     Then The response code is 201
     And It has been deleted the last MatchResult of a Sender "sender" in that Match
     And It has been created a MatchResult with Winner "team" and Description "description"
-#
-#  Scenario: Replace a result with wrong Winner parameter
-#    Given There is a registered result for this Match
-#    And I'm logged in like team's leader "" who has played this Match""
-#    When I try to register a new result with an invalid Winner
-#    Then The response code is 400
-#    And The object is not created
+
 #
   Scenario: Register a result without being correctly registered
     Given I'm not logged in
