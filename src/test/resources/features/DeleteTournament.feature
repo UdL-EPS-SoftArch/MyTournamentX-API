@@ -13,7 +13,7 @@ Feature: Tournament
   Scenario: Player tries to delete a tournament
     Given I login as "demoTM" with password "password"
     And  I create a new tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
-    Then I login as "demoP" with password "password"
+    And I login as "demoP" with password "password"
     When I delete a tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
     Then The response code is 403
 
