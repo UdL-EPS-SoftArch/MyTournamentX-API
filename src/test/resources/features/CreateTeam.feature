@@ -33,9 +33,9 @@ Feature: Create Team
 
   Scenario: Create new team with outnumber maxPlayers
     Given I login as "demoP" with password "password"
-    When I register a new team with name "team", game "game", level "amateur", maxPlayers 80
+    When I register a new team with name "team", game "game", level "amateur", maxPlayers 257
     Then The response code is 400
-    And The error message is "must be less than or equal to 8"
+    And The error message is "must be less than or equal to 256"
     And I cannot create a team with name "team"
 
   Scenario: Create new team with zero maxPlayers
