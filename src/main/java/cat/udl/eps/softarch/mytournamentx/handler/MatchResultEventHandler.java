@@ -16,7 +16,12 @@ import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeLinkSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import cat.udl.eps.softarch.mytournamentx.exception.BadRequestException;
+import cat.udl.eps.softarch.mytournamentx.exception.ForbiddenException;
+import javax.transaction.Transactional;
 
 import java.util.*;
 
@@ -45,8 +50,14 @@ public class MatchResultEventHandler {
         };*/
     }
     @HandleBeforeCreate
-    public void handlePlayerPreCreate(MatchResult matchResult) {
+    public void handlePlayerPreCreate(MatchResult matchResult) throws Throwable {
         logger.info("Before create: {}", matchResult.toString());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        logger.info("Username: {}", authentication.getAuthorities());
+        Player player = ((Player)authentication.getPrincipal());
+        if (!player.getId().equals(matchResult.getSender().getLeader().getId())){
+            throw new ForbiddenException();
+        }
        if(matchResultRepository.findByMatchAndSender(matchResult.getMatch(), matchResult.getSender()) != null){
            matchResultRepository.delete(matchResult);
        }
