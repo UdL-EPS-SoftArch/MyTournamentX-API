@@ -48,6 +48,8 @@ Feature: CreateMatchResult
     And It has been deleted the last MatchResult of a Sender "sender" in that Match
     And It has been created a MatchResult with Winner "team" and Description "description"
 
+#
+
   Scenario: Register a result without being correctly registered
     Given I'm not logged in
     When I register a new MatchResult with Winner "winner" and Description "description"
