@@ -46,11 +46,11 @@ public class MatchResultEventHandler {
     }
     @HandleBeforeCreate
     public void handlePlayerPreCreate(MatchResult matchResult) {
-        logger.info("Before creating: {}", matchResult.toString());
-        Player player = new Player();
-        player.setUsername("demoP");
-        player.setPassword("password");
-
+        logger.info("Before create: {}", matchResult.toString());
+       if(matchResultRepository.findByMatchAndSender(matchResult.getMatch(), matchResult.getSender()) != null){
+           matchResultRepository.delete(matchResult);
+       }
+        logger.info("Before create, after check");
     }
 
     @HandleBeforeSave
