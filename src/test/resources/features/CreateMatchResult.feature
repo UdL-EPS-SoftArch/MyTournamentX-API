@@ -8,15 +8,6 @@ Feature: CreateMatchResult
     And There is a team
     And There is a player
 
-
-  #Scenario: Register new user
-  #  Given There is no registered user with username "user"
-  #  And I'm not logged in
-  #  When I register a new user with username "user", email "user@mytournamentx.game" and password "password"
-  #  Then The response code is 201
-  #  And It has been created a user with username "user" and email "user@mytournamentx.game", the password is not returned
-  #  And I can login with username "user" and password "password"
-
   Scenario: Assign a match to a MatchResult
     Given   There is no registered matchResult for this Match
     And   I login as "demoP" with password "password"
@@ -38,7 +29,7 @@ Feature: CreateMatchResult
 #    When I try to register a new result with an invalid Winner
 #    Then The response code is 400
 #    And The object is not created
-#
+# TODO
   Scenario: Replace a result with correct parameters (Winner, Description)
     Given It has been created a MatchResult with Winner "team" and Description "description"
     And I login as "demoP" with password "password"
