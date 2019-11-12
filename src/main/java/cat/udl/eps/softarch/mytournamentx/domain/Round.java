@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -17,8 +18,17 @@ public class Round extends UriEntity<Integer> {
 
     private int bestOf = 1;
 
-    private int numTeams;
+    private int numTeams = 2;
 
     @ManyToOne
     private Team winner;
+
+    @ManyToMany
+    private List<Team> rivals;
+
+    @OneToOne
+    private Round nextRound;
+
+    @ManyToOne
+    private Tournament tournament;
 }
