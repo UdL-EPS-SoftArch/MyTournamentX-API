@@ -20,6 +20,6 @@ public interface MatchResultRepository extends PagingAndSortingRepository<MatchR
 
     List<MatchResult> findByDescriptionContaining(@Param("description") String description);
 
-    MatchResult findBySender(@Param("sender") Team sender);
+    MatchResult findByMatchAndSender(@Param("match") Match match, @Param("sender") Team sender);
 
 }
