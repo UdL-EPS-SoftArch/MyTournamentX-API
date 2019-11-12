@@ -154,10 +154,9 @@ public class CreateMatchResultStepDefs {
 
     }
 
-    @And("^It has been deleted the last MatchResult of a Sender \"([^\"]*)\" in that Match$")
+    @And("^It has been deleted the last MatchResult sent in that Match$")
     public void itHasBeenDeletedMyLastMatchResultInThatMatchSender() throws Throwable {
-        matchResult.setSender(sender);
-        MatchResult oldMatchResult = matchResultRepository.findBySender(sender);
+        MatchResult oldMatchResult = matchResultRepository.findByMatchAndSender(match, sender);
         matchResultRepository.delete(oldMatchResult);
     }
 

@@ -45,7 +45,7 @@ Feature: CreateMatchResult
 #    And I'm logged in like team's leader "" who has played this Match""
     When I register a new MatchResult with Winner "winner" and Description "description"
     Then The response code is 201
-    And It has been deleted the last MatchResult of a Sender "sender" in that Match
+    And It has been deleted the last MatchResult sent in that Match
     And It has been created a MatchResult with Winner "team" and Description "description"
 
 #
