@@ -1,11 +1,10 @@
 package cat.udl.eps.softarch.mytournamentx.steps;
 
+
 import cucumber.api.PendingException;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
-import org.json.JSONObject;
 import org.junit.Assert;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
 import cat.udl.eps.softarch.mytournamentx.domain.Tournament;
@@ -72,5 +71,4 @@ public class CreateTournamentStepDefs {
         Tournament tournament = new Tournament(name, level, game);
         tournamentRepository.save(tournament);
     }
-
 }
