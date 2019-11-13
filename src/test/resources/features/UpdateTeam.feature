@@ -27,10 +27,10 @@ Feature: Update Team
   Scenario: Update maxPlayers of my team to an invalid number
     Given There is a created team with name "team", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
     And I login as "demoP" with password "password"
-    When I change the maxPlayers of my team "team" to 50
+    When I change the maxPlayers of my team "team" to 257
     Then The response code is 400
-    And The error message is "must be less than or equal to 8"
-    And I cannot change maxPlayers of team "team" to 50, because is an invalid number
+    And The error message is "must be less than or equal to 256"
+    And I cannot change maxPlayers of team "team" to 257, because is an invalid number
 
   Scenario: Update game of my team to blank
     Given There is a created team with name "team", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
