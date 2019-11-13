@@ -5,14 +5,14 @@ Feature: Tournament
 
   Scenario: Tournament Master deletes tournament
     Given I login as "demoTM" with password "password"
-    And  I create a new tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
+    When I create a new tournament with name "FirstTournament", level "AMATEUR" and game "LoL" and bestof "1"
     When I delete a tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
     Then The response code is 204
     And It does not exist a tournament with name "FirstTournament"
 
   Scenario: Player tries to delete a tournament
     Given I login as "demoTM" with password "password"
-    And  I create a new tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
+    When I create a new tournament with name "FirstTournament", level "AMATEUR" and game "LoL" and bestof "1"
     And I login as "demoP" with password "password"
     When I delete a tournament with name "FirstTournament", level "AMATEUR" and game "LoL"
     Then The response code is 403

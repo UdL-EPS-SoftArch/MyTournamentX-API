@@ -2,14 +2,12 @@ package cat.udl.eps.softarch.mytournamentx.steps;
 
 import cat.udl.eps.softarch.mytournamentx.domain.Tournament;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
 
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,15 +29,6 @@ public class EditTournamentStepDefs {
     private StepDefs stepDefs;
 
     private ZonedDateTime startDate, finishDate;
-
-
-
-    @And("^I register a new tournament with name \"([^\"]*)\",level \"([^\"]*)\" and game \"([^\"]*)\"$")
-    public void iRegisterANewTournamentWithNameLevelAndGame(String name, Tournament.Level level, String game) throws Throwable {
-        Tournament tournament = new Tournament(name, level, game);
-        tournamentRepository.save(tournament);
-    }
-
 
     @When("^I edit tournament with name \"([^\"]*)\",level \"([^\"]*)\" and game \"([^\"]*)\"$")
     public void iEditTournamentWithNameLevelAndGame(String name, Tournament.Level level, String game) throws Throwable {

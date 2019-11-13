@@ -18,4 +18,7 @@ public class Match extends UriEntity<Integer> {
 
     @ManyToOne
     private Team winner;
+
+    @ManyToOne
+    private Round round;
 }
