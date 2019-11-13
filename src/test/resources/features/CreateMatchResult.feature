@@ -6,7 +6,6 @@ Feature: CreateMatchResult
   Background:
     Given There is a match
     And There is a team
-    And There is a player
 
   Scenario: Assign a match to a MatchResult
     Given   There is no registered matchResult for this Match
@@ -37,8 +36,6 @@ Feature: CreateMatchResult
     Then The response code is 201
     And It has been deleted the last MatchResult sent in that Match
     And It has been created a MatchResult with Winner "team" and Description "description"
-
-#
 
   Scenario: Register a result without being correctly registered
     Given I'm not logged in
