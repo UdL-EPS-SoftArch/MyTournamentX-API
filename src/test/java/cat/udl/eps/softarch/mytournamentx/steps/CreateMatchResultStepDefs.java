@@ -20,8 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 public class CreateMatchResultStepDefs {
 
-    public static String currentUser;
-    public static String currentPass;
     private Match match;
     private Player player;
     private Team sender;
@@ -125,18 +123,8 @@ public class CreateMatchResultStepDefs {
     public void iRegisterANewMatchResultWithWinnerAndDescription(String winner, String description) throws Throwable {
 
         MatchResult matchResult = new MatchResult();
+        matchResult.setSender(team);
 
-        team.setName(winner);
-        team.setLeader(player);
-//      jsonObject.put("match",match.getUri());
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/team")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(
-                                stepDefs.mapper.writeValueAsString(team))
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andDo(print());
 
         matchResult.setMatch(match);
         matchResult.setWinner(team);
@@ -166,26 +154,26 @@ public class CreateMatchResultStepDefs {
         Assert.assertTrue(matchResultRepository.findByMatch(match).isEmpty());
     }
 
-    /*
     @When("^I try to register a new result with an invalid Winner$")
-    public void iTryToRegisterANewResultWithAnInvalidWinner(){
+    public void iTryToRegisterANewResultWithAnInvalidWinner() throws Throwable {
+        MatchResult matchResult = new MatchResult();
+        matchResult.setSender(team);
 
+        matchResult.setMatch(match);
+        team.setLeader(new Player());
+        matchResult.setWinner(team);
+        matchResult.setDescription("hola");
+
+//      jsonObject.put("match",match.getUri());
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
     }
 
 
-    @When("^I try to register a new result with an invalid Winner$")
-    public void iTryToRegisterANewResultWithAnInvalidWinner() {
-    }
-
-    @And("^The object is not created$")
-    public void theObjectIsNotCreated() {
-    }
-
-    @And("^It has been deleted my last MatchResult in that Match$")
-    public void itHasBeenDeletedMyLastMatchResultInThatMatch() {
-    }
-
-    @When("^I try to register a new result$")
-    public void iTryToRegisterANewResult() {
-    }*/
 }
