@@ -1,11 +1,10 @@
 package cat.udl.eps.softarch.mytournamentx.steps;
 
+
 import cucumber.api.PendingException;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
-import org.json.JSONObject;
 import org.junit.Assert;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
 import cat.udl.eps.softarch.mytournamentx.domain.Tournament;
@@ -44,7 +43,8 @@ public class CreateTournamentStepDefs {
         tournamentRepository.save(tournament);
     }
 
-    @When("^I create a new tournament with name \"([^\"]*)\", level \"([^\"]*)\" and game \"([^\"]*)\" and bestof \"([^\"]*)\"$")
+
+    @Given("^I create a new tournament with name \"([^\"]*)\", level \"([^\"]*)\" and game \"([^\"]*)\" and bestof \"([^\"]*)\"$")
     public void iCreateANewTournamentWithNameLevelAndGameAndBestof(String name, Tournament.Level level, String game, String bestOf) throws Throwable {
         Tournament tournament = new Tournament();
         tournament.setName(name);
