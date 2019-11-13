@@ -38,9 +38,6 @@ public class Team extends UriEntity<String> {
     private int maxPlayers;
 
     @ManyToOne
-    private Player teamLeader;
-
-    @ManyToOne
     private Player leader;
 
     @ManyToMany
