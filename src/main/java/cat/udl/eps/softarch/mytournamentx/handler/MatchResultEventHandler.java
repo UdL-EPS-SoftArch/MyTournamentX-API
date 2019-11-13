@@ -55,7 +55,8 @@ public class MatchResultEventHandler {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         logger.info("Username: {}", authentication.getAuthorities());
         Player player = ((Player)authentication.getPrincipal());
-        if (!player.getId().equals(matchResult.getSender().getLeader().getId())){
+        if(matchResult.getSender() == null){ throw new BadRequestException(); }
+        if (!player.getUsername().equals(matchResult.getSender().getLeader().getUsername())){
             throw new ForbiddenException();
         }
        if(matchResultRepository.findByMatchAndSender(matchResult.getMatch(), matchResult.getSender()) != null){

@@ -41,15 +41,6 @@ public class CreateMatchResultStepDefs {
     @Autowired
     private StepDefs stepDefs;
 
-
-
-    @Before
-    public void setup() {
-        currentPass = "";
-        currentUser = "";
-        team = new Team();
-    }
-
     @Given("^There is a match$")
     public void thereIsAMatch() {
         match = matchRepository.save(new Match());
@@ -58,7 +49,7 @@ public class CreateMatchResultStepDefs {
     @Given("^There is a matchResult$")
     public void thereIsAMatchWithMatchResult() {
         matchResult.setWinner(team);
-        matchResult.setSender(sender);
+        matchResult.setSender(team);
         matchResult.setDescription("Amazing game");
 
         matchResult = matchResultRepository.save(matchResult);
@@ -74,6 +65,7 @@ public class CreateMatchResultStepDefs {
     public void iRegisterANewResultWithDescription(String description) throws Throwable  {
         MatchResult matchResult = new MatchResult();
         matchResult.setMatch(match);
+        matchResult.setSender(team);
         matchResult.setDescription(description);
 
 //        jsonObject.put("match",match.getUri());
@@ -107,17 +99,13 @@ public class CreateMatchResultStepDefs {
     public void thereIsATeam() {
         team = new Team();
         team.setName("team");
+        player = playerRepository.findByEmail("demoP@mytournamentx.game");
+        team.setLeader(player);
+        team.setGame("El lol de los huevos");
+        team.setMaxPlayers(3);
         teamRepository.save(team);
     }
 
-    @And("^There is a player$")
-    public void thereIsAPlayer() {
-        player = new Player();
-        player.setUsername("player");
-        player.setEmail("mytourment@udl.cat");
-        player.setPassword("mytourment");
-        player = playerRepository.save(player);
-    }
 
     @When("^I register a new MatchResult with Winner \"([^\"]*)\" and Description \"([^\"]*)\"$")
     public void iRegisterANewMatchResultWithWinnerAndDescription(String winner, String description) throws Throwable {
@@ -144,7 +132,7 @@ public class CreateMatchResultStepDefs {
 
     @And("^It has been deleted the last MatchResult sent in that Match$")
     public void itHasBeenDeletedMyLastMatchResultInThatMatchSender() throws Throwable {
-        MatchResult oldMatchResult = matchResultRepository.findByMatchAndSender(match, sender);
+        MatchResult oldMatchResult = matchResultRepository.findByMatchAndSender(match, team);
         matchResultRepository.delete(oldMatchResult);
     }
 
