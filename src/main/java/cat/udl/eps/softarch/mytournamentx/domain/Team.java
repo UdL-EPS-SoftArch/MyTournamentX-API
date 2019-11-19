@@ -61,4 +61,8 @@ public class Team extends UriEntity<String> {
     public Boolean userInTeam(String userId){
         return players.contains(userId);
     }
+
+    public void setPlayers(Set<Player> players) {
+        this.players = players;
+    }
 }
