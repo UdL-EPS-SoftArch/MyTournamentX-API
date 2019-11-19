@@ -13,6 +13,9 @@ import org.junit.Assert;
 import org.junit.runner.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -22,9 +25,9 @@ public class CreateMatchResultStepDefs {
 
     private Match match;
     private Player player;
-    private Team sender;
     public Team team;
     private MatchResult matchResult;
+    public Round round;
 
     @Autowired
     private MatchResultRepository matchResultRepository;
@@ -37,13 +40,16 @@ public class CreateMatchResultStepDefs {
 
     @Autowired
     private PlayerRepository playerRepository;
-
+    @Autowired
+    private RoundRepository roundRepository;
     @Autowired
     private StepDefs stepDefs;
 
     @Given("^There is a match$")
     public void thereIsAMatch() {
-        match = matchRepository.save(new Match());
+        match = new Match();
+        match.setRound(round);
+        matchRepository.save(match);
     }
 
     @Given("^There is a matchResult$")
@@ -66,8 +72,8 @@ public class CreateMatchResultStepDefs {
         MatchResult matchResult = new MatchResult();
         matchResult.setMatch(match);
         matchResult.setSender(team);
+        matchResult.setWinner(team);
         matchResult.setDescription(description);
-
 //        jsonObject.put("match",match.getUri());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/matchResults")
@@ -87,12 +93,11 @@ public class CreateMatchResultStepDefs {
     }
 
 
-    @And("^It has been created a MatchResult with Winner \"([^\"]*)\" and Description \"([^\"]*)\"$")
-    public void itHasBeenCreatedAMatchResultWithWinnerAndDescription(String winner, String description) throws Throwable {
+    @And("^It has been created a MatchResult with a Winner and Description \"([^\"]*)\"$")
+    public void itHasBeenCreatedAMatchResultWithWinnerAndDescription(String description){
         Assert.assertNotNull(matchResultRepository.findByDescriptionContaining(description));
         Assert.assertNotNull(matchResultRepository.findByWinner(team));
         Assert.assertNotNull(matchResultRepository.findByMatch(match));
-        //throw new PendingException();
     }
 
     @And("^There is a team$")
@@ -104,11 +109,12 @@ public class CreateMatchResultStepDefs {
         team.setGame("El lol de los huevos");
         team.setMaxPlayers(3);
         teamRepository.save(team);
+
     }
 
 
-    @When("^I register a new MatchResult with Winner \"([^\"]*)\" and Description \"([^\"]*)\"$")
-    public void iRegisterANewMatchResultWithWinnerAndDescription(String winner, String description) throws Throwable {
+    @When("^I register a new MatchResult with a Winner and Description \"([^\"]*)\"$")
+    public void iRegisterANewMatchResultWithWinnerAndDescription(String description) throws Throwable {
 
         MatchResult matchResult = new MatchResult();
         matchResult.setSender(team);
@@ -131,7 +137,7 @@ public class CreateMatchResultStepDefs {
     }
 
     @And("^It has been deleted the last MatchResult sent in that Match$")
-    public void itHasBeenDeletedMyLastMatchResultInThatMatchSender() throws Throwable {
+    public void itHasBeenDeletedMyLastMatchResultInThatMatchSender() {
         MatchResult oldMatchResult = matchResultRepository.findByMatchAndSender(match, team);
         matchResultRepository.delete(oldMatchResult);
     }
@@ -149,7 +155,8 @@ public class CreateMatchResultStepDefs {
 
         matchResult.setMatch(match);
         team.setLeader(new Player());
-        matchResult.setWinner(team);
+        Team team2 = new Team();
+        matchResult.setWinner(team2);
         matchResult.setDescription("hola");
 
 //      jsonObject.put("match",match.getUri());
@@ -164,4 +171,12 @@ public class CreateMatchResultStepDefs {
     }
 
 
+    @And("^There is a round$")
+    public void thereIsARound() {
+        round = new Round();
+        List<Team> players = new ArrayList<>();
+        players.add(team);
+        round.setRivals(players);
+        roundRepository.save(round);
+    }
 }

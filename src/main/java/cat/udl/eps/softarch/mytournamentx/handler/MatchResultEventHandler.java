@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import cat.udl.eps.softarch.mytournamentx.exception.BadRequestException;
 import cat.udl.eps.softarch.mytournamentx.exception.ForbiddenException;
 import javax.transaction.Transactional;
+import java.util.List;
+
 
 import java.util.*;
 
@@ -56,6 +58,9 @@ public class MatchResultEventHandler {
         logger.info("Username: {}", authentication.getAuthorities());
         Player player = ((Player)authentication.getPrincipal());
         if(matchResult.getSender() == null){ throw new BadRequestException(); }
+        if(!matchResult.getMatch().getRound().getRivals().contains(matchResult.getWinner())){
+            throw new BadRequestException();
+        }
         if (!player.getUsername().equals(matchResult.getSender().getLeader().getUsername())){
             throw new ForbiddenException();
         }
