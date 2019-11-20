@@ -118,6 +118,6 @@ public class CreateTeamInvitationStepDefs {
 
     @Then("^The sever response code is (\\d+)$")
     public void theSeverResponseCodeIs(int code) throws Throwable {
-        result.andExpect(status().is(code));
+        stepDefs.result.andExpect(status().is(code));
     }
 }

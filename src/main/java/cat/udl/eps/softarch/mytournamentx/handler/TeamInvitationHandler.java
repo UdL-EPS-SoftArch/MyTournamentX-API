@@ -1,7 +1,10 @@
 package cat.udl.eps.softarch.mytournamentx.handler;
 
 import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
+import cat.udl.eps.softarch.mytournamentx.exception.BadRequestException;
+import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamInvitationRepository;
+import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -16,9 +19,18 @@ public class TeamInvitationHandler {
     @Autowired
     TeamInvitationRepository teamInvitationRepository;
 
+    @Autowired
+    PlayerRepository playerRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
+
     @HandleBeforeCreate
     public void handleTeamInvitationPreCreate(TeamInvitation teamInvitation) {
         logger.info("Before creating: {}", teamInvitation.toString());
+        if(!teamRepository.existsByName(teamInvitation.getId().getTeamId()) || !playerRepository.existsById(teamInvitation.getId().getUserId())){
+            throw new BadRequestException();
+        }
     }
 
     @HandleBeforeSave

@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 public class TeamInvitationId implements Serializable {
+
+
     @NotBlank
     private String teamId;
 
@@ -37,5 +39,20 @@ public class TeamInvitationId implements Serializable {
         else{
             return teamInvitationId.userId.equals(userId);
         }
+    }
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

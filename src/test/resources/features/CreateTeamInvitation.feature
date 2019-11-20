@@ -3,6 +3,9 @@ Feature: Create team invitation
   As a user
   I want to invite another user to my team
 
+  Background:
+    Given There is a registered player with username "player" and password "existing" and email "player@mytournamentx.game"
+
   Scenario: Invite existing user that doesn't participate in my team
     Given The userId "userId" is correct
     And   The teamId "teamId" is correct
@@ -20,10 +23,8 @@ Feature: Create team invitation
     Then  The sever response code is 404
 
   Scenario: Invite existing user to a team that does not exist
-    Given The userId "userId" is correct
-    And   The teamId "teamId" is not correct
-    When  I create the invitation for the user "userId" to participate in team "teamId"
-    Then  The sever response code is 404
-    And I cannot create a invitation for the user "userId" for the team "teamId"
-
-  Scenario: Invite existing user to a full team
+    Given I login as "demoP" with password "password"
+    And There is a registered player with username "player2" and password "existing2" and email "player2@mytournamentx.game"
+    And There is no registered team with name "teamId"
+    When I create the invitation for the user "player2" to participate in team "teamId"
+    Then The sever response code is 400
