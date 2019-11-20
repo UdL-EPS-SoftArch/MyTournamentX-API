@@ -58,4 +58,21 @@ public class JoinTeamtoTournamentStepDefs {
                         .accept(MediaType.APPLICATION_JSON_UTF8)).andDo(print())
         .andExpect(status().isOk());
     }
+
+    @When("^A player try join team called \"([^\"]*)\" to a tournament called \"([^\"]*)\"$")
+    public void aPlayerTryJoinTeamCalledToATournamentCalled(String team, String tournament) throws Throwable {
+        Team team1 = teamRepository.findTeamByName(team);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                patch("/tournaments/{tournament}/participants/{team}", tournament, team)
+                        .accept(MediaType.APPLICATION_JSON_UTF8)).andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @And("^There isn't a team called \"([^\"]*)\" in a tournament called \"([^\"]*)\"$")
+    public void thereIsnTATeamCalledInATournamentCalled(String team, String tournament) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/tournaments/{tournament}/participants/{team}", tournament, team)
+                        .accept(MediaType.APPLICATION_JSON_UTF8)).andDo(print())
+                .andExpect(status().isNotFound());
+    }
 }
