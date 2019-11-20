@@ -1,6 +1,7 @@
 package cat.udl.eps.softarch.mytournamentx.steps;
 
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
+import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
@@ -28,7 +29,9 @@ public class JoinToTeamStepDefs {
     @Autowired
     private StepDefs stepDefs;
 
-    @When("^I try to join team with name \"([^\"]*)\"$")
+    private TeamInvitation teamInv;
+
+    @When("^I try to join a not created team with name \"([^\"]*)\"$")
     public void iTryToJoinTeamWithName(String name) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/teams/{name}",name)
@@ -54,5 +57,32 @@ public class JoinToTeamStepDefs {
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .with(authenticate()))
                 .andDo(print());
+    }
+
+    @When("^I try to join a created team with name \"([^\"]*)\"$")
+    public void iTryToJoinACreatedTeamWithName(String name) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teams/{name}",name)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+
+    @And("^I don't have invitation to team \"([^\"]*)\"$")
+    public void iDonTHaveInvitationToTeam(String name) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teams/{name}",name)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @And("^I have been invited to a team with name \"([^\"]*)\" and message \"([^\"]*)\"$")
+    public void iHaveBeenInvitedToATeamWithNameAndMessage(String name, String message) throws Throwable {
+        TeamInvitation teamInvitation = new TeamInvitation();
+        teamInvitation.setId("name");
+        teamInvitation.setMessage("message");
+        teamRepository.save(teamInvitation);
     }
 }

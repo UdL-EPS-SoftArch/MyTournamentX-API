@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.mytournamentx.steps;
 
 import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
+import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import cucumber.api.PendingException;
@@ -33,6 +34,8 @@ public class DeleteTeamStepDefs {
     private PlayerRepository playerRepository;
     @Autowired
     private StepDefs stepDefs;
+
+
 
     @When("^I delete the team called \"([^\"]*)\"$")
     public void iDeleteTheTeamCalled(String team) throws Throwable {

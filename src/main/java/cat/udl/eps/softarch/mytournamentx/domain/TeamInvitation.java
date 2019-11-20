@@ -51,7 +51,17 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
     public Date getCreationDate(){
         return creationDate;
     }
+    public void setId(String teamId) {
+        this.teamId=teamId;
+    }
 
+    public void setMessage(String message) {
+        this.message=message;
+    }
+
+    public void setCreationDate(Date creationDate){
+        this.creationDate=creationDate;
+    }
 
     public void setAccepted(Boolean accepted){
         this.accepted = accepted;
