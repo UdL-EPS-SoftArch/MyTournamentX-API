@@ -32,7 +32,7 @@ public class TournamentService {
     MatchRepository matchRepository;
 
 
-    public Tournament createTournament(Tournament tournament) {
+    public Tournament createTournament(Tournament tournament) throws Exception {
         // Assume n² rivals
         //          0
         //        0   0
@@ -40,8 +40,7 @@ public class TournamentService {
 
         // Assume: 2^n | ∀ n ∈ N : n > 0
 
-        tournament.setState(TournamentState.INITIALIZING);
-        tournamentRepository.save(tournament);
+        this.advanceState(tournament);
 
         List<Team> rivals = tournament.getParticipants();
         // Create Round
@@ -65,8 +64,7 @@ public class TournamentService {
 
         setRoundLinks(rounds, roundsNum);
 
-        tournament.setState(TournamentState.INITIALIZED);
-        tournamentRepository.save(tournament);
+        this.advanceState(tournament);
 
         return tournament;
     }
