@@ -81,12 +81,12 @@ public class MatchResultEventHandler {
         logger.info("After updating: {}", matchResult.toString());
         if(matchResult.getMatch().getRound().getNumTeams() ==
                 matchResultRepository.findByMatch(matchResult.getMatch()).size()){
-            matchResult.getMatch().setWinner(checkWinners(matchResult));
+            checkWinners(matchResult);
         }
 
     }
 
-    public Team checkWinners(MatchResult matchResult){
+    private void checkWinners(MatchResult matchResult){
         Map<Team, Integer> diccionari = new HashMap<>();
         for (MatchResult matchRes:matchResultRepository.findByMatch(matchResult.getMatch())) {
             if (diccionari.containsKey(matchRes.getWinner())) {
@@ -96,18 +96,18 @@ public class MatchResultEventHandler {
 
         }
         if(diccionari.size() == 1){
-            return matchResult.getWinner();
+            matchResult.getMatch().setWinner(matchResult.getWinner());
         }
         else {
             if(Collections.max(diccionari.values()) > matchResult.getMatch().getRound().getNumTeams()/2 + 1){
                 for (Team team:diccionari.keySet()
                      ) {
-                    if (diccionari.get(team) == Collections.max(diccionari.values())){
-                        return team;
+                    if (diccionari.get(team).equals(Collections.max(diccionari.values()))){
+                        matchResult.getMatch().setWinner(team);
                 }
 
-                };
-            };
+                }
+            }
 
         }
 
