@@ -26,7 +26,7 @@ public class TournamentController {
     public @ResponseBody
     PersistentEntityResource generateTournamentBracket(
             @PathVariable(value="name") String name,
-            PersistentEntityResourceAssembler resourceAssembler) {
+            PersistentEntityResourceAssembler resourceAssembler) throws Exception {
 
         Tournament tournament = tournamentService.getTournament(name);
 
