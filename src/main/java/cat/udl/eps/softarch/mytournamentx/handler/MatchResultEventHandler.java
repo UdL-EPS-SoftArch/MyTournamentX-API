@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.mytournamentx.handler;
 import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
 import cat.udl.eps.softarch.mytournamentx.domain.Player;
+import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import org.slf4j.Logger;
@@ -73,7 +74,45 @@ public class MatchResultEventHandler {
     @HandleBeforeSave
     public void handlePlayerPreSave(MatchResult matchResult) {
         logger.info("Before updating: {}", matchResult.toString());
+
     }
+    @HandleAfterSave
+    public void handlePlayerAfterSave(MatchResult matchResult) {
+        logger.info("After updating: {}", matchResult.toString());
+        if(matchResult.getMatch().getRound().getNumTeams() ==
+                matchResultRepository.findByMatch(matchResult.getMatch()).size()){
+            matchResult.getMatch().setWinner(checkWinners(matchResult));
+        }
+
+    }
+
+    public Team checkWinners(MatchResult matchResult){
+        Map<Team, Integer> diccionari = new HashMap<>();
+        for (MatchResult matchRes:matchResultRepository.findByMatch(matchResult.getMatch())) {
+            if (diccionari.containsKey(matchRes.getWinner())) {
+                diccionari.replace(matchRes.getWinner(), diccionari.get(matchRes.getWinner()) + 1);
+            }
+            diccionari.put(matchRes.getWinner(), 1);
+
+        }
+        if(diccionari.size() == 1){
+            return matchResult.getWinner();
+        }
+        else {
+            if(Collections.max(diccionari.values()) > matchResult.getMatch().getRound().getNumTeams()/2 + 1){
+                for (Team team:diccionari.keySet()
+                     ) {
+                    if (diccionari.get(team) == Collections.max(diccionari.values())){
+                        return team;
+                }
+
+                };
+            };
+
+        }
+
+    }
+
 
     @HandleBeforeDelete
     public void handlePlayerPreDelete(MatchResult matchResult) {
