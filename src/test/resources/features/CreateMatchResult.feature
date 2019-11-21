@@ -7,7 +7,6 @@ Feature: CreateMatchResult
     Given There is a match
     And There is a team
     And There is a round
-    And There is a match
 
   Scenario: Assign a match to a MatchResult
     Given   There is no registered matchResult for this Match

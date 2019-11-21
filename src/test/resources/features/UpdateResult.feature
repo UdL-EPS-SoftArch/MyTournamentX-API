@@ -4,8 +4,9 @@ Feature: CreateMatchResult
   I want to see the result of a Match
 
   Background:
-    Given There some matches with matchresults
-    And There is a round with some matches
+    Given There are some matchresults
+    And There is a match
+    And There is a round
 
 
   Scenario: Assign various matches to a Round and assign a MatchResult for each team in a Match
