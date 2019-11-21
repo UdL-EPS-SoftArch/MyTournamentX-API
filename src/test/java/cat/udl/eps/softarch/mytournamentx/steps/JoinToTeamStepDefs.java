@@ -14,10 +14,9 @@ import org.springframework.http.MediaType;
 import javax.print.attribute.standard.Media;
 
 import static cat.udl.eps.softarch.mytournamentx.steps.AuthenticationStepDefs.authenticate;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 public class JoinToTeamStepDefs {
 
@@ -52,7 +51,7 @@ public class JoinToTeamStepDefs {
     public void iCanJoinTheTeamWithName(String name) throws Throwable {
         team = teamRepository.findTeamByName(name);
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/joinTeam")
+                post("teams/{name}", name)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .with(authenticate()))
@@ -68,21 +67,27 @@ public class JoinToTeamStepDefs {
                 .andExpect(status().isOk());
     }
 
-
-    @And("^I don't have invitation to team \"([^\"]*)\"$")
-    public void iDonTHaveInvitationToTeam(String name) throws Throwable {
+    @When("^I want to join to the team with name \"([^\"]*)\"$")
+    public void iWantToJoinToTheTeamWithName(String name) throws Throwable {
+        team = teamRepository.findTeamByName(name);
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teams/{name}",name)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andDo(print())
-                .andExpect(status().isForbidden());
+                post("teams/{name}", name)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(authenticate()))
+                .andDo(print());
     }
 
-    @And("^I have been invited to a team with name \"([^\"]*)\" and message \"([^\"]*)\"$")
-    public void iHaveBeenInvitedToATeamWithNameAndMessage(String name, String message) throws Throwable {
-        TeamInvitation teamInvitation = new TeamInvitation();
-        teamInvitation.setId("name");
-        teamInvitation.setMessage("message");
-        teamRepository.save(teamInvitation);
+    @And("^I already joined a team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\"$")
+    public void iAlreadyJoinedATeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIs(String name, String game, String level, int maxPlayers, String demoP) throws Throwable {
+        team = new Team();
+        String message = stepDefs.mapper.writeValueAsString(team);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/team/{name}",name)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(message)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(authenticate()))
+                .andDo(print());
     }
 }
