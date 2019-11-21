@@ -4,7 +4,7 @@ Feature: CreateMatchResult
   I want to see the result of a Match
 
   Background:
-    Given There some matches with MatchResults
+    Given There some matches with matchresults
     And There is a round with some matches
 
 
