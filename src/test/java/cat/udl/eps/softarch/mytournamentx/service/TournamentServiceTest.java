@@ -82,7 +82,7 @@ class TournamentServiceTest {
     @DisplayName("Create Tournament Spring @Autowired Integration")
     @Transactional //per a que no doni errors de Lazy Inicialization
     @Test
-    void createTournament() {
+    void createTournament() throws Exception {
         Tournament tournament = tournamentRepository.findTournamentByName(
                 "Galactic Aquatic Football Tournament"
         );
