@@ -19,7 +19,7 @@ import static cat.udl.eps.softarch.mytournamentx.utils.MathUtils.intDivisonTop;
 
 
 @Service
-public class InitialiseTournamentService {
+public class TournamentService {
 
     @Autowired
     TournamentRepository tournamentRepository;
@@ -31,7 +31,7 @@ public class InitialiseTournamentService {
     MatchRepository matchRepository;
 
 
-    public void createTournament(String name) throws Exception {
+    public Tournament createTournament(Tournament tournament) {
         // Assume n² rivals
         //          0
         //        0   0
@@ -39,11 +39,8 @@ public class InitialiseTournamentService {
 
         // Assume: 2^n | ∀ n ∈ N : n > 0
 
-        Tournament tournament = tournamentRepository.findTournamentByName(name);
-
         List<Team> rivals = tournament.getParticipants();
         // Create Round
-        // int roundsNum = MathUtils.factorial(rivals.size() / 2);
         int roundsNum = rivals.size() - 1;
 
         Collections.shuffle(rivals);
@@ -63,6 +60,8 @@ public class InitialiseTournamentService {
         }
 
         setRoundLinks(rounds, roundsNum);
+
+        return tournament;
     }
 
     private void setRoundLinks(List<Round> rounds, int roundsNum) {
@@ -110,5 +109,9 @@ public class InitialiseTournamentService {
         round.setTournament(tournament);
         roundRepository.save(round);
         return round;
+    }
+
+    public Tournament getTournament(String name) {
+        return tournamentRepository.findTournamentByName(name);
     }
 }
