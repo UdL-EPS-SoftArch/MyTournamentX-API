@@ -4,6 +4,7 @@ import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.Round;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.domain.Tournament;
+import cat.udl.eps.softarch.mytournamentx.domain.types.TournamentState;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.RoundRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
@@ -39,6 +40,9 @@ public class TournamentService {
 
         // Assume: 2^n | ∀ n ∈ N : n > 0
 
+        tournament.setState(TournamentState.INITIALIZING);
+        tournamentRepository.save(tournament);
+
         List<Team> rivals = tournament.getParticipants();
         // Create Round
         int roundsNum = rivals.size() - 1;
@@ -60,6 +64,9 @@ public class TournamentService {
         }
 
         setRoundLinks(rounds, roundsNum);
+
+        tournament.setState(TournamentState.INITIALIZED);
+        tournamentRepository.save(tournament);
 
         return tournament;
     }
@@ -113,5 +120,28 @@ public class TournamentService {
 
     public Tournament getTournament(String name) {
         return tournamentRepository.findTournamentByName(name);
+    }
+
+    public Tournament advanceState(Tournament tournament) throws Exception {
+        switch(tournament.getState()){
+            case UNINITIALIZED:
+                tournament.setState(TournamentState.INITIALIZING);
+                break;
+            case INITIALIZING:
+                tournament.setState(TournamentState.INITIALIZED);
+                break;
+            case INITIALIZED:
+                tournament.setState(TournamentState.IN_PROGRESS);
+                break;
+            case IN_PROGRESS:
+                tournament.setState(TournamentState.FINISHED);
+                break;
+            case FINISHED:
+                tournament.setState(TournamentState.CLOSED);
+                break;
+            default:
+                throw new Exception("Wrong state. This state needs manual modification");
+        }
+        return tournamentRepository.save(tournament);
     }
 }
