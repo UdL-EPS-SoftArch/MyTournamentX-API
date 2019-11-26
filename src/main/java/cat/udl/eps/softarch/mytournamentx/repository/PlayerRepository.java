@@ -27,6 +27,8 @@ public interface PlayerRepository extends PagingAndSortingRepository<Player, Str
      */
     Player findByEmail(String email);
 
+    Player findByUsername(String name);
+
     /**
      * Find a list of players which matches the text.
      *
