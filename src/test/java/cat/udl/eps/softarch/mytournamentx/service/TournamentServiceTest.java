@@ -24,10 +24,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-class InitialiseTournamentServiceTest {
+class TournamentServiceTest {
 
     @Autowired
-    InitialiseTournamentService initialiseTournamentService;
+    TournamentService tournamentService;
 
     @Autowired
     TournamentRepository tournamentRepository;
@@ -79,15 +79,15 @@ class InitialiseTournamentServiceTest {
         tournamentRepository.save(tournament);
     }
 
-    @DisplayName("Create Tounament Spring @Autowired Integration")
-    @Test
+    @DisplayName("Create Tournament Spring @Autowired Integration")
     @Transactional //per a que no doni errors de Lazy Inicialization
+    @Test
     void createTournament() throws Exception {
         Tournament tournament = tournamentRepository.findTournamentByName(
                 "Galactic Aquatic Football Tournament"
         );
 
-        initialiseTournamentService.createTournament("Galactic Aquatic Football Tournament");
+        tournamentService.createTournament(tournament);
         List<Round> rounds = roundRepository.findByTournament(tournament);
 
         assertEquals(3, rounds.size());
@@ -102,10 +102,10 @@ class InitialiseTournamentServiceTest {
         assertEquals(0, round3.getRivals().size());
 
         List<Match> matches1 = matchRepository.findByRound(round1);
-        assertEquals(tournament.getBestOf(), matches1.size());
+        assertEquals((int) tournament.getBestOf(), matches1.size());
 
         List<Match> matches2 = matchRepository.findByRound(round2);
-        assertEquals(tournament.getBestOf(), matches2.size());
+        assertEquals((int) tournament.getBestOf(), matches2.size());
 
         List<Match> matches3 = matchRepository.findByRound(round3);
         assertEquals(0, matches3.size());
