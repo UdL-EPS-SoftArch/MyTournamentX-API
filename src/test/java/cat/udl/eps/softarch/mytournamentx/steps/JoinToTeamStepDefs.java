@@ -12,6 +12,7 @@ import cucumber.api.java.en.When;
 import gherkin.ast.Step;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
 
 import javax.print.attribute.standard.Media;
@@ -116,8 +117,8 @@ public class JoinToTeamStepDefs {
     public void iAmPlayerAndIWantToJoinToTheTeamWithName(String playerName, String teamName) throws Throwable {
         Player player1 = playerRepository.findByUsername(playerName);
         stepDefs.result = stepDefs.mockMvc.perform(
-                patch("teams/{name}/participants", teamName)
-                        .contentType("text/uri-list")
+                put("teams/{name}/players", teamName)
+                        .contentType(RestMediaTypes.TEXT_URI_LIST)
                         .content(
                                 player1.getUri())
                         .accept(MediaType.APPLICATION_JSON_UTF8)
