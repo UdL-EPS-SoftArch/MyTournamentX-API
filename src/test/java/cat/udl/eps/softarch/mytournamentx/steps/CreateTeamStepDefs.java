@@ -95,4 +95,9 @@ public class CreateTeamStepDefs {
     public void iCannotCreateATeamWithBlankName() {
         Assert.assertEquals(0,teamRepository.findAll().size());
     }
+
+    @And("^There is a registered team with name \"([^\"]*)\"$")
+    public void thereIsARegisteredTeamWithName(String name) throws Throwable {
+        Assert.assertTrue(teamRepository.existsByName(name));
+    }
 }

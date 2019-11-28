@@ -7,37 +7,25 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
-@Entity @IdClass(TeamInvitationId.class)
+@Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TeamInvitation extends UriEntity<TeamInvitationId> {
+public class TeamInvitation extends UriEntity<String> {
 
     @Id
-    @NotBlank
-    private String teamId;
-
-    @Id
-    @NotBlank
-    private String userId;
+    private String id;
 
     private String message;
-
-    private TeamInvitationId id;
 
     private Boolean accepted;
 
     private Date creationDate;
+    public TeamInvitation(){}
+    public TeamInvitation(String userId, String teamId,  String message){
 
-    public TeamInvitation(String teamId, String userId, String message){
-        this.teamId = teamId;
-        this.userId = userId;
-        this.id = new TeamInvitationId(teamId, userId);
+        this.id = userId + "_" + teamId;
         this.message = message;
         this.creationDate = new Date();
-    }
-    @Override
-    public TeamInvitationId getId() {
-        return id;
     }
 
     public String getMessage() {
@@ -52,8 +40,12 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
         return creationDate;
     }
 
-
     public void setAccepted(Boolean accepted){
         this.accepted = accepted;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 }

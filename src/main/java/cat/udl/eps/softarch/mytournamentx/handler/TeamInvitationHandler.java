@@ -10,6 +10,10 @@ import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 @Component
 @RepositoryEventHandler
@@ -28,9 +32,11 @@ public class TeamInvitationHandler {
     @HandleBeforeCreate
     public void handleTeamInvitationPreCreate(TeamInvitation teamInvitation) {
         logger.info("Before creating: {}", teamInvitation.toString());
-        if(!teamRepository.existsByName(teamInvitation.getId().getTeamId()) || !playerRepository.existsById(teamInvitation.getId().getUserId())){
+        String[] ids = teamInvitation.getId().split("_");
+        if(!teamRepository.existsByName(ids[1]) || !playerRepository.existsById(ids[0])){
             throw new BadRequestException();
         }
+
     }
 
     @HandleBeforeSave
@@ -57,4 +63,5 @@ public class TeamInvitationHandler {
     public void handleTeamInvitationPostLinkSave(TeamInvitation teamInvitation, Object o) {
         logger.info("After linking: {} to {}", teamInvitation.toString(), o.toString());
     }
+
 }
