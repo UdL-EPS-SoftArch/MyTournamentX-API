@@ -16,7 +16,7 @@ Feature: Join player or players to team
     Given There is a created team with name "team", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
     And I login as "demoP" with password "password"
     When I am player "demoP" and I want to join to the team with name "team"
-    Then The response code is 200
+    Then The response code is 204
     And I can join the team with name "team"
 
 

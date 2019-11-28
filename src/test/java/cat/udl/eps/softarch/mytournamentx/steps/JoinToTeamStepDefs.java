@@ -1,28 +1,26 @@
 package cat.udl.eps.softarch.mytournamentx.steps;
 
+import static cat.udl.eps.softarch.mytournamentx.steps.AuthenticationStepDefs.authenticate;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import gherkin.ast.Step;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
-
-import javax.print.attribute.standard.Media;
-
-import java.util.Optional;
-
-import static cat.udl.eps.softarch.mytournamentx.steps.AuthenticationStepDefs.authenticate;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class JoinToTeamStepDefs {
 
@@ -117,7 +115,7 @@ public class JoinToTeamStepDefs {
     public void iAmPlayerAndIWantToJoinToTheTeamWithName(String playerName, String teamName) throws Throwable {
         Player player1 = playerRepository.findByUsername(playerName);
         stepDefs.result = stepDefs.mockMvc.perform(
-                put("teams/{name}/players", teamName)
+                post("/teams/{name}/players", teamName)
                         .contentType(RestMediaTypes.TEXT_URI_LIST)
                         .content(
                                 player1.getUri())
