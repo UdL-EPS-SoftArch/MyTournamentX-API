@@ -11,23 +11,28 @@ import cucumber.api.java.en.When;
 import cucumber.api.java.it.Ma;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.tsv.TsvRoutines;
 import org.junit.runner.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.ArrayList;
+import cat.udl.eps.softarch.mytournamentx.service.TournamentService;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-public class UpdateResult {
+public class UpdateResultStepDefs {
 
     private Player leaderPlayer1 = new Player();
     private Player leaderPlayer2 = new Player();
 
     public Team team1 = new Team();
     public Team team2 = new Team();
+    public List<Team> rivals = new ArrayList<>();
+
+
 
     public Tournament tournament = new Tournament();
     public Round round = new Round();
@@ -44,7 +49,8 @@ public class UpdateResult {
 
     @Autowired
     private TeamRepository teamRepository;
-
+    @Autowired
+    private TournamentService tournamentService;
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
@@ -56,7 +62,24 @@ public class UpdateResult {
 
 
     @Given("^There are some matchresults$")
-    public void thereAreSomeMatchresults() {
+    public void thereAreSomeMatchresults() throws Exception {
+        tournamentService.createTournament(tournament);
+        rivals.add(team1);
+        rivals.add(team2);
+        round.setNextRound(null);
+        round.setTournament(tournament);
+        round.setNumTeams(2);
+        round.setRivals(rivals);
+        match.setRound(round);
+        matchResult1.setMatch(match);
+        matchResult2.setMatch(match);
+        matchResult2.setSender(team2);
+        matchResult1.setSender(team1);
+        matchResultRepository.save(matchResult1);
+        matchResultRepository.save(matchResult2);
+    }
 
+    @Given("^Less of half plus one of the matchresults$")
+    public void lessOfHalfPlusOneOfTheMatchresults() {
     }
 }
