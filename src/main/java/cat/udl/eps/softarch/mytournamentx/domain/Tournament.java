@@ -1,5 +1,6 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
+import cat.udl.eps.softarch.mytournamentx.domain.types.TournamentState;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -61,8 +62,14 @@ public class Tournament extends UriEntity<String> {
     @Max(50)
     private Integer maxTeamPlayers;
 
+    @NotNull
+    private TournamentState state = TournamentState.UNINITIALIZED;
+
     @ManyToMany
     private List<Team> participants;
+
+    @ManyToOne
+    private Team winner;
 
     @Positive
     @NotNull

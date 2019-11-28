@@ -34,11 +34,18 @@ public class UpdateMatchHandler {
 
     @HandleAfterSave
     public void  handleMatchPreUpdate(Match match)  {
-        logger.info("After updating: {}", match.toString());
-        if(match.getRound().getBestOf()/2 + 1 == matchRepository.findByRound(match.getRound()).size()){
-            checkWinners(match);
+        //if(match.getWinner() != null) {
+        int checktheWinner = 0;
+        for (Match matchTotal:matchRepository.findByRound(match.getRound())){
+            if(matchTotal.getWinner() != null){
+                checktheWinner= checktheWinner+1;
+            }
         }
-    }
+            if (match.getRound().getBestOf() / 2 + 1 == checktheWinner) {
+                checkWinners(match);
+            }
+        }
+    //}
 
     private void checkWinners(Match match){
         Map<Team, Integer> diccionari = new HashMap<>();
@@ -46,8 +53,9 @@ public class UpdateMatchHandler {
             if (diccionari.containsKey(matchTotal.getWinner())) {
                 diccionari.replace(matchTotal.getWinner(), diccionari.get(matchTotal.getWinner()) + 1);
             }
-            diccionari.put(matchTotal.getWinner(), 1);
-
+            if(matchTotal.getWinner() != null) {
+                diccionari.put(matchTotal.getWinner(), 1);
+            }
         }
         if(diccionari.size() == 1){
             match.getRound().setWinner(match.getWinner());
