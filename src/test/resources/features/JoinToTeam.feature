@@ -17,6 +17,8 @@ Feature: Join player or players to team
     And I login as "demoP" with password "password"
     When I am player "demoP" and I want to join to the team with name "team"
     Then The response code is 204
+    And There are 1 players in team "team"
+    And Team "team" includes player "demoP"
     And I can join the team with name "team"
 
 

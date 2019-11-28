@@ -123,4 +123,20 @@ public class JoinToTeamStepDefs {
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
     }
+
+    @And("^There are (\\d+) players in team \"([^\"]*)\"$")
+    public void thereAreNoPlayersInTeam(int numPlayers, String teamName) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+            get("/teams/{name}/players", teamName)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
+            .andDo(print())
+            .andExpect(jsonPath("$._embedded.players", hasSize(numPlayers)));
+    }
+
+    @And("^Team \"([^\"]*)\" includes player \"([^\"]*)\"$")
+    public void teamIncludesPlayer(String teamName, String playerName) throws Throwable {
+        stepDefs.result
+            .andExpect(jsonPath("$._embedded.players.*.id", hasItem(playerName)));
+    }
 }
