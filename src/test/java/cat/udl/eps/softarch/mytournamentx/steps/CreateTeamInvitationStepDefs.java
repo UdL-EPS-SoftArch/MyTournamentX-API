@@ -18,10 +18,14 @@ import cat.udl.eps.softarch.mytournamentx.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Optional;
+
 import javax.validation.constraints.AssertTrue;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -123,6 +127,11 @@ public class CreateTeamInvitationStepDefs {
     @Then("^The sever response code is (\\d+)$")
     public void theSeverResponseCodeIs(int code) throws Throwable {
         stepDefs.result.andExpect(status().is(code));
+    }
+
+    @And("^There is no empty room in the team \"([^\"]*)\"$")
+    public void thereIsNoEmptyRoomInTheTeam(String teamId) throws Throwable {
+
     }
 
     @And("^There is empty room in the team \"([^\"]*)\"$")

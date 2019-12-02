@@ -30,3 +30,12 @@ Feature: Create team invitation
     And There is no registered team with name "teamId"
     When I create the invitation for the user "player2" to participate in team "teamId"
     Then The sever response code is 400
+
+  Scenario: Invite existing user to team that its full
+    Given I login as "demoPlayer" with password "demoPassword"
+    And There is a registered player with username "demoPlayer2" and password "demoExisting2" and email "player2@mytournamentx.game"
+    And I register a new team with name "demoTeam", game "futbol", level "demoLvl", maxPlayers 1
+    And There is no empty room in the team "demoTeam"
+    When I create the invitation for the user "demoPlayer2" to participate in team "demoTeam"
+    Then I cannot create a invitation for the user "demoPlayer" for the team "demoTeam"
+
