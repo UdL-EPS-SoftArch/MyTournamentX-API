@@ -34,7 +34,6 @@ public class UpdateMatchHandler {
 
     @HandleAfterSave
     public void  handleMatchPreUpdate(Match match)  {
-        //if(match.getWinner() != null) {
         int checktheWinner = 0;
         for (Match matchTotal:matchRepository.findByRound(match.getRound())){
             if(matchTotal.getWinner() != null){
@@ -45,7 +44,7 @@ public class UpdateMatchHandler {
                 checkWinners(match);
             }
         }
-    //}
+
 
     private void checkWinners(Match match){
         Map<Team, Integer> diccionari = new HashMap<>();
