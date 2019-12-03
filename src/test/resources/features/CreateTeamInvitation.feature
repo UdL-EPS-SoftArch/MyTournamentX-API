@@ -13,7 +13,7 @@ Feature: Create team invitation
     And   The user "invitedEmail@gmail.com" is not in the team "demoTeam"
     And   There is empty room in the team "demoTeam"
     When  I create the invitation for the user "invitedUsername" to participate in team "demoTeam"
-    Then   The invitation has been created for the user "invitedUsername" for the team "demoTeam"
+    Then  The invitation has been created for the user "invitedUsername" for the team "demoTeam"
     And  The sever response code is 200
 
   Scenario: Invite none existing user to my team
@@ -22,7 +22,7 @@ Feature: Create team invitation
     And There is a created team with name "demoTeam", game "demoGame", level "demoLevel", maxPlayers 8
     And There is empty room in the team "demoTeam"
     When I create the invitation for the user "demoPlayer" to participate in team "demoTeam"
-    Then  The sever response code is 404
+    Then  The sever response code is 401
 
   Scenario: Invite existing user to a team that does not exist
     Given I login as "demoP" with password "password"
@@ -32,10 +32,12 @@ Feature: Create team invitation
     Then The sever response code is 400
 
   Scenario: Invite existing user to team that its full
-    Given I login as "demoPlayer" with password "demoPassword"
+    Given I login as "player" with password "existing"
     And There is a registered player with username "demoPlayer2" and password "demoExisting2" and email "player2@mytournamentx.game"
-    And I register a new team with name "demoTeam", game "futbol", level "demoLvl", maxPlayers 1
+    And I register a new team with name "demoTeam", game "demoGame", level "demoLvl", maxPlayers 1
+    And The user "player@mytournamentx.game" is in the team "demoTeam"
+    And The user "invitedEmail@gmail.com" is not in the team "demoTeam"
     And There is no empty room in the team "demoTeam"
     When I create the invitation for the user "demoPlayer2" to participate in team "demoTeam"
-    Then I cannot create a invitation for the user "demoPlayer" for the team "demoTeam"
+    Then The sever response code is 400
 

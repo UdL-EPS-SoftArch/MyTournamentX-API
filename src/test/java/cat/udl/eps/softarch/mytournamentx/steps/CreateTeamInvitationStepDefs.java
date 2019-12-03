@@ -131,7 +131,8 @@ public class CreateTeamInvitationStepDefs {
 
     @And("^There is no empty room in the team \"([^\"]*)\"$")
     public void thereIsNoEmptyRoomInTheTeam(String teamId) throws Throwable {
-
+        Team team = teamRepository.findTeamByName(teamId);
+        Assert.assertFalse(team.getMaxPlayers()>team.getCurrentPlayers());
     }
 
     @And("^There is empty room in the team \"([^\"]*)\"$")
@@ -142,7 +143,6 @@ public class CreateTeamInvitationStepDefs {
 
     @And("^The user \"([^\"]*)\" is in the team \"([^\"]*)\"$")
     public void theUserIsInTheTeam(String userEmail, String teamId) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
         Team team = teamRepository.findTeamByName(teamId);
         Player player = playerRepository.findByEmail(userEmail);
         Assert.assertFalse(team.userInTeam(player));

@@ -1,5 +1,6 @@
 package cat.udl.eps.softarch.mytournamentx.handler;
 
+import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
 import cat.udl.eps.softarch.mytournamentx.exception.BadRequestException;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
@@ -36,7 +37,9 @@ public class TeamInvitationHandler {
         if(!teamRepository.existsByName(ids[1]) || !playerRepository.existsById(ids[0])){
             throw new BadRequestException();
         }
-
+        Team team = teamRepository.findTeamByName(ids[1]);
+        if(team.getMaxPlayers() == team.getCurrentPlayers())
+            throw new BadRequestException();
     }
 
     @HandleBeforeSave
