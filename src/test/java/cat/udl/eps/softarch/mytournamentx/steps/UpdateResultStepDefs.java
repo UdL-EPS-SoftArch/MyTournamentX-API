@@ -79,7 +79,8 @@ public class UpdateResultStepDefs {
         matchResultRepository.save(matchResult2);
     }
 
-    @Given("^Less of half plus one of the matchresults$")
-    public void lessOfHalfPlusOneOfTheMatchresults() {
+    @Given("^At least half plus one of the matchresults of the match contain the same winner$")
+    public void atLeastHalfPlusOneOfTheMatchresultsOfTheMatchContainTheSameWinner() {
+
     }
 }

@@ -10,7 +10,7 @@ Feature: UpdateMatch
 
 
   Scenario: Register the winner of a Match with at least half plus one of the matchresults containing the same winner
-    Given At least half plus one of the matchresults of the match contain the same winner "Winner"
+    Given At least half plus one of the matchresults of the match contain the same winner
     When I compare all the matchresults of the match
     And I set "Winner" as winner
     Then The response code is 201
