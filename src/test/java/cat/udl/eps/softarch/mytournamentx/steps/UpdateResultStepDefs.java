@@ -36,9 +36,13 @@ public class UpdateResultStepDefs {
 
     public Tournament tournament = new Tournament();
     public Round round = new Round();
-    public Match match =  new Match();
+    public Match match1 =  new Match();
+    //public Match match2 = new Match();
     public MatchResult matchResult1 = new MatchResult();
     public MatchResult matchResult2 = new MatchResult();
+    //public MatchResult matchResult3 = new MatchResult();
+    //public MatchResult matchResult4 = new MatchResult();
+
 
 
     @Autowired
@@ -63,24 +67,83 @@ public class UpdateResultStepDefs {
 
     @Given("^There are some matchresults$")
     public void thereAreSomeMatchresults() throws Exception {
-        tournamentService.createTournament(tournament);
+        team1.setName("team1");
+        team1.setMaxPlayers(1);
+        team1.setGame("el lol");
+        team2.setName("team2");
+        team2.setMaxPlayers(1);
+        team2.setGame("el lol");
+
+        teamRepository.save(team1);
+        teamRepository.save(team2);
+
         rivals.add(team1);
         rivals.add(team2);
+
+        tournament.setName("Working");
+        tournament.setGame("el lol");
+        tournament.setBestOf(1);
+        tournament.setLevel(Tournament.Level.AMATEUR);
+        tournament.setParticipants(rivals);
+        tournamentService.createTournament(tournament);
+
         round.setNextRound(null);
         round.setTournament(tournament);
         round.setNumTeams(2);
+        round.setBestOf(1);
         round.setRivals(rivals);
-        match.setRound(round);
-        matchResult1.setMatch(match);
-        matchResult2.setMatch(match);
-        matchResult2.setSender(team2);
+        roundRepository.save(round);
+
+        match1.setRound(round);
+        matchRepository.save(match1);
+        matchResult1.setMatch(match1);
+        matchResult1.setWinner(team1);
+        //matchResult2.setMatch(match1);
+        //matchResult2.setSender(team2);
         matchResult1.setSender(team1);
+
+        //match2.setRound(round);
+        //matchRepository.save(match2);
+        //matchResult3.setMatch(match2);
+        // matchResult3.setWinner(team1);
+        //matchResult4.setMatch(match2);
+        //matchResult4.setSender(team2);
+        //matchResult3.setSender(team1);
+
         matchResultRepository.save(matchResult1);
-        matchResultRepository.save(matchResult2);
+        //matchResultRepository.save(matchResult2);
+        //matchResultRepository.save(matchResult3);
+        //matchResultRepository.save(matchResult4);
+
     }
 
-    @Given("^At least half plus one of the matchresults of the match contain the same winner$")
-    public void atLeastHalfPlusOneOfTheMatchresultsOfTheMatchContainTheSameWinner() {
+    @Given("^One match result has already been created$")
+    public void oneMatchResultHasAlreadyBeenCreated() throws Throwable {
+        Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team1),matchResult1);
+        //Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team2),matchResult2);
+        //Assert.assertEquals(matchResultRepository.findByMatchAndSender(match2,team1),matchResult3);
+        //Assert.assertEquals(matchResultRepository.findByMatchAndSender(match2,team2),matchResult4);
 
+    }
+
+    @When("^I created my MatchResult as a TeamLeader and i'm the last team to submit it$")
+    public void iCreatedMyMatchResultAsATeamLeaderAndIMTheLastTeamToSubmitIt() throws Throwable {
+        matchResult2.setMatch(match1);
+        matchResult2.setSender(team2);
+        matchResult2.setWinner(team1);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult2))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("^The winner of the Match is set$")
+    public void theWinnerOfTheMatchIsSet() {
+        Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team2).getMatch().getWinner(), team1);
     }
 }
