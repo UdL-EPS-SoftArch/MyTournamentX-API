@@ -1,23 +1,17 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
-import com.fasterxml.jackson.databind.JsonSerializer;
+import cat.udl.eps.softarch.mytournamentx.domain.types.TournamentState;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
+import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.core.userdetails.UserDetails;
-
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 
 @Entity
@@ -27,7 +21,7 @@ public class Tournament extends UriEntity<String> {
 
     @Id
     @NotBlank
-    @Length(min = 5, max = 20)
+    @Length(min = 5, max = 64)
     private String name;
 
     @Override
@@ -42,7 +36,6 @@ public class Tournament extends UriEntity<String> {
     }
     @NotNull(message = "Level must not be Null")
     private Level level;
-
 
     @NotBlank
     private String game;
@@ -69,8 +62,18 @@ public class Tournament extends UriEntity<String> {
     @Max(50)
     private Integer maxTeamPlayers;
 
+    @NotNull
+    private TournamentState state = TournamentState.UNINITIALIZED;
+
+    @ManyToMany
+    private List<Team> participants;
+
+    @Positive
+    @NotNull
+    private Integer bestOf;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private ZonedDateTime  finishedAt, startAt, createdAt;
+    private ZonedDateTime  finishedAt, startAt, createdAt, limitDate;
 
     public Tournament(@NotBlank @Length(min = 5, max = 20) String name, @NotBlank Level level, @NotBlank String game) {
         this.name = name;

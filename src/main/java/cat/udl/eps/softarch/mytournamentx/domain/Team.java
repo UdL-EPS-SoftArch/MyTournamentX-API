@@ -21,7 +21,6 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class Team extends UriEntity<String> {
 
-    /*OWN CODE*/
     @NotBlank
     @Id
     @Length(min = 1, max = 256)
@@ -31,14 +30,10 @@ public class Team extends UriEntity<String> {
     @Length(min = 1, max = 256)
     private String game;
 
-
     @Length(min = 1, max = 256)
     private String level;
 
-    @ManyToOne
-    private Player teamLeader;
-
-    @Max(value = 8) // Example
+    @Max(value = 256) // Example
     @Min(value = 1)
     private int maxPlayers;
 

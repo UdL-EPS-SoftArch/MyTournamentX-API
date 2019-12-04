@@ -3,6 +3,7 @@ package cat.udl.eps.softarch.mytournamentx.repository;
 import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.Round;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
+import cat.udl.eps.softarch.mytournamentx.domain.Tournament;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -41,4 +42,11 @@ public interface RoundRepository extends PagingAndSortingRepository<Round, Strin
      * @return a list of matches.
      */
     // List<Match> findMatchesByWinner(@Param("winner") Team winner);
+
+    /**
+     * Find a list of rounds won by tournament.
+     *
+     * @return a list of rounds.
+     */
+    List<Round> findByTournament(@Param("tournament") Tournament tournament);
 }
