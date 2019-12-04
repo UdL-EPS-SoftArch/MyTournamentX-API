@@ -4,6 +4,27 @@ Feature: UpdateMatch
   I want to see the winner of a Match and its result
 
   Background:
+
+          Given There is a tournament with name "FirstTournament", level "AMATEUR", game "LoL" and bestof "1" UpdateResult
+          AND There is a created team with name "team", game "LoL", level "AMATEUR", maxPlayers 8, and the team leader is "demoP"
+    Team team = new Team(name, game, level, maxPlayers);
+    Player player = playerRepository.findById(teamLeader).get();
+    team.setLeader(player);
+    teamRepository.save(team);
+          AND There is a Round with
+
+
+
+
+
+
+
+
+
+
+
+
+
     Given There is a match
     And There is a round
     And There are some matchresults
