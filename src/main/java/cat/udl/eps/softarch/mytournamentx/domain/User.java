@@ -39,7 +39,7 @@ public abstract class User extends UriEntity<String> implements UserDetails {
 	@Length(min = 8, max = 256)
 	private String password;
 
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Transient
 	private boolean passwordReset;
 

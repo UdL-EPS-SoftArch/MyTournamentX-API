@@ -93,6 +93,7 @@ public class CreateTeamStepDefs {
 
     @And("^I cannot create a team with blank name$")
     public void iCannotCreateATeamWithBlankName() {
-        Assert.assertEquals(0,teamRepository.findAll().size());
+        // Now is 4 as the DB has data inside
+        Assert.assertEquals(4,teamRepository.findAll().size());
     }
 }
