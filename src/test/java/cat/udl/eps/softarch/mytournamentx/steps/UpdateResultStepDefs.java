@@ -4,10 +4,7 @@ import cat.udl.eps.softarch.mytournamentx.domain.*;
 import cat.udl.eps.softarch.mytournamentx.repository.*;
 import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import cucumber.api.PendingException;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.When;
+import cucumber.api.java.en.*;
 import cucumber.api.java.it.Ma;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -15,17 +12,9 @@ import org.junit.jupiter.params.shadow.com.univocity.parsers.tsv.TsvRoutines;
 import org.junit.runner.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-
+import java.util.*;
 import cat.udl.eps.softarch.mytournamentx.service.TournamentService;
-
-
 import javax.transaction.Transactional;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -55,10 +44,8 @@ public class UpdateResultStepDefs {
 
     @Autowired
     private MatchResultRepository matchResultRepository;
-
     @Autowired
     private MatchRepository matchRepository;
-
     @Autowired
     private TeamRepository teamRepository;
     @Autowired
@@ -161,16 +148,14 @@ public class UpdateResultStepDefs {
 
  */
 
-
     Tournament tournament = new Tournament();
     Round round = new Round();
     Match match = new Match();
     MatchResult matchResult = new MatchResult();
 
-
-    Team team = new Team();
     Player player = new Player();
 
+    Team team = new Team();
     Team team2 = new Team();
 
     @Given("^There is a tournament with name \"([^\"]*)\", level \"([^\"]*)\", game \"([^\"]*)\" and bestof \"([^\"]*)\" UpdateResult$")
@@ -184,33 +169,30 @@ public class UpdateResultStepDefs {
 
     @And("^There is a created team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\" UpdateResult$")
     public void thereIsACreatedTeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIsUpdateResult(String name, String game, String level, int maxPlayers, String teamLeader) throws Throwable {
-        team.setName("TeamA");
+        team.setName("TEAM1");
         team.setGame("PACYBITS");
         team.setLevel("AMATEUR");
-        Set<Player> player_list = new HashSet<>();
-        player_list.add(player);
-        team.setPlayers(player_list);
+        Set<Player> playerList = new HashSet<>();
+        playerList.add(player);
+        team.setPlayers(playerList);
         team.setMaxPlayers(1);
         team.setLeader(player);
 
-        team2.setName("TeamB");
+        team2.setName("TEAM2");
         team2.setGame("PACYBITS");
         team2.setLevel("AMATEUR");
-        Set<Player> player_list2 = new HashSet<>();
-        player_list.add(player);
-        team2.setPlayers(player_list2);
+        Set<Player> playerList2 = new HashSet<>();
+        playerList2.add(player);
+        team2.setPlayers(playerList2);
         team2.setMaxPlayers(1);
         team2.setLeader(player);
 
         teamRepository.save(team);
         teamRepository.save(team2);
-
-        //teamRepository.save(team);
-
     }
 
     @And("^There is a round with Round \"([^\"]*)\", bestof \"([^\"]*)\", numTeams \"([^\"]*)\", List<Team> \"([^\"]*)\", tournament \"([^\"]*)\"$")
-    public void thereIsARoundWithRoundBestofNumTeamsListTeamTournament(String nextRound, int bestOf, int numTeams, String rivals31, Tournament tournament) throws Throwable {
+    public void thereIsARoundWithRoundBestofNumTeamsListTeamTournament(String nextRound, int bestOf, int numTeams, String rivals31, String tournament1) throws Throwable {
 
         round.setBestOf(bestOf);
         round.setNextRound(null);
@@ -225,31 +207,45 @@ public class UpdateResultStepDefs {
 
     @And("^There is a match UpdateResult$")
     public void thereIsAMatchUpdateResult() {
+
         match.setRound(round);
         matchRepository.save(match);
-
     }
 
     @And("^There is a matchResult with Match \"([^\"]*)\", Team \"([^\"]*)\", Team \"([^\"]*)\" UpdateResult$")
-    public void thereIsAMatchResultWithMatchTeamTeamUpdateResult(Match match1, Team sender2, Team winner3) throws Throwable {
+    public void thereIsAMatchResultWithMatchTeamTeamUpdateResult(String match1, String sender2, String winner3) throws Throwable {
 
-       /* matchResult.setMatch(match);
+        matchResult.setMatch(match);
         matchResult.setSender(team);
         matchResult.setWinner(team);
-        matchResultRepository.save(matchResult);
+        //matchResultRepository.save(matchResult);
 
-        */
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
     }
 
-    @And("^There is a registered player with username \"([^\"]*)\" and password \"([^\"]*)\" UpdateResult$")
-    public void thereIsARegisteredPlayerWithUsernameAndPasswordUpdateResult(String username, String password) throws Throwable {
+    @And("^There is a registered player with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" " +
+            "UpdateResult$")
+    public void thereIsARegisteredPlayerWithUsernameEmailAndPasswordUpdateResult(String username, String email,
+                                                                                 String password) throws Throwable {
         if (!playerRepository.existsById(username)) {
             player.setUsername(username);
-            player.setEmail("Hola@gmail.com");
+            player.setEmail(email);
 
             player.setPassword(password);
             player.encodePassword();
             playerRepository.save(player);
         }
+    }
+
+    @And("^The winner of the Match is set$")
+    public void theWinnerOfTheMatchIsSet() {
+        Assert.assertNotNull(matchResultRepository.findByWinner(match.getWinner()));
     }
 }
