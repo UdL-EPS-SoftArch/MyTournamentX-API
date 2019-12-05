@@ -5,16 +5,12 @@ Feature: UpdateMatch
 
   Background:
     Given There is a tournament with name "FirstTournament", level "AMATEUR", game "LoL" and bestof "1" UpdateResult
+    And There is a registered player with username "Adrielsito" and password "Adrielsito" UpdateResult
     And There is a created team with name "team", game "LoL", level "AMATEUR", maxPlayers 8, and the team leader is "demoP" UpdateResult
     And There is a created team with name "team2", game "LoL", level "AMATEUR", maxPlayers 8, and the team leader is "demoP" UpdateResult
     And There is a round with Round "null", bestof "1", numTeams "2", List<Team> "team,team2", tournament "FirstTournament"
-
-
-
-    Given There is a match
-
-    And There are some matchresults
-
+    And There is a match UpdateResult
+    And There is a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
 
 
   Scenario: Register the winner of a Match with at least half plus one of the matchresults containing the same winner
