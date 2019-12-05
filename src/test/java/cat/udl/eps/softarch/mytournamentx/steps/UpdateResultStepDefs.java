@@ -198,7 +198,7 @@ public class UpdateResultStepDefs {
         team2.setLevel("AMATEUR");
         Set<Player> player_list2 = new HashSet<>();
         player_list.add(player);
-        team2.setPlayers(player_list);
+        team2.setPlayers(player_list2);
         team2.setMaxPlayers(1);
         team2.setLeader(player);
 
@@ -230,10 +230,12 @@ public class UpdateResultStepDefs {
     @And("^There is a matchResult with Match \"([^\"]*)\", Team \"([^\"]*)\", Team \"([^\"]*)\" UpdateResult$")
     public void thereIsAMatchResultWithMatchTeamTeamUpdateResult(Match match1, Team sender2, Team winner3) throws Throwable {
 
-        matchResult.setMatch(match);
+       /* matchResult.setMatch(match);
         matchResult.setSender(team);
         matchResult.setWinner(team);
         matchResultRepository.save(matchResult);
+
+        */
     }
 
     @And("^There is a registered player with username \"([^\"]*)\" and password \"([^\"]*)\" UpdateResult$")
