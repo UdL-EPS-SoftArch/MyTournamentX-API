@@ -15,6 +15,8 @@ import org.junit.jupiter.params.shadow.com.univocity.parsers.tsv.TsvRoutines;
 import org.junit.runner.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -29,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 public class UpdateResultStepDefs {
 
-    private Player leaderPlayer1 = new Player();
+ /*   private Player leaderPlayer1 = new Player();
     private Player leaderPlayer2 = new Player();
 
     public Team team1 = new Team();
@@ -46,6 +48,8 @@ public class UpdateResultStepDefs {
     public MatchResult matchResult2 = new MatchResult();
     //public MatchResult matchResult3 = new MatchResult();
     //public MatchResult matchResult4 = new MatchResult();
+
+  */
 
 
 
@@ -68,7 +72,7 @@ public class UpdateResultStepDefs {
     @Autowired
     private StepDefs stepDefs;
 
-
+/*
     @Given("^There are some matchresults$")
     public void thereAreSomeMatchresults() throws Exception {
         team1.setName("team1");
@@ -120,6 +124,9 @@ public class UpdateResultStepDefs {
         //matchResultRepository.save(matchResult4);
 
     }
+
+ */
+/*
     @Transactional
     @Given("^One match result has already been created$")
     public void oneMatchResultHasAlreadyBeenCreated() throws Throwable {
@@ -152,27 +159,90 @@ public class UpdateResultStepDefs {
         Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team2).getMatch().getWinner(), team1);
     }
 
+ */
+
+
+    Tournament tournament = new Tournament();
+    Round round = new Round();
+    Match match = new Match();
+    MatchResult matchResult = new MatchResult();
+
+
+    Team team = new Team();
+    Player player = new Player();
+
+    Team team2 = new Team();
+
     @Given("^There is a tournament with name \"([^\"]*)\", level \"([^\"]*)\", game \"([^\"]*)\" and bestof \"([^\"]*)\" UpdateResult$")
-    public void thereIsATournamentWithNameLevelGameAndBestofUpdateResult(String name, Tournament.Level level, String game, String bestOf) throws Throwable {
-        Tournament tournament = new Tournament();
+    public void thereIsATournamentWithNameLevelGameAndBestofUpdateResult(String name, Tournament.Level level, String game, int bestOf) throws Throwable {
         tournament.setName(name);
         tournament.setLevel(level);
         tournament.setGame(game);
-        tournament.setBestOf(Integer.valueOf(bestOf));
+        tournament.setBestOf(bestOf);
+        tournamentRepository.save(tournament);
     }
 
     @And("^There is a created team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\" UpdateResult$")
     public void thereIsACreatedTeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIsUpdateResult(String name, String game, String level, int maxPlayers, String teamLeader) throws Throwable {
-        Team team = new Team(name, game, level, maxPlayers);
-        Player player = playerRepository.findById(teamLeader).get();
+        team.setName("TeamA");
+        team.setGame("PACYBITS");
+        team.setLevel("AMATEUR");
+        Set<Player> player_list = new HashSet<>();
+        player_list.add(player);
+        team.setPlayers(player_list);
+        team.setMaxPlayers(1);
         team.setLeader(player);
+
+        team2.setName("TeamB");
+        team2.setGame("PACYBITS");
+        team2.setLevel("AMATEUR");
+        Set<Player> player_list2 = new HashSet<>();
+        player_list.add(player);
+        team2.setPlayers(player_list);
+        team2.setMaxPlayers(1);
+        team2.setLeader(player);
+
         teamRepository.save(team);
+        teamRepository.save(team2);
+
+        //teamRepository.save(team);
 
     }
 
     @And("^There is a round with Round \"([^\"]*)\", bestof \"([^\"]*)\", numTeams \"([^\"]*)\", List<Team> \"([^\"]*)\", tournament \"([^\"]*)\"$")
-    public void thereIsARoundWithRoundBestofNumTeamsListTeamTournament(String nextRound, String bestOf, String numTeams, String rivals, String tournament) throws Throwable {
-        Round round = new Round();
+    public void thereIsARoundWithRoundBestofNumTeamsListTeamTournament(String nextRound, int bestOf, int numTeams, List<Team> rivals, Tournament tournament) throws Throwable {
+
         round.setBestOf(bestOf);
+        round.setNextRound(null);
+        round.setNumTeams(numTeams);
+        round.setRivals(rivals);
+        round.setTournament(tournament);
+        roundRepository.save(round);
+    }
+
+    @And("^There is a match UpdateResult$")
+    public void thereIsAMatchUpdateResult() {
+        match.setRound(round);
+        matchRepository.save(match);
+
+    }
+
+    @And("^There is a matchResult with Match \"([^\"]*)\", Team \"([^\"]*)\", Team \"([^\"]*)\" UpdateResult$")
+    public void thereIsAMatchResultWithMatchTeamTeamUpdateResult(Match match1, Team sender2, Team winner3) throws Throwable {
+
+        matchResult.setMatch(match);
+        matchResult.setSender(team);
+        matchResult.setWinner(team);
+        matchResultRepository.save(matchResult);
+    }
+
+    @And("^There is a registered player with username \"([^\"]*)\" and password \"([^\"]*)\" UpdateResult$")
+    public void thereIsARegisteredPlayerWithUsernameAndPasswordUpdateResult(String username, String password) throws Throwable {
+        if (!playerRepository.existsById(username)) {
+            player.setUsername(username);
+            player.setPassword(password);
+            player.encodePassword();
+            playerRepository.save(player);
+        }
     }
 }
