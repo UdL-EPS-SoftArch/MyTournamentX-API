@@ -4,8 +4,15 @@ Feature: UpdateMatch
   I want to see the winner of a Match and its result
 
   Background:
+    Given There is a tournament with name "FirstTournament", level "AMATEUR", game "LoL" and bestof "1" UpdateResult
+    And There is a created team with name "team", game "LoL", level "AMATEUR", maxPlayers 8, and the team leader is "demoP" UpdateResult
+    And There is a created team with name "team2", game "LoL", level "AMATEUR", maxPlayers 8, and the team leader is "demoP" UpdateResult
+    And There is a round with Round "null", bestof "1", numTeams "2", List<Team> "team,team2", tournament "FirstTournament"
+
+
+
     Given There is a match
-    And There is a round
+
     And There are some matchresults
 
 

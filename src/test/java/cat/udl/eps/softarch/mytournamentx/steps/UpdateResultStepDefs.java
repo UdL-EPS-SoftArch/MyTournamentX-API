@@ -17,8 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+
 import cat.udl.eps.softarch.mytournamentx.service.TournamentService;
 
+
+import javax.transaction.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -116,9 +120,10 @@ public class UpdateResultStepDefs {
         //matchResultRepository.save(matchResult4);
 
     }
-
+    @Transactional
     @Given("^One match result has already been created$")
     public void oneMatchResultHasAlreadyBeenCreated() throws Throwable {
+
         Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team1),matchResult1);
         //Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team2),matchResult2);
         //Assert.assertEquals(matchResultRepository.findByMatchAndSender(match2,team1),matchResult3);
@@ -145,5 +150,29 @@ public class UpdateResultStepDefs {
     @And("^The winner of the Match is set$")
     public void theWinnerOfTheMatchIsSet() {
         Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team2).getMatch().getWinner(), team1);
+    }
+
+    @Given("^There is a tournament with name \"([^\"]*)\", level \"([^\"]*)\", game \"([^\"]*)\" and bestof \"([^\"]*)\" UpdateResult$")
+    public void thereIsATournamentWithNameLevelGameAndBestofUpdateResult(String name, Tournament.Level level, String game, String bestOf) throws Throwable {
+        Tournament tournament = new Tournament();
+        tournament.setName(name);
+        tournament.setLevel(level);
+        tournament.setGame(game);
+        tournament.setBestOf(Integer.valueOf(bestOf));
+    }
+
+    @And("^There is a created team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\" UpdateResult$")
+    public void thereIsACreatedTeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIsUpdateResult(String name, String game, String level, int maxPlayers, String teamLeader) throws Throwable {
+        Team team = new Team(name, game, level, maxPlayers);
+        Player player = playerRepository.findById(teamLeader).get();
+        team.setLeader(player);
+        teamRepository.save(team);
+
+    }
+
+    @And("^There is a round with Round \"([^\"]*)\", bestof \"([^\"]*)\", numTeams \"([^\"]*)\", List<Team> \"([^\"]*)\", tournament \"([^\"]*)\"$")
+    public void thereIsARoundWithRoundBestofNumTeamsListTeamTournament(String nextRound, String bestOf, String numTeams, String rivals, String tournament) throws Throwable {
+        Round round = new Round();
+        round.setBestOf(bestOf);
     }
 }
