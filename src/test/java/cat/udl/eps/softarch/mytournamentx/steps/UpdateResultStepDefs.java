@@ -160,4 +160,19 @@ public class UpdateResultStepDefs {
         tournament.setGame(game);
         tournament.setBestOf(Integer.valueOf(bestOf));
     }
+
+    @And("^There is a created team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\" UpdateResult$")
+    public void thereIsACreatedTeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIsUpdateResult(String name, String game, String level, int maxPlayers, String teamLeader) throws Throwable {
+        Team team = new Team(name, game, level, maxPlayers);
+        Player player = playerRepository.findById(teamLeader).get();
+        team.setLeader(player);
+        teamRepository.save(team);
+
+    }
+
+    @And("^There is a round with Round \"([^\"]*)\", bestof \"([^\"]*)\", numTeams \"([^\"]*)\", List<Team> \"([^\"]*)\", tournament \"([^\"]*)\"$")
+    public void thereIsARoundWithRoundBestofNumTeamsListTeamTournament(String nextRound, String bestOf, String numTeams, String rivals, String tournament) throws Throwable {
+        Round round = new Round();
+        round.setBestOf(bestOf);
+    }
 }
