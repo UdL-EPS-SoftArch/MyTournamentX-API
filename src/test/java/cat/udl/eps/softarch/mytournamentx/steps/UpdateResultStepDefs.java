@@ -210,11 +210,14 @@ public class UpdateResultStepDefs {
     }
 
     @And("^There is a round with Round \"([^\"]*)\", bestof \"([^\"]*)\", numTeams \"([^\"]*)\", List<Team> \"([^\"]*)\", tournament \"([^\"]*)\"$")
-    public void thereIsARoundWithRoundBestofNumTeamsListTeamTournament(String nextRound, int bestOf, int numTeams, List<Team> rivals, Tournament tournament) throws Throwable {
+    public void thereIsARoundWithRoundBestofNumTeamsListTeamTournament(String nextRound, int bestOf, int numTeams, String rivals31, Tournament tournament) throws Throwable {
 
         round.setBestOf(bestOf);
         round.setNextRound(null);
         round.setNumTeams(numTeams);
+        List<Team> rivals = new ArrayList<>();
+        rivals.add(team);
+        rivals.add(team2);
         round.setRivals(rivals);
         round.setTournament(tournament);
         roundRepository.save(round);
@@ -242,6 +245,8 @@ public class UpdateResultStepDefs {
     public void thereIsARegisteredPlayerWithUsernameAndPasswordUpdateResult(String username, String password) throws Throwable {
         if (!playerRepository.existsById(username)) {
             player.setUsername(username);
+            player.setEmail("Hola@gmail.com");
+
             player.setPassword(password);
             player.encodePassword();
             playerRepository.save(player);
