@@ -4,6 +4,7 @@ import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.Round;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.domain.Tournament;
+import cat.udl.eps.softarch.mytournamentx.domain.types.TournamentState;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.RoundRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
@@ -19,7 +20,7 @@ import static cat.udl.eps.softarch.mytournamentx.utils.MathUtils.intDivisonTop;
 
 
 @Service
-public class InitialiseTournamentService {
+public class TournamentService {
 
     @Autowired
     TournamentRepository tournamentRepository;
@@ -31,7 +32,7 @@ public class InitialiseTournamentService {
     MatchRepository matchRepository;
 
 
-    public void createTournament(String name) throws Exception {
+    public Tournament createTournament(Tournament tournament) throws Exception {
         // Assume n² rivals
         //          0
         //        0   0
@@ -39,11 +40,10 @@ public class InitialiseTournamentService {
 
         // Assume: 2^n | ∀ n ∈ N : n > 0
 
-        Tournament tournament = tournamentRepository.findTournamentByName(name);
+        this.advanceState(tournament);
 
         List<Team> rivals = tournament.getParticipants();
         // Create Round
-        // int roundsNum = MathUtils.factorial(rivals.size() / 2);
         int roundsNum = rivals.size() - 1;
 
         Collections.shuffle(rivals);
@@ -63,6 +63,10 @@ public class InitialiseTournamentService {
         }
 
         setRoundLinks(rounds, roundsNum);
+
+        this.advanceState(tournament);
+
+        return tournament;
     }
 
     private void setRoundLinks(List<Round> rounds, int roundsNum) {
@@ -110,5 +114,32 @@ public class InitialiseTournamentService {
         round.setTournament(tournament);
         roundRepository.save(round);
         return round;
+    }
+
+    public Tournament getTournament(String name) {
+        return tournamentRepository.findTournamentByName(name);
+    }
+
+    public Tournament advanceState(Tournament tournament) throws Exception {
+        switch(tournament.getState()){
+            case UNINITIALIZED:
+                tournament.setState(TournamentState.INITIALIZING);
+                break;
+            case INITIALIZING:
+                tournament.setState(TournamentState.INITIALIZED);
+                break;
+            case INITIALIZED:
+                tournament.setState(TournamentState.IN_PROGRESS);
+                break;
+            case IN_PROGRESS:
+                tournament.setState(TournamentState.FINISHED);
+                break;
+            case FINISHED:
+                tournament.setState(TournamentState.CLOSED);
+                break;
+            default:
+                throw new Exception("Wrong state. This state needs manual modification");
+        }
+        return tournamentRepository.save(tournament);
     }
 }
