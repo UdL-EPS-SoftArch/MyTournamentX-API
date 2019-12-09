@@ -5,16 +5,18 @@ Feature: UpdateMatch
 
   Background:
     Given There is a tournament with name "FirstTournament", level "AMATEUR", game "LoL" and bestof "1" UpdateResult
-    And There is a registered player with username "Adriel", email "adriel@gmail.com" and password "victorpetao" UpdateResult
-    And There is a created team with name "team", game "LoL", level "AMATEUR", maxPlayers 8, and the team leader is "demoP" UpdateResult
-    And There is a created team with name "team2", game "LoL", level "AMATEUR", maxPlayers 8, and the team leader is "demoP" UpdateResult
+    And I login as "demoP" with password "password"
+    And There is a created team with name "team", game "LoL", level "AMATEUR", maxPlayers "1", and the team leader is "demoP" UpdateResult
+    And There is a created team with name "team2", game "LoL", level "AMATEUR", maxPlayers "1", and the team leader is "demoP" UpdateResult
     And There is a round with Round "null", bestof "1", numTeams "2", List<Team> "team,team2", tournament "FirstTournament"
     And There is a match UpdateResult
 
 
-
   Scenario: Register the winner of a Match with at least half plus one of the matchresults containing the same winner
-    When There is a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
+    Given There is a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
+    And There is a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
+    And There is a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
+    When I choose the winner
     Then The response code is 201
     And The winner of the Match is set
 

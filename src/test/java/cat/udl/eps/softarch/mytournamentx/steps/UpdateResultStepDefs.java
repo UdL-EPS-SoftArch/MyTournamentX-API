@@ -167,8 +167,14 @@ public class UpdateResultStepDefs {
         tournamentRepository.save(tournament);
     }
 
-    @And("^There is a created team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\" UpdateResult$")
+    @And("^There is a created team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers \"" +
+            "([^\"]*)\", and the team leader is \"([^\"]*)\" UpdateResult$")
     public void thereIsACreatedTeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIsUpdateResult(String name, String game, String level, int maxPlayers, String teamLeader) throws Throwable {
+
+        player = playerRepository.findByEmail("demoP@mytournamentx.game");
+
+        playerRepository.save(player);
+
         team.setName("TEAM1");
         team.setGame("PACYBITS");
         team.setLevel("AMATEUR");
@@ -177,6 +183,8 @@ public class UpdateResultStepDefs {
         team.setPlayers(playerList);
         team.setMaxPlayers(1);
         team.setLeader(player);
+
+        teamRepository.save(team);
 
         team2.setName("TEAM2");
         team2.setGame("PACYBITS");
@@ -187,7 +195,6 @@ public class UpdateResultStepDefs {
         team2.setMaxPlayers(1);
         team2.setLeader(player);
 
-        teamRepository.save(team);
         teamRepository.save(team2);
     }
 
@@ -248,4 +255,5 @@ public class UpdateResultStepDefs {
     public void theWinnerOfTheMatchIsSet() {
         Assert.assertNotNull(matchResultRepository.findByWinner(match.getWinner()));
     }
+
 }
