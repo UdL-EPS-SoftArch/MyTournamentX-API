@@ -1,3 +1,4 @@
+
 package cat.udl.eps.softarch.mytournamentx.steps;
 
 import cat.udl.eps.softarch.mytournamentx.domain.*;
@@ -12,6 +13,8 @@ import org.junit.jupiter.params.shadow.com.univocity.parsers.tsv.TsvRoutines;
 import org.junit.runner.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+
+import java.io.OutputStream;
 import java.util.*;
 import cat.udl.eps.softarch.mytournamentx.service.TournamentService;
 import javax.transaction.Transactional;
@@ -22,13 +25,9 @@ public class UpdateResultStepDefs {
 
  /*   private Player leaderPlayer1 = new Player();
     private Player leaderPlayer2 = new Player();
-
     public Team team1 = new Team();
     public Team team2 = new Team();
     public List<Team> rivals = new ArrayList<>();
-
-
-
     public Tournament tournament = new Tournament();
     public Round round = new Round();
     public Match match1 =  new Match();
@@ -37,7 +36,6 @@ public class UpdateResultStepDefs {
     public MatchResult matchResult2 = new MatchResult();
     //public MatchResult matchResult3 = new MatchResult();
     //public MatchResult matchResult4 = new MatchResult();
-
   */
 
 
@@ -68,27 +66,22 @@ public class UpdateResultStepDefs {
         team2.setName("team2");
         team2.setMaxPlayers(1);
         team2.setGame("el lol");
-
         teamRepository.save(team1);
         teamRepository.save(team2);
-
         rivals.add(team1);
         rivals.add(team2);
-
         tournament.setName("Working");
         tournament.setGame("el lol");
         tournament.setBestOf(1);
         tournament.setLevel(Tournament.Level.AMATEUR);
         tournament.setParticipants(rivals);
         tournamentService.createTournament(tournament);
-
         round.setNextRound(null);
         round.setTournament(tournament);
         round.setNumTeams(2);
         round.setBestOf(1);
         round.setRivals(rivals);
         roundRepository.save(round);
-
         match1.setRound(round);
         matchRepository.save(match1);
         matchResult1.setMatch(match1);
@@ -96,7 +89,6 @@ public class UpdateResultStepDefs {
         //matchResult2.setMatch(match1);
         //matchResult2.setSender(team2);
         matchResult1.setSender(team1);
-
         //match2.setRound(round);
         //matchRepository.save(match2);
         //matchResult3.setMatch(match2);
@@ -104,33 +96,26 @@ public class UpdateResultStepDefs {
         //matchResult4.setMatch(match2);
         //matchResult4.setSender(team2);
         //matchResult3.setSender(team1);
-
         matchResultRepository.save(matchResult1);
         //matchResultRepository.save(matchResult2);
         //matchResultRepository.save(matchResult3);
         //matchResultRepository.save(matchResult4);
-
     }
-
  */
 /*
     @Transactional
     @Given("^One match result has already been created$")
     public void oneMatchResultHasAlreadyBeenCreated() throws Throwable {
-
         Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team1),matchResult1);
         //Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team2),matchResult2);
         //Assert.assertEquals(matchResultRepository.findByMatchAndSender(match2,team1),matchResult3);
         //Assert.assertEquals(matchResultRepository.findByMatchAndSender(match2,team2),matchResult4);
-
     }
-
     @When("^I created my MatchResult as a TeamLeader and i'm the last team to submit it$")
     public void iCreatedMyMatchResultAsATeamLeaderAndIMTheLastTeamToSubmitIt() throws Throwable {
         matchResult2.setMatch(match1);
         matchResult2.setSender(team2);
         matchResult2.setWinner(team1);
-
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/matchResults")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -140,12 +125,10 @@ public class UpdateResultStepDefs {
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
     }
-
     @And("^The winner of the Match is set$")
     public void theWinnerOfTheMatchIsSet() {
         Assert.assertEquals(matchResultRepository.findByMatchAndSender(match1,team2).getMatch().getWinner(), team1);
     }
-
  */
 
     Tournament tournament = new Tournament();
@@ -219,7 +202,7 @@ public class UpdateResultStepDefs {
         matchRepository.save(match);
     }
 
-    @And("^There is a matchResult with Match \"([^\"]*)\", Team \"([^\"]*)\", Team \"([^\"]*)\" UpdateResult$")
+    @When("^I post a  matchResult with Match \"([^\"]*)\", Team \"([^\"]*)\", Team \"([^\"]*)\" UpdateResult$")
     public void thereIsAMatchResultWithMatchTeamTeamUpdateResult(String match1, String sender2, String winner3) throws Throwable {
 
         matchResult.setMatch(match);
@@ -250,9 +233,10 @@ public class UpdateResultStepDefs {
             playerRepository.save(player);
         }
     }
-
+    @Transactional
     @And("^The winner of the Match is set$")
     public void theWinnerOfTheMatchIsSet() {
+        Assert.assertEquals(matchResultRepository.findByMatchAndSender(match,matchResult.getSender()).getWinner(), team);
         Assert.assertNotNull(matchResultRepository.findByWinner(match.getWinner()));
     }
 

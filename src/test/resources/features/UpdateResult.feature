@@ -13,10 +13,7 @@ Feature: UpdateMatch
 
 
   Scenario: Register the winner of a Match with at least half plus one of the matchresults containing the same winner
-    Given There is a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
-    And There is a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
-    And There is a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
-    When I choose the winner
+    When I post a  matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
     Then The response code is 201
     And The winner of the Match is set
 
