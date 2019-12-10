@@ -1,10 +1,9 @@
 package cat.udl.eps.softarch.mytournamentx.service;
 
-import cat.udl.eps.softarch.mytournamentx.domain.Match;
-import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
-import cat.udl.eps.softarch.mytournamentx.domain.Team;
+import cat.udl.eps.softarch.mytournamentx.domain.*;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
+import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,13 @@ public class MatchWinnerService {
     @Autowired
     MatchResultRepository matchResultRepository;
 
-    public void handleMatchResultWinners(MatchResult matchResult ){
+    @Autowired
+    TournamentRepository tournamentRepository;
+
+    @Autowired
+    TournamentService tournamentService;
+
+    public void handleMatchResultWinners(MatchResult matchResult ) throws Exception {
         Map<Team, Integer> diccionari = new HashMap<>();
         for (MatchResult matchRes:matchResultRepository.findByMatch(matchResult.getMatch())) {
             if (diccionari.containsKey(matchRes.getWinner())) {
@@ -46,8 +51,9 @@ public class MatchWinnerService {
             }
 
         }
+        handleMatchWinners(matchResult.getMatch());
     }
-    public void handleMatchWinners(Match match) {
+    public void handleMatchWinners(Match match) throws Exception {
         int checktheWinner = 0;
         for (Match matchTotal:matchRepository.findByRound(match.getRound())){
             if(matchTotal.getWinner() != null){
@@ -56,6 +62,15 @@ public class MatchWinnerService {
         }
         if (match.getRound().getBestOf() / 2 + 1 == checktheWinner) {
             checkWinners(match);
+        }
+        handleRoundWinners(match.getRound());
+    }
+
+    private void handleRoundWinners(Round round) throws Exception{
+        if(round.getNextRound() == null){
+            round.getTournament().setWinner(round.getWinner());
+            tournamentRepository.save(round.getTournament());
+            tournamentService.advanceState(round.getTournament());
         }
     }
 

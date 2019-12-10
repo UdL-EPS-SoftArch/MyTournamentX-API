@@ -85,7 +85,7 @@ public class MatchResultEventHandler {
 
     }
     @HandleAfterCreate
-    public void handlePlayerAfterSave(MatchResult matchResult) {
+    public void handlePlayerAfterSave(MatchResult matchResult) throws Exception {
         logger.info("After updating: {}", matchResult.toString());
         if(matchResult.getMatch().getRound().getNumTeams() == matchResultRepository.findByMatch(matchResult.getMatch()).size()){
             matchWinnerService.handleMatchResultWinners(matchResult);

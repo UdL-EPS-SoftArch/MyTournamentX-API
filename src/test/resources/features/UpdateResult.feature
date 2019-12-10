@@ -17,6 +17,7 @@ Feature: UpdateMatch
     Then The response code is 201
     And The winner of the Match is set
     And The winner of the Round is set
+    And The winner of the Tournament is set
 
   Scenario: Try to register the winner of a Match without half plus one of the matchresults containing the same winner
     Given Less of half of the matchresults of the match contain the same winner "Winner"

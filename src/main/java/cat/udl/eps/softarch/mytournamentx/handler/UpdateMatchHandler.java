@@ -35,8 +35,8 @@ public class UpdateMatchHandler {
     MatchWinnerService matchWinnerService;
 
     @HandleAfterCreate
-    public void  handleMatchPreUpdate(Match match)  {
-        matchWinnerService.handleMatchWinners(match);
+    public void  handleMatchPreUpdate(Match match) throws Exception {
+
     }
 }
 
