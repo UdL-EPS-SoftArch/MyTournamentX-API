@@ -4,6 +4,7 @@ import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
 import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
+import cat.udl.eps.softarch.mytournamentx.repository.MatchRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.service.MatchWinnerService;
 import org.slf4j.Logger;
@@ -37,6 +38,9 @@ public class MatchResultEventHandler {
 
     @Autowired
     MatchResultRepository matchResultRepository;
+
+    @Autowired
+    MatchRepository matchRepository;
 
     @Autowired
     MatchWinnerService matchWinnerService;
@@ -102,6 +106,7 @@ public class MatchResultEventHandler {
         }
         if(diccionari.size() == 1){
             matchResult.getMatch().setWinner(matchResult.getWinner());
+            matchRepository.save(matchResult.getMatch());
         }
         else {
             if(Collections.max(diccionari.values()) > matchResult.getMatch().getRound().getNumTeams()/2 + 1){

@@ -58,6 +58,7 @@ public class UpdateMatchHandler {
         }
         if(diccionari.size() == 1){
             match.getRound().setWinner(match.getWinner());
+            roundReposotiry
         }
         else {
             if(Collections.max(diccionari.values()) > match.getRound().getBestOf()/2 + 1){
