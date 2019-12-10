@@ -41,6 +41,7 @@ public class UpdateRoundHandler{
     public void  handleMatchPreUpdate(Round round) throws Exception {
         if(round.getNextRound() == null){
             round.getTournament().setWinner(round.getWinner());
+            tournamentRepository.save(round.getTournament());
             tournamentService.advanceState(round.getTournament());
         }
     }

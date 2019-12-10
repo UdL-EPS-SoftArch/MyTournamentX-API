@@ -236,7 +236,7 @@ public class UpdateResultStepDefs {
     @Transactional
     @And("^The winner of the Match is set$")
     public void theWinnerOfTheMatchIsSet() {
-        Assert.assertEquals(matchResultRepository.findByMatchAndSender(match,matchResult.getSender()).getMatch().getWinner(), team);
+        Assert.assertEquals(team.getName(), matchResultRepository.findByMatchAndSender(match,matchResult.getSender()).getMatch().getWinner().getName());
     }
 
 }

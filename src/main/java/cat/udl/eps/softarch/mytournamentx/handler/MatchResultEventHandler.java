@@ -84,45 +84,15 @@ public class MatchResultEventHandler {
         logger.info("Before updating: {}", matchResult.toString());
 
     }
-    @HandleAfterSave
+    @HandleAfterCreate
     public void handlePlayerAfterSave(MatchResult matchResult) {
         logger.info("After updating: {}", matchResult.toString());
-        if(matchResult.getMatch().getRound().getNumTeams() ==
-                matchResultRepository.findByMatch(matchResult.getMatch()).size()){
-            matchWinnerService.handleMatchWinners();
-            checkWinners(matchResult);
+        if(matchResult.getMatch().getRound().getNumTeams() == matchResultRepository.findByMatch(matchResult.getMatch()).size()){
+            matchWinnerService.handleMatchResultWinners(matchResult);
         }
 
     }
 
-    private void checkWinners(MatchResult matchResult){
-        Map<Team, Integer> diccionari = new HashMap<>();
-        for (MatchResult matchRes:matchResultRepository.findByMatch(matchResult.getMatch())) {
-            if (diccionari.containsKey(matchRes.getWinner())) {
-                diccionari.replace(matchRes.getWinner(), diccionari.get(matchRes.getWinner()) + 1);
-            }
-            diccionari.put(matchRes.getWinner(), 1);
-
-        }
-        if(diccionari.size() == 1){
-            matchResult.getMatch().setWinner(matchResult.getWinner());
-            matchRepository.save(matchResult.getMatch());
-        }
-        else {
-            if(Collections.max(diccionari.values()) > matchResult.getMatch().getRound().getNumTeams()/2 + 1){
-                for (Team team:diccionari.keySet()
-                     ) {
-                    if (diccionari.get(team).equals(Collections.max(diccionari.values()))){
-                        matchResult.getMatch().setWinner(team);
-                        matchRepository.save(matchResult.getMatch());
-                }
-
-                }
-            }
-
-        }
-
-    }
 
 
     @HandleBeforeDelete

@@ -8,7 +8,7 @@ Feature: UpdateMatch
     And I login as "demoP" with password "password"
     And There is a created team with name "team", game "LoL", level "AMATEUR", maxPlayers "1", and the team leader is "demoP" UpdateResult
     And There is a created team with name "team2", game "LoL", level "AMATEUR", maxPlayers "1", and the team leader is "demoP" UpdateResult
-    And There is a round with Round "null", bestof "1", numTeams "2", List<Team> "team,team2", tournament "FirstTournament"
+    And There is a round with Round "null", bestof "1", numTeams "1", List<Team> "team,team2", tournament "FirstTournament"
     And There is a match UpdateResult
 
 
