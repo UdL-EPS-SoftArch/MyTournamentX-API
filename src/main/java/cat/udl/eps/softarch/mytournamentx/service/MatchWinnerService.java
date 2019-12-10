@@ -1,5 +1,6 @@
 package cat.udl.eps.softarch.mytournamentx.service;
 
+import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchRepository;
@@ -46,7 +47,46 @@ public class MatchWinnerService {
 
         }
     }
-    public void handleMatchWinners() {
+    public void handleMatchWinners(Match match) {
+        int checktheWinner = 0;
+        for (Match matchTotal:matchRepository.findByRound(match.getRound())){
+            if(matchTotal.getWinner() != null){
+                checktheWinner= checktheWinner+1;
+            }
+        }
+        if (match.getRound().getBestOf() / 2 + 1 == checktheWinner) {
+            checkWinners(match);
+        }
+    }
+
+
+    private void checkWinners(Match match){
+        Map<Team, Integer> diccionari = new HashMap<>();
+        for (Match matchTotal:matchRepository.findByRound(match.getRound())) {
+            if (diccionari.containsKey(matchTotal.getWinner())) {
+                diccionari.replace(matchTotal.getWinner(), diccionari.get(matchTotal.getWinner()) + 1);
+            }
+            if(matchTotal.getWinner() != null) {
+                diccionari.put(matchTotal.getWinner(), 1);
+            }
+        }
+        if(diccionari.size() == 1){
+            match.getRound().setWinner(match.getWinner());
+        }
+        else {
+            if(Collections.max(diccionari.values()) > match.getRound().getBestOf()/2 + 1){
+                for (Team team:diccionari.keySet()
+                ) {
+                    if (diccionari.get(team).equals(Collections.max(diccionari.values()))){
+                        match.getRound().setWinner(team);
+                    }
+
+                }
+            }
+
+        }
 
     }
+
 }
+

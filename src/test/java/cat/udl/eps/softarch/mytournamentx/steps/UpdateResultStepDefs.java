@@ -197,7 +197,6 @@ public class UpdateResultStepDefs {
 
     @And("^There is a match UpdateResult$")
     public void thereIsAMatchUpdateResult() {
-        match.setId(1);
         match.setRound(round);
         matchRepository.save(match);
     }
@@ -239,4 +238,10 @@ public class UpdateResultStepDefs {
         Assert.assertEquals(team.getName(), matchResultRepository.findByMatchAndSender(match,matchResult.getSender()).getMatch().getWinner().getName());
     }
 
+    @And("^The winner of the Round is set$")
+    public void theWinnerOfTheRoundIsSet() {
+        roundRepository.findByWinner(matchResult.getWinner());
+        Team Winner_test = matchResultRepository.findByMatchAndSender(match,matchResult.getSender()).getMatch().getRound().getWinner();
+        Assert.assertEquals(team.getName(), Winner_test.getName());
+    }
 }
