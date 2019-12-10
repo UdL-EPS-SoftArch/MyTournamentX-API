@@ -14,7 +14,7 @@ import java.util.List;
  * The interface Round repository.
  */
 @RepositoryRestResource
-public interface RoundRepository extends PagingAndSortingRepository<Round, String> {
+public interface RoundRepository extends PagingAndSortingRepository<Round, Integer> {
     /* Interface provides automatically, as defined in https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html
      * count, delete, deleteAll, deleteById, existsById, findAll, findAllById, findById, save, saveAll
      *
@@ -27,7 +27,7 @@ public interface RoundRepository extends PagingAndSortingRepository<Round, Strin
      *
      * @return round identified by the given id.
      */
-    Round findById(@Param("id") Integer id);
+    // Round findById(@Param("id") Integer id);
 
     /**
      * Find a list of rounds won by a particular team.
