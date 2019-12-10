@@ -25,6 +25,7 @@ Feature: UpdateMatch
     And The winner of the Match is not updated
     And Throws an exception
 
+
   Scenario: Try to register the winner of a Match without at half plus one of the matchresults
     Given Less of half plus one of the matchresults
     When I compare all the matchresults of the match

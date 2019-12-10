@@ -5,6 +5,7 @@ import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
+import cat.udl.eps.softarch.mytournamentx.service.MatchWinnerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class MatchResultEventHandler {
 
     @Autowired
     MatchResultRepository matchResultRepository;
+
+    @Autowired
+    MatchWinnerService matchWinnerService;
 
     @HandleAfterCreate
     public void handleDefWinner(MatchResult matchResult){
@@ -81,6 +85,7 @@ public class MatchResultEventHandler {
         logger.info("After updating: {}", matchResult.toString());
         if(matchResult.getMatch().getRound().getNumTeams() ==
                 matchResultRepository.findByMatch(matchResult.getMatch()).size()){
+            matchWinnerService.handleMatchWinners();
             checkWinners(matchResult);
         }
 
@@ -104,6 +109,7 @@ public class MatchResultEventHandler {
                      ) {
                     if (diccionari.get(team).equals(Collections.max(diccionari.values()))){
                         matchResult.getMatch().setWinner(team);
+                        matchRepository.save(matchResult.getMatch());
                 }
 
                 }
