@@ -44,12 +44,26 @@ public class UpdateResultStepDefs {
     Tournament tournament = new Tournament();
     Round round = new Round();
     Match match = new Match();
+    Match match1 = new Match();
+    Match match2 = new Match();
+    Match match3 = new Match();
     MatchResult matchResult = new MatchResult();
+    MatchResult matchResult1 = new MatchResult();
+    MatchResult matchResult2 = new MatchResult();
+    MatchResult matchResult3 = new MatchResult();
+    MatchResult matchResult4 = new MatchResult();
+    MatchResult matchResult5 = new MatchResult();
+    MatchResult matchResult6 = new MatchResult();
+    MatchResult matchResult7 = new MatchResult();
+    MatchResult matchResult8 = new MatchResult();
+    MatchResult matchResult9 = new MatchResult();
+
 
     Player player = new Player();
 
     Team team = new Team();
     Team team2 = new Team();
+    Team team3 = new Team();
 
     @Given("^There is a tournament with name \"([^\"]*)\", level \"([^\"]*)\", game \"([^\"]*)\" and bestof \"([^\"]*)\" UpdateResult$")
     public void thereIsATournamentWithNameLevelGameAndBestofUpdateResult(String name, Tournament.Level level, String game, int bestOf) throws Throwable {
@@ -148,5 +162,212 @@ public class UpdateResultStepDefs {
     public void theWinnerOfTheTournamentIsSet() {
         Team Winner_test = matchResultRepository.findByMatchAndSender(match,matchResult.getSender()).getMatch().getRound().getTournament().getWinner();
         Assert.assertEquals(team.getName(), Winner_test.getName());
+    }
+
+
+
+    @And("^There is a number of matchs for the round$")
+    public void thereIsANumberOfMatchsForTheRound() {
+        match1.setRound(round);
+        matchRepository.save(match1);
+        match2.setRound(round);
+        matchRepository.save(match2);
+        match3.setRound(round);
+        matchRepository.save(match3);
+
+    }
+
+    @And("^There is a created different number of teams$")
+    public void thereIsACreatedDifferentNumberOfTeams() {
+        player = playerRepository.findByEmail("demoP@mytournamentx.game");
+
+        playerRepository.save(player);
+
+        team.setName("TEAM1");
+        team.setGame("PACYBITS");
+        team.setLevel("AMATEUR");
+        Set<Player> playerList = new HashSet<>();
+        playerList.add(player);
+        team.setPlayers(playerList);
+        team.setMaxPlayers(1);
+        team.setLeader(player);
+
+        teamRepository.save(team);
+
+        team2.setName("TEAM2");
+        team2.setGame("PACYBITS");
+        team2.setLevel("AMATEUR");
+        Set<Player> playerList2 = new HashSet<>();
+        playerList2.add(player);
+        team2.setPlayers(playerList);
+        team2.setMaxPlayers(1);
+        team2.setLeader(player);
+
+        teamRepository.save(team2);
+
+        team3.setName("TEAM3");
+        team3.setGame("PACYBITS");
+        team3.setLevel("AMATEUR");
+        Set<Player> playerList3 = new HashSet<>();
+        playerList3.add(player);
+        team3.setPlayers(playerList);
+        team3.setMaxPlayers(1);
+        team3.setLeader(player);
+
+        teamRepository.save(team3);
+    }
+
+    @When("^I post nine MatchResults$")
+    public void iPostAMatchResults() throws Exception{
+        matchResult1.setMatch(match1);
+        matchResult1.setSender(team);
+        matchResult1.setWinner(team);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult1))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult2.setMatch(match1);
+        matchResult2.setSender(team2);
+        matchResult2.setWinner(team);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult2))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult3.setMatch(match1);
+        matchResult3.setSender(team3);
+        matchResult3.setWinner(team2);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult3))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult4.setMatch(match2);
+        matchResult4.setSender(team);
+        matchResult4.setWinner(team2);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult4))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult5.setMatch(match2);
+        matchResult5.setSender(team2);
+        matchResult5.setWinner(team2);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult5))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult6.setMatch(match2);
+        matchResult6.setSender(team3);
+        matchResult6.setWinner(team2);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult6))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult7.setMatch(match3);
+        matchResult7.setSender(team);
+        matchResult7.setWinner(team);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult7))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult8.setMatch(match3);
+        matchResult8.setSender(team2);
+        matchResult8.setWinner(team);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult8))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+
+        matchResult9.setMatch(match3);
+        matchResult9.setSender(team3);
+        matchResult9.setWinner(team);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/matchResults")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(
+                                stepDefs.mapper.writeValueAsString(matchResult9))
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @Transactional
+    @And("^The winner of the Matchs are set$")
+    public void theWinnerOfTheMatchsAreSet() {
+        Assert.assertEquals(team.getName(), matchResultRepository.findByMatchAndSender(match1,matchResult1.getSender()).getMatch().getWinner().getName());
+        Assert.assertEquals(team2.getName(), matchResultRepository.findByMatchAndSender(match2,matchResult4.getSender()).getMatch().getWinner().getName());
+        Assert.assertEquals(team3.getName(), matchResultRepository.findByMatchAndSender(match3,matchResult7.getSender()).getMatch().getWinner().getName());
+    }
+
+    @And("^The winner of the Round for the Matches is set$")
+    public void theWinnerOfTheRoundForTheMatchesIsSet() {
+        Team Winner_test = matchResultRepository.findByMatchAndSender(match1,matchResult1.getSender()).getMatch().getRound().getWinner();
+        Assert.assertEquals(team.getName(), Winner_test.getName());
+    }
+
+    @And("^The winner of the Tournament for the Round is set$")
+    public void theWinnerOfTheTournamentForTheRoundIsSet() {
+        Team Winner_test = matchResultRepository.findByMatchAndSender(match1,matchResult1.getSender()).getMatch().getRound().getTournament().getWinner();
+        Assert.assertEquals(team.getName(), Winner_test.getName());
+    }
+
+    @And("^There is a round created for SecondTournament$")
+    public void thereIsARoundCreatedForSecondTournament() {
+        round.setBestOf(3);
+        round.setNextRound(null);
+        round.setNumTeams(3);
+        List<Team> rivals = new ArrayList<>();
+        rivals.add(team);
+        rivals.add(team2);
+        rivals.add(team3);
+        round.setRivals(rivals);
+        round.setTournament(tournament);
+        roundRepository.save(round);
     }
 }

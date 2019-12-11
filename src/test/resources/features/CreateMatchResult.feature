@@ -10,7 +10,7 @@ Feature: CreateMatchResult
 
 
   Scenario: Assign a match to a MatchResult
-    Given   There is no registered matchResult for this Match
+    Given  There is no registered matchResult for this Match
     And   I login as "demoP" with password "password"
     When  I register a new MatchResult with Description "description"
     Then  The response code is 201

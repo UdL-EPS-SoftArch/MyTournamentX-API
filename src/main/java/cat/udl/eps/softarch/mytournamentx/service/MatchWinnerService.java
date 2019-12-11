@@ -36,14 +36,16 @@ public class MatchWinnerService {
         }
         if(diccionari.size() == 1){
             matchResult.getMatch().setWinner(matchResult.getWinner());
+            matchResult.getMatch().setHasWinner(true);
             matchRepository.save(matchResult.getMatch());
         }
         else {
-            if(Collections.max(diccionari.values()) > matchResult.getMatch().getRound().getNumTeams()/2 + 1){
-                for (Team team:diccionari.keySet()
-                ) {
+            if(Collections.max(diccionari.values()) >= matchResult.getMatch().getRound().getNumTeams() / 2 + 1){
+                for (Team team:diccionari.keySet())
+                {
                     if (diccionari.get(team).equals(Collections.max(diccionari.values()))){
                         matchResult.getMatch().setWinner(team);
+                        matchResult.getMatch().setHasWinner(true);
                         matchRepository.save(matchResult.getMatch());
                     }
 

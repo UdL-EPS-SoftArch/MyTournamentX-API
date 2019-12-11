@@ -21,4 +21,7 @@ public class Match extends UriEntity<Integer> {
 
     @ManyToOne
     private Round round;
+
+
+    private boolean hasWinner = false;
 }

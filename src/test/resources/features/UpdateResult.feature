@@ -18,12 +18,16 @@ Feature: UpdateMatch
     And The winner of the Tournament is set
 
   Scenario: Try to register the winner of a Match without half plus one of the matchresults containing the same winner
-    Given Less of half of the matchresults of the match contain the same winner "Winner"
-    When I compare all the matchresults of the match
-    And I set "Winner" as winner
-    Then The response code is <number>
-    And The winner of the Match is not updated
-    And Throws an exception
+    Given There is a tournament with name "SecondTournament", level "AMATEUR", game "LoL" and bestof "3" UpdateResult
+    And I login as "demoP" with password "password"
+    And There is a created different number of teams
+    And There is a round created for SecondTournament
+    And There is a number of matchs for the round
+    When I post nine MatchResults
+    Then The response code is 201
+    And The winner of the Matchs are set
+    And The winner of the Round for the Matches is set
+    And The winner of the Tournament for the Round is set
 
 
   Scenario: Try to register the winner of a Match without at half plus one of the matchresults
