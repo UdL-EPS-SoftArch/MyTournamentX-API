@@ -9,10 +9,9 @@ Feature: UpdateMatch
     Given There is a tournament with name "FirstTournament", level "AMATEUR", game "LoL" and bestof "1" UpdateResult
     And I login as "demoP" with password "password"
     And There is a created team with name "team", game "LoL", level "AMATEUR", maxPlayers "1", and the team leader is "demoP" UpdateResult
-    And There is a created team with name "team2", game "LoL", level "AMATEUR", maxPlayers "1", and the team leader is "demoP" UpdateResult
-    And There is a round with Round "null", bestof "1", numTeams "1", List<Team> "team,team2", tournament "FirstTournament"
+    And There is a round with Round "null", bestof "1", numTeams "1", List<Team> "team", tournament "FirstTournament"
     And There is a match UpdateResult
-    When I post a  matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
+    When I post a matchResult with Match "match", Team "Sender", Team "Winner" UpdateResult
     Then The response code is 201
     And The winner of the Match is set
     And The winner of the Round is set
