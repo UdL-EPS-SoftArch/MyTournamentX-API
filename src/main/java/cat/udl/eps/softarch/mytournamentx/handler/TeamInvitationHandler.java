@@ -33,11 +33,14 @@ public class TeamInvitationHandler {
     @HandleBeforeCreate
     public void handleTeamInvitationPreCreate(TeamInvitation teamInvitation) {
         logger.info("Before creating: {}", teamInvitation.toString());
-        String[] ids = teamInvitation.getId().split("_");
-        if(!teamRepository.existsByName(ids[1]) || !playerRepository.existsById(ids[0])){
+        if(teamInvitation.getTeam()==null || !teamRepository.existsByName(teamInvitation.getTeam().getId())  || teamInvitation.getUser()==null || !playerRepository.existsById(teamInvitation.getUser().getId())){
             throw new BadRequestException();
         }
-        Team team = teamRepository.findTeamByName(ids[1]);
+
+        if(teamInvitationRepository.findTTeamInvitationByTeamAndUser(teamInvitation.getTeam(), teamInvitation.getUser()) != null)
+            throw new BadRequestException();
+        Team team = teamRepository.findTeamByName(teamInvitation.getTeam().getId());
+
         if(team.getMaxPlayers() == team.getCurrentPlayers())
             throw new BadRequestException();
     }

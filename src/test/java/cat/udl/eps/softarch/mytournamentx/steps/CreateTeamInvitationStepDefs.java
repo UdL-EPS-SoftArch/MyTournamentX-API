@@ -70,8 +70,8 @@ public class CreateTeamInvitationStepDefs {
     }
 
     @When("^I create the invitation for the user \"([^\"]*)\" to participate in team \"([^\"]*)\"$")
-    public void iCreateTheInvitationForTheUserToParticipateInTeam(String userId, String teamId) throws Throwable {
-        TeamInvitation teamInvitation = new TeamInvitation(userId, teamId, "Welcome");
+    public void iCreateTheInvitationForTheUserToParticipateInTeam(String user, String team) throws Throwable {
+        TeamInvitation teamInvitation = new TeamInvitation(playerRepository.findByEmail(user), teamRepository.findTeamByName(team), "Welcome");
 
         stepDefs.result = stepDefs.mockMvc.perform(
             post("/teamInvitations")
@@ -89,8 +89,8 @@ public class CreateTeamInvitationStepDefs {
     }*/
 
     @And("^The invitation has been created for the user \"([^\"]*)\" for the team \"([^\"]*)\"$")
-    public void theInvitationHasBeenCreatedForTheUserForTheTeam(String userId, String teamId) throws Throwable {
-        TeamInvitation teamInvitation =new TeamInvitation(userId, teamId, "Welcome");
+    public void theInvitationHasBeenCreatedForTheUserForTheTeam(String user, String team) throws Throwable {
+        TeamInvitation teamInvitation = teamInvitationRepository.findTTeamInvitationByTeamAndUser(teamRepository.findTeamByName(team), playerRepository.findByEmail(user));
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/teamInvitations/{id}", teamInvitation.getId())
                         .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate()))
@@ -108,8 +108,7 @@ public class CreateTeamInvitationStepDefs {
     }
 
     @And("^I cannot create a invitation for the user \"([^\"]*)\" for the team \"([^\"]*)\"$")
-    public void iCannotCreateAInvitationForTheUserForTheTeam(String userId, String teamId) throws Throwable {
-        TeamInvitation teamInvitation = new TeamInvitation(userId,teamId,"");
+    public void iCannotCreateAInvitationForTheUserForTheTeam(User user, Team team) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/teamInvitations/{id}", teamInvitation.getId())
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -124,8 +123,8 @@ public class CreateTeamInvitationStepDefs {
                 .andExpect(status().isNotFound());
     }
 
-    @Then("^The sever response code is (\\d+)$")
-    public void theSeverResponseCodeIs(int code) throws Throwable {
+    @Then("^The server response code is (\\d+)$")
+    public void theServerResponseCodeIs(int code) throws Throwable {
         stepDefs.result.andExpect(status().is(code));
     }
 
