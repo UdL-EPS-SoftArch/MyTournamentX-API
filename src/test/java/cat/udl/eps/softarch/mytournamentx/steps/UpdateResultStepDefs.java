@@ -342,13 +342,13 @@ public class UpdateResultStepDefs {
     public void theWinnerOfTheMatchsAreSet() {
         Assert.assertEquals(team.getName(), matchResultRepository.findByMatchAndSender(match1,matchResult1.getSender()).getMatch().getWinner().getName());
         Assert.assertEquals(team2.getName(), matchResultRepository.findByMatchAndSender(match2,matchResult4.getSender()).getMatch().getWinner().getName());
-        Assert.assertEquals(team3.getName(), matchResultRepository.findByMatchAndSender(match3,matchResult7.getSender()).getMatch().getWinner().getName());
+        Assert.assertEquals(team.getName(), matchResultRepository.findByMatchAndSender(match3,matchResult7.getSender()).getMatch().getWinner().getName());
     }
-
+    @Transactional
     @And("^The winner of the Round for the Matches is set$")
     public void theWinnerOfTheRoundForTheMatchesIsSet() {
-        Team Winner_test = matchResultRepository.findByMatchAndSender(match1,matchResult1.getSender()).getMatch().getRound().getWinner();
-        Assert.assertEquals(team.getName(), Winner_test.getName());
+        Round Winner_test = matchResultRepository.findByMatchAndSender(match1,matchResult1.getSender()).getMatch().getRound();
+        Assert.assertEquals(team.getName(), Winner_test);
     }
 
     @And("^The winner of the Tournament for the Round is set$")
