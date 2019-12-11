@@ -4,6 +4,7 @@ import cat.udl.eps.softarch.mytournamentx.domain.*;
 import cat.udl.eps.softarch.mytournamentx.exception.ForbiddenException;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
+import cat.udl.eps.softarch.mytournamentx.repository.RoundRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class MatchWinnerService {
 
     @Autowired
     TournamentRepository tournamentRepository;
+
+    @Autowired
+    RoundRepository roundRepository;
 
     @Autowired
     TournamentService tournamentService;
@@ -88,16 +92,18 @@ public class MatchWinnerService {
         }
         if (diccionari.size() == 1) {
             match.getRound().setWinner(match.getWinner());
+            roundRepository.save(match.getRound());
         } else {
-            if (Collections.max(diccionari.values()) >= match.getRound().getBestOf() / 2 + 1) { //TODO Program do not enter here.
+            //if (Collections.max(diccionari.values()) >= match.getRound().getBestOf() / 2 + 1) { //TODO Program do not enter here.
                 for (Team team : diccionari.keySet()
                 ) {
                     if (diccionari.get(team).equals(Collections.max(diccionari.values()))) {
                         match.getRound().setWinner(team);
+                        roundRepository.save(match.getRound());
                     }
 
                 }
-            }
+            //}
 
         }
 
