@@ -24,6 +24,11 @@ public class TeamInvitation extends UriEntity<Long> {
     @ManyToOne
     @NotNull
     @JsonIdentityReference(alwaysAsId = true)
+    private User creationUser;
+
+    @ManyToOne
+    @NotNull
+    @JsonIdentityReference(alwaysAsId = true)
     private Team team;
     private String message;
 
@@ -35,6 +40,11 @@ public class TeamInvitation extends UriEntity<Long> {
     public User getUser() {
         return user;
     }
+
+    public User getCreationUser() {
+        return creationUser;
+    }
+
 
     public void setUser(User user) {
         this.user = user;
@@ -54,6 +64,7 @@ public class TeamInvitation extends UriEntity<Long> {
         this.team = team;
         this.message = message;
         this.creationDate = new Date();
+        creationUser = ((Player)authentication.getPrincipal());
     }
 
     public String getMessage() {

@@ -1,7 +1,9 @@
 package cat.udl.eps.softarch.mytournamentx.handler;
 
+import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
+import cat.udl.eps.softarch.mytournamentx.domain.User;
 import cat.udl.eps.softarch.mytournamentx.exception.BadRequestException;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamInvitationRepository;
@@ -48,6 +50,8 @@ public class TeamInvitationHandler {
     @HandleBeforeSave
     public void handleTeamInvitationPreSave(TeamInvitation teamInvitation) {
         logger.info("Before updating: {}", teamInvitation.toString());
+        if(teamInvitation.getUser().equals(((User)authentication.getPrincipal())) || teamInvitation.getCreationUser().equals(((User)authentication.getPrincipal())))
+            throw new BadRequestException();
     }
 
     @HandleBeforeDelete
