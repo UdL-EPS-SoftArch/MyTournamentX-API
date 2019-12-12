@@ -4,7 +4,6 @@ Feature: UpdateMatch
   I want to see the winner of a Match and its result
 
 
-
   Scenario: Register the winner of a Match with at least half plus one of the matchresults containing the same winner
     Given There is a tournament with name "FirstTournament", level "AMATEUR", game "LoL" and bestof "1" UpdateResult
     And I login as "demoP" with password "password"
@@ -28,12 +27,3 @@ Feature: UpdateMatch
     And The winner of the Matchs are set
     And The winner of the Round for the Matches is set
     And The winner of the Tournament for the Round is set
-
-
-  Scenario: Try to register the winner of a Match without at half plus one of the matchresults
-    Given Less of half plus one of the matchresults
-    When I compare all the matchresults of the match
-    And I set "Winner" as winner
-    Then The response code is <number>
-    And Throws an exception
-

@@ -1,7 +1,5 @@
 package cat.udl.eps.softarch.mytournamentx.service;
-
 import cat.udl.eps.softarch.mytournamentx.domain.*;
-import cat.udl.eps.softarch.mytournamentx.exception.ForbiddenException;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.RoundRepository;
