@@ -5,11 +5,14 @@ import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
 import cat.udl.eps.softarch.mytournamentx.domain.User;
 import cat.udl.eps.softarch.mytournamentx.exception.BadRequestException;
+import cat.udl.eps.softarch.mytournamentx.exception.ForbiddenException;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamInvitationRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +53,10 @@ public class TeamInvitationHandler {
     @HandleBeforeSave
     public void handleTeamInvitationPreSave(TeamInvitation teamInvitation) {
         logger.info("Before updating: {}", teamInvitation.toString());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if(teamInvitation.getUser().equals(((User)authentication.getPrincipal())) || teamInvitation.getCreationUser().equals(((User)authentication.getPrincipal())))
-            throw new BadRequestException();
+            throw new ForbiddenException();
     }
 
     @HandleBeforeDelete

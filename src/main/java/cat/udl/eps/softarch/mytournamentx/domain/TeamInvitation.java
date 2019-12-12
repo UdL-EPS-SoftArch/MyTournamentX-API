@@ -3,6 +3,8 @@ package cat.udl.eps.softarch.mytournamentx.domain;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -64,6 +66,8 @@ public class TeamInvitation extends UriEntity<Long> {
         this.team = team;
         this.message = message;
         this.creationDate = new Date();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         creationUser = ((Player)authentication.getPrincipal());
     }
 
