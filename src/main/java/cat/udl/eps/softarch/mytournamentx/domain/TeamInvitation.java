@@ -47,6 +47,10 @@ public class TeamInvitation extends UriEntity<Long> {
         return creationUser;
     }
 
+    public void setCreationUser(User user) {
+        creationUser = user;
+    }
+
 
     public void setUser(User user) {
         this.user = user;
@@ -66,9 +70,7 @@ public class TeamInvitation extends UriEntity<Long> {
         this.team = team;
         this.message = message;
         this.creationDate = new Date();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        creationUser = ((Player)authentication.getPrincipal());
     }
 
     public String getMessage() {

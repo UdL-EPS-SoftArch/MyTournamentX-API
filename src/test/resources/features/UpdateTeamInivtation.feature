@@ -36,13 +36,13 @@ Feature: Update team invitation
     And  The invitation has been created for the user "invitedEmail@gmail.com" for the team "demoTeam"
     And   There is a registered player with username "notInvitedUsername" and password "notInvitedPassword" and email "notInvitedEmail@gmail.com"
     And I login as "notInvitedUsername" with password "notInvitedPassword"
-    When The invitation for the user "invitedEmail@gmail.com" for the team "demoTeam" has been modified with the accepted status "true"
-    And  The server response code is 400
+    When The invitation for the user "invitedEmail@gmail.com" for the team "demoTeam" has not been modified
+    And  The server response code is 404
 
   Scenario: Update non existing invitation not being creation or invited user
     Given The user "player@mytournamentx.game" is in the team "demoTeam"
     And   The user "invitedEmail@gmail.com" is not in the team "demoTeam"
     And   There is empty room in the team "demoTeam"
-    When The invitation for the user "invitedEmail@gmail.com" for the team "demoTeam" has been modified with the accepted status "true"
+    When The invitation for the user "invitedEmail@gmail.com" for the team "demoTeam" has not been modified
     And  The server response code is 404
 

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,19 +36,19 @@ public class UpdateTeamInvitationStepDefs {
 
     @Then("^The invitation for the user \"([^\"]*)\" for the team \"([^\"]*)\" has been modified with the accepted status \"([^\"]*)\"$")
     public void theInvitationForTheUserForTheTeamHasBeenModifiedWithTheAcceptedStatus(String user, String team, String status) throws Throwable {
-        boolean booleanStatus = Boolean.valueOf(status);
+        boolean booleanStatus = Boolean.parseBoolean(status);
         TeamInvitation teamInvitation = teamInvitationRepository.findTTeamInvitationByTeamAndUser(teamRepository.findTeamByName(team), playerRepository.findByEmail(user));
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teamInvitations/{id}", teamInvitation.getId())
+                get("/teamInvitations/{id}", (teamInvitation==null ? 0 : teamInvitation.getId()))
                         .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate()))
                 .andDo(print())
-                .andExpect(jsonPath("$.accepted", is(status))
+                .andExpect(jsonPath("$.accepted", is(booleanStatus))
                 );
     }
 
     @When("^I modify the invitation for the user \"([^\"]*)\" for the team \"([^\"]*)\" with the accepted status = \"([^\"]*)\"$")
     public void iModifyTheInvitationForTheUserForTheTeamWithTheAcceptedStatus(String user, String team, String status) throws Throwable {
-        boolean booleanStatus = Boolean.valueOf(status);
+        boolean booleanStatus = Boolean.parseBoolean(status);
         TeamInvitation teamInvitation = teamInvitationRepository.findTTeamInvitationByTeamAndUser(teamRepository.findTeamByName(team), playerRepository.findByEmail(user));
         JSONObject team_json = new JSONObject();
         team_json.put("accepted",booleanStatus);
@@ -67,7 +68,7 @@ public class UpdateTeamInvitationStepDefs {
                 get("/teamInvitations/{id}", teamInvitation.getId())
                         .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate()))
                 .andDo(print())
-                .andExpect(jsonPath("$.accepted", is(message))
+                .andExpect(jsonPath("$.message", is(teamInvitation.getMessage()))
                 );
     }
 
@@ -83,5 +84,14 @@ public class UpdateTeamInvitationStepDefs {
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate())
         ).andDo(print());
+    }
+
+    @When("^The invitation for the user \"([^\"]*)\" for the team \"([^\"]*)\" has not been modified$")
+    public void theInvitationForTheUserForTheTeamHasNotBeenModified(String team, String user) throws Throwable {
+        TeamInvitation teamInvitation = teamInvitationRepository.findTTeamInvitationByTeamAndUser(teamRepository.findTeamByName(team), playerRepository.findByEmail(user));
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/teamInvitations/{id}", (teamInvitation==null ? 0 : teamInvitation.getId()))
+                        .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
     }
 }

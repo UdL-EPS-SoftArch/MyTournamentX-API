@@ -38,6 +38,8 @@ public class TeamInvitationHandler {
     @HandleBeforeCreate
     public void handleTeamInvitationPreCreate(TeamInvitation teamInvitation) {
         logger.info("Before creating: {}", teamInvitation.toString());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        teamInvitation.setCreationUser(((Player)authentication.getPrincipal()));
         if(teamInvitation.getTeam()==null || !teamRepository.existsByName(teamInvitation.getTeam().getId())  || teamInvitation.getUser()==null || !playerRepository.existsById(teamInvitation.getUser().getId())){
             throw new BadRequestException();
         }
