@@ -64,6 +64,9 @@ public class TeamInvitationHandler {
     @HandleBeforeDelete
     public void handleTeamInvitationPreDelete(TeamInvitation teamInvitation) {
         logger.info("Before deleting: {}", teamInvitation.toString());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(teamInvitation.getUser().equals(((User)authentication.getPrincipal())) || teamInvitation.getCreationUser().equals(((User)authentication.getPrincipal())))
+            throw new ForbiddenException();
     }
 
     @HandleBeforeLinkSave
