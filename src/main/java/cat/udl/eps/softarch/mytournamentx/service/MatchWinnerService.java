@@ -60,14 +60,32 @@ public class MatchWinnerService {
     }
 
     public void handleMatchWinners(Match match) throws Exception {
-        int checktheWinner = 0;
+        Map<Team, Integer> diccionari = new HashMap<>();
+        //Save values
         for (Match matchTotal : matchRepository.findByRound(match.getRound())) {
             if (matchTotal.getWinner() != null) {
-                checktheWinner = checktheWinner + 1;
+                if (diccionari.containsKey(matchTotal.getWinner())) {
+                    diccionari.put(matchTotal.getWinner(), diccionari.get(matchTotal.getWinner()) + 1);
+                } else if (matchTotal.getWinner() != null) {
+                    diccionari.put(matchTotal.getWinner(), 1);
+                }
             }
         }
-        if (match.getRound().getBestOf() / 2 + 1 == checktheWinner) {
-            checkWinners(match);
+        //Decide winner when some team is half+1 voted
+        if (match.getRound().getBestOf() / 2 + 1 == Collections.max(diccionari.values())) {
+            if (diccionari.size() == 1) {
+                match.getRound().setWinner(match.getWinner());
+                roundRepository.save(match.getRound());
+            } else {
+                for (Team team : diccionari.keySet()
+                ) {
+                    if (diccionari.get(team).equals(Collections.max(diccionari.values()))) {
+                        match.getRound().setWinner(team);
+                        roundRepository.save(match.getRound());
+                    }
+
+                }
+            }
         }
         handleRoundWinners(match.getRound());
     }
@@ -79,35 +97,5 @@ public class MatchWinnerService {
             tournamentService.advanceState(round.getTournament());
         }
     }
-
-
-    private void checkWinners(Match match) {
-        Map<Team, Integer> diccionari = new HashMap<>();
-        for (Match matchTotal : matchRepository.findByRound(match.getRound())) {
-            if (diccionari.containsKey(matchTotal.getWinner())) {
-                diccionari.put(matchTotal.getWinner(), diccionari.get(matchTotal.getWinner()) + 1);
-            }else if(matchTotal.getWinner() != null) {
-                diccionari.put(matchTotal.getWinner(), 1);
-            }
-        }
-        if (diccionari.size() == 1) {
-            match.getRound().setWinner(match.getWinner());
-            roundRepository.save(match.getRound());
-        } else {
-            //if (Collections.max(diccionari.values()) >= match.getRound().getBestOf() / 2 + 1) { //TODO Program do not enter here.
-                for (Team team : diccionari.keySet()
-                ) {
-                    if (diccionari.get(team).equals(Collections.max(diccionari.values()))) {
-                        match.getRound().setWinner(team);
-                        roundRepository.save(match.getRound());
-                    }
-
-                }
-            //}
-
-        }
-
-    }
-
 }
 
