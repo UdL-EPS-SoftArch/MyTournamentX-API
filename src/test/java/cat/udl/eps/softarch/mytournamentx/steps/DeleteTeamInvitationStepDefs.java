@@ -28,7 +28,7 @@ public class DeleteTeamInvitationStepDefs {
     public void iDeleteTheInvitationForTheUserForTheTeam(String user, String team) throws Throwable {
         TeamInvitation teamInvitation = teamInvitationRepository.findTTeamInvitationByTeamAndUser(teamRepository.findTeamByName(team), playerRepository.findByEmail(user));
         stepDefs.result = stepDefs.mockMvc.perform(
-                delete("/teamInvitations/{id}", teamInvitation.getId())
+                delete("/teamInvitations/{id}", teamInvitation == null ? 0: teamInvitation.getId())
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
     }

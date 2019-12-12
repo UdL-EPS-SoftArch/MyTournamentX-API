@@ -47,4 +47,4 @@ Feature: Update team invitation
     And   There is empty room in the team "demoTeam"
     When I delete the invitation for the user "invitedEmail@gmail.com" for the team "demoTeam"
     Then The invitation for the user "invitedEmail@gmail.com" for the team "demoTeam" has not been deleted
-    And  The server response code is 200
+    And  The server response code is 404
