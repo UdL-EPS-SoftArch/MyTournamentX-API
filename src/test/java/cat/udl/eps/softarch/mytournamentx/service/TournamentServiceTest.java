@@ -9,22 +9,23 @@ import cat.udl.eps.softarch.mytournamentx.repository.RoundRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
-
+@RunWith(SpringRunner.class)
 @SpringBootTest
-class TournamentServiceTest {
+public class TournamentServiceTest {
 
     @Autowired
     TournamentService tournamentService;
@@ -42,8 +43,8 @@ class TournamentServiceTest {
     MatchRepository matchRepository;
 
 
-    @BeforeEach
-    void setup() {
+    @Before
+    public void setup() {
         Tournament tournament = new Tournament();
         tournament.setName("Galactic Aquatic Football Tournament");
         tournament.setBestOf(3);
@@ -79,10 +80,10 @@ class TournamentServiceTest {
         tournamentRepository.save(tournament);
     }
 
-    @DisplayName("Create Tournament Spring @Autowired Integration")
+    // @DisplayName("Create Tournament Spring @Autowired Integration")
     @Transactional //per a que no doni errors de Lazy Inicialization
     @Test
-    void createTournament() throws Exception {
+    public void createTournament() throws Exception {
         Tournament tournament = tournamentRepository.findTournamentByName(
                 "Galactic Aquatic Football Tournament"
         );

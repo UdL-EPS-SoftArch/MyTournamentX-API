@@ -68,6 +68,9 @@ public class Tournament extends UriEntity<String> {
     @ManyToMany
     private List<Team> participants;
 
+    @ManyToOne
+    private Team winner;
+
     @Positive
     @NotNull
     private Integer bestOf;

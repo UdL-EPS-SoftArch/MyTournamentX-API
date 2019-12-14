@@ -31,4 +31,6 @@ public class Round extends UriEntity<Integer> {
 
     @ManyToOne
     private Tournament tournament;
+
+    private boolean hasWinner = false;
 }
