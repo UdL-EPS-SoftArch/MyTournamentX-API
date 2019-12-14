@@ -1,6 +1,5 @@
 package cat.udl.eps.softarch.mytournamentx.repository;
 
-import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
 import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Match;
 import cat.udl.eps.softarch.mytournamentx.domain.MatchResult;
