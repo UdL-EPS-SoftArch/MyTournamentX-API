@@ -45,10 +45,11 @@ public class CreateTournamentStepDefs {
 
 
     @Given("^I create a new tournament with name \"([^\"]*)\", level \"([^\"]*)\" and game \"([^\"]*)\" and bestof \"([^\"]*)\"$")
-    public void iCreateANewTournamentWithNameLevelAndGameAndBestof(String name, Tournament.Level level, String game, String bestOf) throws Throwable {
+    public void iCreateANewTournamentWithNameLevelAndGameAndBestof(String name, String level, String game, String bestOf) throws Throwable {
+
         Tournament tournament = new Tournament();
         tournament.setName(name);
-        tournament.setLevel(level);
+        tournament.setLevel(level.isEmpty() ? null : Tournament.Level.valueOf(level));
         tournament.setGame(game);
         tournament.setBestOf(Integer.valueOf(bestOf));
         stepDefs.result = stepDefs.mockMvc.perform(
