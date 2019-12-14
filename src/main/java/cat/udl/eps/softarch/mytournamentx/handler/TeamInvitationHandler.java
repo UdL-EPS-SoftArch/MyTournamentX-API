@@ -1,13 +1,18 @@
 package cat.udl.eps.softarch.mytournamentx.handler;
 
+import cat.udl.eps.softarch.mytournamentx.domain.Player;
 import cat.udl.eps.softarch.mytournamentx.domain.Team;
 import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
+import cat.udl.eps.softarch.mytournamentx.domain.User;
 import cat.udl.eps.softarch.mytournamentx.exception.BadRequestException;
+import cat.udl.eps.softarch.mytournamentx.exception.ForbiddenException;
 import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamInvitationRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +38,8 @@ public class TeamInvitationHandler {
     @HandleBeforeCreate
     public void handleTeamInvitationPreCreate(TeamInvitation teamInvitation) {
         logger.info("Before creating: {}", teamInvitation.toString());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        teamInvitation.setCreationUser(((Player)authentication.getPrincipal()));
         if(teamInvitation.getTeam()==null || !teamRepository.existsByName(teamInvitation.getTeam().getId())  || teamInvitation.getUser()==null || !playerRepository.existsById(teamInvitation.getUser().getId())){
             throw new BadRequestException();
         }
@@ -48,6 +55,10 @@ public class TeamInvitationHandler {
     @HandleBeforeSave
     public void handleTeamInvitationPreSave(TeamInvitation teamInvitation) {
         logger.info("Before updating: {}", teamInvitation.toString());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!teamInvitation.getUser().getId().equals(((User)authentication.getPrincipal()).getId()) && !teamInvitation.getCreationUser().getId().equals(((User)authentication.getPrincipal()).getId()))
+            throw new ForbiddenException();
     }
 
     @HandleBeforeDelete
