@@ -27,6 +27,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
                     .and()
                     .authorizeRequests()
                     .antMatchers(HttpMethod.GET, "/identity").authenticated()
+                    .antMatchers(HttpMethod.POST, "/tournamentMasters").anonymous()
+                    .antMatchers(HttpMethod.POST, "/players").anonymous()
                     .antMatchers(HttpMethod.POST, "/tournamentMasters/*").denyAll()
                     .antMatchers(HttpMethod.POST, "/players/*").denyAll()
 
@@ -44,6 +46,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
                     .antMatchers(HttpMethod.POST, "/matches").denyAll()
 
+              
+                    //.antMatchers(HttpMethod.GET, "/teams/*").anonymous()
                     .antMatchers(HttpMethod.PUT, "/teams/*").hasRole("PLAYER")
                     .antMatchers(HttpMethod.POST, "/teams").hasRole("PLAYER")
                     .antMatchers(HttpMethod.DELETE, "/teams/*").hasRole("PLAYER")

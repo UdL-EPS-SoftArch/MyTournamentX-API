@@ -57,7 +57,7 @@ public class TeamInvitationHandler {
         logger.info("Before updating: {}", teamInvitation.toString());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(teamInvitation.getUser().equals(((User)authentication.getPrincipal())) || teamInvitation.getCreationUser().equals(((User)authentication.getPrincipal())))
+        if(!teamInvitation.getUser().getId().equals(((User)authentication.getPrincipal()).getId()) && !teamInvitation.getCreationUser().getId().equals(((User)authentication.getPrincipal()).getId()))
             throw new ForbiddenException();
     }
 
