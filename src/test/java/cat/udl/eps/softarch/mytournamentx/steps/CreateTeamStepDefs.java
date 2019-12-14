@@ -96,4 +96,9 @@ public class CreateTeamStepDefs {
         // Now is 4 as the DB has data inside
         Assert.assertEquals(4,teamRepository.findAll().size());
     }
+
+    @And("^There is a registered team with name \"([^\"]*)\"$")
+    public void thereIsARegisteredTeamWithName(String name) throws Throwable {
+        Assert.assertTrue(teamRepository.existsByName(name));
+    }
 }

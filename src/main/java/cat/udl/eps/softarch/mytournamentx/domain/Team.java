@@ -5,14 +5,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -40,14 +40,15 @@ public class Team extends UriEntity<String> {
     @ManyToOne
     private Player leader;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set <Player> players;
 
-    public Team(String name,String game,String level, int maxPlayers) {
+    public Team(String name, String game, String level, int maxPlayers) {
         this.name = name;
         this.game = game;
         this.level = level;
         this.maxPlayers = maxPlayers;
+        players = new HashSet<Player>();
     }
 
     public Team() {
@@ -58,7 +59,19 @@ public class Team extends UriEntity<String> {
         return name;
     }
 
-    public Boolean userInTeam(String userId){
-        return players.contains(userId);
+    public Boolean userInTeam(Player player){
+        return players.contains(player);
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public int getCurrentPlayers() {
+        return players.size();
+    }
+
+    public void setPlayer(Player player) {
+         players.add(player);
     }
 }
