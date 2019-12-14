@@ -1,6 +1,8 @@
 package cat.udl.eps.softarch.mytournamentx.steps;
 
 import cat.udl.eps.softarch.mytournamentx.domain.TeamInvitation;
+import cat.udl.eps.softarch.mytournamentx.handler.CreateTeamHandler;
+import cat.udl.eps.softarch.mytournamentx.repository.PlayerRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamInvitationRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.UserRepository;
@@ -9,14 +11,21 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.hibernate.Hibernate;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import cat.udl.eps.softarch.mytournamentx.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Optional;
+
+import javax.validation.constraints.AssertTrue;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,18 +33,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CreateTeamInvitationStepDefs {
-    TeamInvitation teamInvitation;
+    private TeamInvitation teamInvitation;
     @Autowired
     private StepDefs stepDefs;
 
     @Autowired
-    private UserRepository userRepository;
-
+    private TeamRepository teamRepository;
     @Autowired
     private TeamInvitationRepository teamInvitationRepository;
-
     @Autowired
-    private TeamRepository teamRepository;
+    private PlayerRepository playerRepository;
 
     protected ResultActions result;
 
@@ -54,23 +61,26 @@ public class CreateTeamInvitationStepDefs {
     }
 
     @And("^The user \"([^\"]*)\" is not in the team \"([^\"]*)\"$")
-    public void theUserIsNotInTheTeam(String userId, String teamId) throws Throwable {
+    public void theUserIsNotInTheTeam(String userEmail, String teamId) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-        //Team team = teamRepository.findTeamByName(teamId);
-        //Assert.assertFalse(team.userInTeam(userId));
+
+        Team team = teamRepository.findTeamByName(teamId);
+        Player player = playerRepository.findByEmail(userEmail);
+        Assert.assertFalse(team.userInTeam(player));
     }
 
     @When("^I create the invitation for the user \"([^\"]*)\" to participate in team \"([^\"]*)\"$")
-    public void iCreateTheInvitationForTheUserToParticipateInTeam(String userId, String teamId) throws Throwable {
-        teamInvitation = new TeamInvitation(teamId, userId, "Welcome");
-            stepDefs.result = stepDefs.mockMvc.perform(
-                post("/teamInvitation")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(
-                                stepDefs.mapper.writeValueAsString(teamInvitation))
-                        .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate()))
-                .andDo(print());
+    public void iCreateTheInvitationForTheUserToParticipateInTeam(String user, String team) throws Throwable {
+        TeamInvitation teamInvitation = new TeamInvitation(playerRepository.findByEmail(user), teamRepository.findTeamByName(team), "Welcome");
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+            post("/teamInvitations")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(
+                        stepDefs.mapper.writeValueAsString(teamInvitation))
+                .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate()))
+        .andDo(print());
+
     }
 
     /*@Then("^The sever response code is (\\d+)$")
@@ -79,14 +89,13 @@ public class CreateTeamInvitationStepDefs {
     }*/
 
     @And("^The invitation has been created for the user \"([^\"]*)\" for the team \"([^\"]*)\"$")
-    public void theInvitationHasBeenCreatedForTheUserForTheTeam(String userId, String teamId) throws Throwable {
-        TeamInvitationId teamInvitationId = new TeamInvitationId(userId,teamId);
+    public void theInvitationHasBeenCreatedForTheUserForTheTeam(String user, String team) throws Throwable {
+        TeamInvitation teamInvitation = teamInvitationRepository.findTTeamInvitationByTeamAndUser(teamRepository.findTeamByName(team), playerRepository.findByEmail(user));
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teamInvitation/{teamInvitationId}", teamInvitationId)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                get("/teamInvitations/{id}", teamInvitation.getId())
+                        .accept(MediaType.APPLICATION_JSON_UTF8).with(AuthenticationStepDefs.authenticate()))
                 .andDo(print())
-                .andExpect(jsonPath("$.userId", is(userId)))
-                .andExpect(jsonPath("$.teamId", is(teamId))
+                .andExpect(jsonPath("$.message", is(teamInvitation.getMessage()))
                 );
     }
 
@@ -99,13 +108,11 @@ public class CreateTeamInvitationStepDefs {
     }
 
     @And("^I cannot create a invitation for the user \"([^\"]*)\" for the team \"([^\"]*)\"$")
-    public void iCannotCreateAInvitationForTheUserForTheTeam(String userId, String teamId) throws Throwable {
-        TeamInvitationId teamInvitationId = new TeamInvitationId(userId,teamId);
+    public void iCannotCreateAInvitationForTheUserForTheTeam(User user, Team team) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/teamInvitation/{teamInvitationId}", teamInvitationId)
+                get("/teamInvitations/{id}", teamInvitation.getId())
                         .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.userId", not(userId)))
-                .andExpect(jsonPath("$.teamId",not(teamId)));
+                .andExpect(jsonPath("$.id", not(teamInvitation.getId())));
     }
 
     @And("^The teamId \"([^\"]*)\" is not correct$")
@@ -116,8 +123,27 @@ public class CreateTeamInvitationStepDefs {
                 .andExpect(status().isNotFound());
     }
 
-    @Then("^The sever response code is (\\d+)$")
-    public void theSeverResponseCodeIs(int code) throws Throwable {
-        result.andExpect(status().is(code));
+    @Then("^The server response code is (\\d+)$")
+    public void theServerResponseCodeIs(int code) throws Throwable {
+        stepDefs.result.andExpect(status().is(code));
+    }
+
+    @And("^There is no empty room in the team \"([^\"]*)\"$")
+    public void thereIsNoEmptyRoomInTheTeam(String teamId) throws Throwable {
+        Team team = teamRepository.findTeamByName(teamId);
+        Assert.assertFalse(team.getMaxPlayers()>team.getCurrentPlayers());
+    }
+
+    @And("^There is empty room in the team \"([^\"]*)\"$")
+    public void thereIsEmptyRoomInTheTeam(String teamId) throws Throwable {
+        Team team = teamRepository.findTeamByName(teamId);
+        Assert.assertTrue(team.getMaxPlayers()>team.getCurrentPlayers());
+    }
+
+    @And("^The user \"([^\"]*)\" is in the team \"([^\"]*)\"$")
+    public void theUserIsInTheTeam(String userEmail, String teamId) throws Throwable {
+        Team team = teamRepository.findTeamByName(teamId);
+        Player player = playerRepository.findByEmail(userEmail);
+        Assert.assertFalse(team.userInTeam(player));
     }
 }
