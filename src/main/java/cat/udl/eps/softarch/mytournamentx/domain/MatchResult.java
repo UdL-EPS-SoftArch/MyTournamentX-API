@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import cat.udl.eps.softarch.mytournamentx.repository.MatchResultRepository;
+
 import javax.persistence.*;
 
 import javax.validation.constraints.NotBlank;
@@ -24,8 +25,8 @@ public class MatchResult extends UriEntity<Integer> {
 
     //@NotBlank
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private Team winner;
-
 
     @Length(min = 1, max = 256)
     private String description;
@@ -37,6 +38,7 @@ public class MatchResult extends UriEntity<Integer> {
 
     //@NotBlank
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private Team sender;
 
 }

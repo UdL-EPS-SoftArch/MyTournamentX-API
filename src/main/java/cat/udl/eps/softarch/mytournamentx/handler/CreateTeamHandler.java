@@ -24,5 +24,6 @@ public class CreateTeamHandler {
         logger.info("Username: {}", authentication.getAuthorities());
 
         team.setLeader((Player)authentication.getPrincipal());
+        team.setPlayer((Player)authentication.getPrincipal());
     }
 }

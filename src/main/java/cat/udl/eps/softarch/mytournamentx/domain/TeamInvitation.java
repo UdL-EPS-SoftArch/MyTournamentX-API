@@ -1,43 +1,59 @@
 package cat.udl.eps.softarch.mytournamentx.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@Entity @IdClass(TeamInvitationId.class)
+@Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TeamInvitation extends UriEntity<TeamInvitationId> {
+public class TeamInvitation extends UriEntity<Long> {
 
-    @Id
-    @NotBlank
-    private String teamId;
+    @Id @GeneratedValue(strategy=GenerationType.AUTO) long id;
 
-    @Id
-    @NotBlank
-    private String userId;
+    @ManyToOne
+    @NotNull
+    @JsonIdentityReference(alwaysAsId = true)
+    private User user;
 
+    @ManyToOne
+    @NotNull
+    @JsonIdentityReference(alwaysAsId = true)
+    private Team team;
     private String message;
-
-    private TeamInvitationId id;
 
     private Boolean accepted;
 
     private Date creationDate;
+    public TeamInvitation(){}
 
-    public TeamInvitation(String teamId, String userId, String message){
-        this.teamId = teamId;
-        this.userId = userId;
-        this.id = new TeamInvitationId(teamId, userId);
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public TeamInvitation(User user, Team team, String message){
+
+        this.user = user;
+        this.team = team;
         this.message = message;
         this.creationDate = new Date();
-    }
-    @Override
-    public TeamInvitationId getId() {
-        return id;
     }
 
     public String getMessage() {
@@ -51,19 +67,13 @@ public class TeamInvitation extends UriEntity<TeamInvitationId> {
     public Date getCreationDate(){
         return creationDate;
     }
-    public void setId(String teamId) {
-        this.teamId=teamId;
-    }
-
-    public void setMessage(String message) {
-        this.message=message;
-    }
-
-    public void setCreationDate(Date creationDate){
-        this.creationDate=creationDate;
-    }
 
     public void setAccepted(Boolean accepted){
         this.accepted = accepted;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }
