@@ -85,7 +85,7 @@ public class JoinToTeamStepDefs {
     @When("^I leave the team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\"$")
     public void iLeaveTheTeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIs(String team_name, String game, String level, int maxPlayers, String demoP) throws Throwable {
             stepDefs.result = stepDefs.mockMvc.perform(
-                    delete("/teams/{teamId}/players/{playerId}", team_name)
+                    delete("/teams/{teamId}/players/{playerId}", team_name, demoP)
                             .accept(MediaType.APPLICATION_JSON)
                             .with(authenticate()));
     }
