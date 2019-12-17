@@ -42,14 +42,22 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
                     .antMatchers(HttpMethod.POST, "/tournamentInvitations").authenticated()
 
+                    .antMatchers(HttpMethod.POST, "/rounds").denyAll()
+
                     .antMatchers(HttpMethod.GET, "/matches").authenticated()
                     .antMatchers(HttpMethod.POST, "/matches").denyAll()
 
-                    .antMatchers(HttpMethod.GET, "/teams/*").anonymous()
+                    //.antMatchers(HttpMethod.GET, "/teams/*").anonymous()
                     .antMatchers(HttpMethod.PUT, "/teams/*").hasRole("PLAYER")
                     .antMatchers(HttpMethod.POST, "/teams").hasRole("PLAYER")
                     .antMatchers(HttpMethod.DELETE, "/teams/*").hasRole("PLAYER")
                     .antMatchers(HttpMethod.PATCH, "/teams/*").hasRole("PLAYER")
+
+                    .antMatchers(HttpMethod.GET, "/teamInvitations/*").authenticated()
+                    .antMatchers(HttpMethod.PUT, "/teamInvitations/*").authenticated()
+                    .antMatchers(HttpMethod.POST, "/teamInvitations").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/teamInvitations/*").authenticated()
+                    .antMatchers(HttpMethod.PATCH, "/teamInvitations/*").authenticated()
 
                     .antMatchers(HttpMethod.GET, "/joinTeams/*").anonymous()
                     .antMatchers(HttpMethod.PUT, "/joinTeams/*").hasRole("PLAYER")

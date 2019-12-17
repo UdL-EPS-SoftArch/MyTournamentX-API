@@ -9,25 +9,26 @@ import cat.udl.eps.softarch.mytournamentx.repository.RoundRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TeamRepository;
 import cat.udl.eps.softarch.mytournamentx.repository.TournamentRepository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
-
+@RunWith(SpringRunner.class)
 @SpringBootTest
-class InitialiseTournamentServiceTest {
+public class TournamentServiceTest {
 
     @Autowired
-    InitialiseTournamentService initialiseTournamentService;
+    TournamentService tournamentService;
 
     @Autowired
     TournamentRepository tournamentRepository;
@@ -42,8 +43,8 @@ class InitialiseTournamentServiceTest {
     MatchRepository matchRepository;
 
 
-    @BeforeEach
-    void setup() {
+    @Before
+    public void setup() {
         Tournament tournament = new Tournament();
         tournament.setName("Galactic Aquatic Football Tournament");
         tournament.setBestOf(3);
@@ -79,15 +80,15 @@ class InitialiseTournamentServiceTest {
         tournamentRepository.save(tournament);
     }
 
-    @DisplayName("Create Tounament Spring @Autowired Integration")
-    @Test
+    // @DisplayName("Create Tournament Spring @Autowired Integration")
     @Transactional //per a que no doni errors de Lazy Inicialization
-    void createTournament() throws Exception {
+    @Test
+    public void createTournament() throws Exception {
         Tournament tournament = tournamentRepository.findTournamentByName(
                 "Galactic Aquatic Football Tournament"
         );
 
-        initialiseTournamentService.createTournament("Galactic Aquatic Football Tournament");
+        tournamentService.createTournament(tournament);
         List<Round> rounds = roundRepository.findByTournament(tournament);
 
         assertEquals(3, rounds.size());
@@ -102,10 +103,10 @@ class InitialiseTournamentServiceTest {
         assertEquals(0, round3.getRivals().size());
 
         List<Match> matches1 = matchRepository.findByRound(round1);
-        assertEquals(tournament.getBestOf(), matches1.size());
+        assertEquals((int) tournament.getBestOf(), matches1.size());
 
         List<Match> matches2 = matchRepository.findByRound(round2);
-        assertEquals(tournament.getBestOf(), matches2.size());
+        assertEquals((int) tournament.getBestOf(), matches2.size());
 
         List<Match> matches3 = matchRepository.findByRound(round3);
         assertEquals(0, matches3.size());
