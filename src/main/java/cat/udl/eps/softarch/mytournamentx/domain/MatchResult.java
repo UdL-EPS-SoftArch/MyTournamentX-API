@@ -23,7 +23,6 @@ public class MatchResult extends UriEntity<Integer> {
     private Integer id;
 
 
-    //@NotBlank
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Team winner;
@@ -31,12 +30,10 @@ public class MatchResult extends UriEntity<Integer> {
     @Length(min = 1, max = 256)
     private String description;
 
-    //@NotBlank
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Match match;
 
-    //@NotBlank
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Team sender;

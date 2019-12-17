@@ -177,6 +177,8 @@ public class CreateMatchResultStepDefs {
         List<Team> players = new ArrayList<>();
         players.add(team);
         round.setRivals(players);
+        round.setNumTeams(2);
+        round.setBestOf(1);
         roundRepository.save(round);
     }
 }

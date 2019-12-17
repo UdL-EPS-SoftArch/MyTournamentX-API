@@ -41,7 +41,7 @@ public class Team extends UriEntity<String> {
     private Player leader;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Player> players = new HashSet<>();
+    private Set <Player> players = new HashSet<Player>();
 
     public Team(String name, String game, String level, int maxPlayers) {
         this.name = name;
@@ -50,8 +50,7 @@ public class Team extends UriEntity<String> {
         this.maxPlayers = maxPlayers;
     }
 
-    public Team() {
-    }
+    public Team() {}
 
     @Override
     public String getId() {

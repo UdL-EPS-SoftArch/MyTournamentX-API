@@ -4,13 +4,13 @@ Feature: CreateMatchResult
   I want to see the result of a Match
 
   Background:
-    Given There is a match
-    And There is a team
+    Given There is a team
     And There is a round
     And There is a match
 
+
   Scenario: Assign a match to a MatchResult
-    Given   There is no registered matchResult for this Match
+    Given  There is no registered matchResult for this Match
     And   I login as "demoP" with password "password"
     When  I register a new MatchResult with Description "description"
     Then  The response code is 201
