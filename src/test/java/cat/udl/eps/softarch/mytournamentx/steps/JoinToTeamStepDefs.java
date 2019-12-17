@@ -94,8 +94,9 @@ public class JoinToTeamStepDefs {
     public void iSuccessfullyLeaveTheTeamWithNameGameLevelMaxPlayersAndTheTeamLeaderIs(String name, String game, String level, int maxPlayers, String demoP) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get("/teams/{name}", name)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(authenticate()))
+                .andDo(print());
     }
 
     @And("^There is a team with name \"([^\"]*)\", game \"([^\"]*)\", level \"([^\"]*)\", maxPlayers (\\d+), and the team leader is \"([^\"]*)\"$")

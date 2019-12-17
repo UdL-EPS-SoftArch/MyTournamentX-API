@@ -31,10 +31,12 @@ Feature: Join player or players to team
 
   Scenario: I want to leave a team
     Given I login as "demoP" with password "password"
+    And There is a created team with name "team", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
+    Then I am player "demoP" and I want to join to the team with name "team"
     And I already joined a team with name "team", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
     When I leave the team with name "team", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
     Then I successfully leave the team with name "team", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
-
+    And The response code is 200
 
   Scenario: Joining to two different teams
     Given There is a created team with name "team1", game "game", level "level", maxPlayers 8, and the team leader is "demoP"
