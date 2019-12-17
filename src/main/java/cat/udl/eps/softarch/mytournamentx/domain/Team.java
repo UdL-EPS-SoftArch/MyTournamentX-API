@@ -72,4 +72,8 @@ public class Team extends UriEntity<String> {
     public void setPlayer(Player player) {
          players.add(player);
     }
+
+    public void setPlayers(Set<Player> players) {
+        this.players = players;
+    }
 }
