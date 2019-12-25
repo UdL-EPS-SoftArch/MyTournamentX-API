@@ -3,6 +3,8 @@ package cat.udl.eps.softarch.mytournamentx.domain;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -24,6 +26,11 @@ public class TeamInvitation extends UriEntity<Long> {
     @ManyToOne
     @NotNull
     @JsonIdentityReference(alwaysAsId = true)
+    private User creationUser;
+
+    @ManyToOne
+    @NotNull
+    @JsonIdentityReference(alwaysAsId = true)
     private Team team;
     private String message;
 
@@ -35,6 +42,15 @@ public class TeamInvitation extends UriEntity<Long> {
     public User getUser() {
         return user;
     }
+
+    public User getCreationUser() {
+        return creationUser;
+    }
+
+    public void setCreationUser(User user) {
+        creationUser = user;
+    }
+
 
     public void setUser(User user) {
         this.user = user;
@@ -54,6 +70,7 @@ public class TeamInvitation extends UriEntity<Long> {
         this.team = team;
         this.message = message;
         this.creationDate = new Date();
+
     }
 
     public String getMessage() {
