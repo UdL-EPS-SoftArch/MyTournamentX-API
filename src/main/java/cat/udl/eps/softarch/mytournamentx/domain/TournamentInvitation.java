@@ -14,11 +14,11 @@ import java.time.ZonedDateTime;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TournamentInvitation extends UriEntity<Integer>{
+public class TournamentInvitation extends UriEntity<String>{
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime createdAt;
@@ -42,13 +42,13 @@ public class TournamentInvitation extends UriEntity<Integer>{
 
     public TournamentInvitation(){}
 
-    public void setTournamentInvitation(Integer id, String message){
+    public void setTournamentInvitation(String id, String message){
         this.id = id;
         this.message = message;
     }
 
     @Override
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 }
